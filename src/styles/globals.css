@@ -1,33 +1,924 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.leftPanel {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  width: 27.125rem !important;
+  max-width: 27.125rem !important;
+  min-width: 27.125rem !important;
+  padding-left: 4.875rem !important;
+  background: #bad6fb !important;
+  position: fixed !important;
+  top: 0px !important;
+  bottom: 0px !important;
+  left: 0px !important;
+}
+.main-container {
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.left-panel {
+  background-color: #bad6fb;
+  padding: 20px;
+  height: 100vh;
+  width: 40vw; /* Set left panel width to 30% of viewport width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.right-panel {
+  background-color: #ffffff;
+  padding: 20px;
+  height: 100vh;
+  width: 70vw; /* Set right panel width to 70% of viewport width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+
+.loginRightPanelTitle {
+  margin-bottom: 0.625rem;
+}
+
+.loginRightPanelSubtitle {
+  margin-bottom: 1.25rem;
+}
+
+.continueWithGoogleButton,
+.continueWithAppleButton {
+  margin-bottom: 0.625rem;
+}
+
+
+@media (max-width: 48rem) {
+  .left-panel,
+  .right-panel {
+    width: auto;
+    height: auto;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+
+
+.logologin,
+.logo>svg {
+  width: 3.6875rem;
+  height: 2.7525rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0.0119rem 0rem 0rem 0rem;
+  opacity: 0rem;
+  align-items: center;
+  margin-left: 24px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.loginTitle {
+  width: 31.5625rem;
+height: 7rem;
+gap: 0rem;
+opacity: 0rem;
+  font-family: Manrope;
+font-size: 2.5rem;
+font-weight: 700;
+line-height: 3.5rem;
+letter-spacing: -0.0444rem;
+text-align: left;
+  color: #0f172a !important;
+}
+
+.loginDescription {
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  line-height: 1.25rem !important;
+  letter-spacing: 0.0088rem !important;
+  color: #475569 !important;
+}
+
+.loginRightPanel {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  justify-content: center !important;
+  padding-left: 7.625rem !important;
+  padding-right: 7.625rem !important;
+  margin-left: 27.125rem !important;
+}
+
+.loginRightPanelTitle {
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  line-height: 1.625rem !important;
+  letter-spacing: 0px !important;
+  color: #0f172a !important;
+}
+
+.loginRightPanelSubtitle {
+  margin-top: 0.125rem !important;
+  font-size: 0.625rem !important;
+  font-weight: 400 !important;
+  line-height: 1.125rem !important;
+  letter-spacing: 0.0131rem !important;
+  color: #64748b !important;
+  margin-bottom: 6.25rem !important;
+}
+
+.continueWithGoogleButton {
+  width: 21.5625rem !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  line-height: 1.625rem !important;
+  letter-spacing: 0.025rem !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border: 1px solid #0f172a !important;
+  padding: 0px !important;
+  height: 2.5rem !important;
+  border-radius: 4.5rem !important;
+  box-shadow: none !important;
+}
+
+.continueWithAppleButton {
+  margin-top: 0.75rem !important;
+  width: 21.5625rem !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  line-height: 1.625rem !important;
+  letter-spacing: 0.025rem !important;
+  color: #f1f5f9 !important;
+  background: #000000 !important;
+  border: 1px solid #0f172a !important;
+  padding: 0px !important;
+  height: 2.5rem !important;
+  border-radius: 4.5rem !important;
+  box-shadow: none !important;
+}
+
+.continueWithGoogleButton .ant-btn-icon .anticon>svg {
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+}
+
+.continueWithAppleButton .ant-btn-icon .anticon>svg {
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  fill: white !important;
+}
+
+.leftMenuPanel {
+  display: flex !important;
+  flex-direction: column !important;
+  background: white !important;
+  width: 10.375rem !important;
+  min-width: 10.375rem !important;
+  max-width: 10.375rem !important;
+  padding-top: 2.875rem !important;
+  padding-left: 1.125rem !important;
+  padding-right: 1.125rem !important;
+  padding-bottom: 1.875rem !important;
+  border-right: 0.7104px solid #00000033;
+}
+
+.menuLogo,
+.menuLogo>svg {
+  width: 4.125rem !important;
+  height: 3.75rem !important;
+  margin-bottom: 1.6875rem !important;
+  align-self: center !important;
+}
+.menuLogo,
+.menuLogo>svg {
+  width: 4.125rem !important;
+  height: 3.75rem !important;
+  margin-bottom: 1.6875rem !important;
+  align-self: center !important;
+}
+
+.middlePanel {
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 1.75rem !important;
+}
+
+.rightPanel {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #e8f1fe !important;
+  width: 16.25rem !important;
+  min-width: 16.25rem !important;
+  max-width: 16.25rem !important;
+}
+
+.happythoughtsLabel {
+  font-size: 1.4375rem !important;
+  font-weight: 700 !important;
+  line-height: 2rem !important;
+  letter-spacing: -0.0444rem !important;
+  color: #334155 !important;
+  margin-bottom: 1.125rem !important;
+}
+
+
+
+.verifyKhojiDiv {
+  display: flex !important;
+  flex-direction: column !important;
+  z-index: 1000 !important;
+  margin-top: 2.875rem !important;
+  margin-bottom: 2.875rem !important;
+  margin-left: 2rem !important;
+  margin-right: 2rem !important;
+  position: absolute !important;
+}
+
+.verifyKhoji {
+  font-size: 1.4375rem !important;
+  font-weight: 700 !important;
+  line-height: 2rem !important;
+  letter-spacing: -0.0444rem !important;
+  color: #475569 !important;
+}
+
+.verifyKhojiSubtitle {
+  font-size: 0.6875rem !important;
+  font-weight: 400 !important;
+  line-height: 1.1875rem !important;
+  letter-spacing: 0.0175rem !important;
+  margin-top: 0.375rem !important;
+  color: #475569 !important;
+}
+
+.verifyKhojiButton {
+  margin-top: 3.75rem !important;
+  padding-left: 1.375rem !important;
+  padding-right: 1.375rem !important;
+  background: #eb763c !important;
+  height: 1.875rem !important;
+  border-radius: 1.3125rem !important;
+  border: none !important;
+  align-self: baseline !important;
+  font-family: "Nunito" !important;
+  font-size: 0.625rem !important;
+  font-weight: 800 !important;
+  line-height: 0.875rem !important;
+  letter-spacing: 0.02em !important;
+  text-align: center !important;
+  color: #fff !important;
+}
+
+.menuItemCard {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 10.75rem !important;
+  height: 4.3125rem !important;
+  cursor: pointer !important;
+  position: relative !important;
+}
+
+.menuItemCardImage,
+.menuItemCardImage>svg {
+  width: 12.75rem !important;
+  height: 4.6125rem !important;
+}
+
+.menuItemCardLabel {
+  position: absolute !important;
+  z-index: 1000 !important;
+  font-size: 0.5625rem !important;
+  font-weight: 700 !important;
+  line-height: 0.9375rem !important;
+  letter-spacing: 0.0088rem !important;
+  color: #475569 !important;
+  text-align: center !important;
+  cursor: pointer !important;
+}
+
+.verifyKhojiMiddleDiv {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-top: 3.4375rem !important;
+  margin-left: 27.125rem !important;
+}
+
+.verifyKhojiProfileVerifiedLabel {
+  margin-top: 1.875rem !important;
+  font-size: 1.0625rem !important;
+  font-weight: 700 !important;
+  line-height: 1.625rem !important;
+  letter-spacing: 0px !important;
+  color: #0f172a !important;
+}
+
+.verifyKhojiProfileTitle {
+  font-size: 0.625rem !important;
+  font-weight: 400 !important;
+  line-height: 1.0625rem !important;
+  letter-spacing: 0.0131rem !important;
+  color: #64748b !important;
+}
+
+.verifyKhojiProfileSubTitle {
+  font-size: 0.5625rem !important;
+  font-weight: 400 !important;
+  line-height: 0.9375rem !important;
+  letter-spacing: 0.0088rem !important;
+  color: #64748b !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.625rem !important;
+}
+
+.userProfileImage {
+  height: 4rem !important;
+  width: 4rem !important;
+  border-radius: 2rem !important;
+  margin-left: 1.125rem !important;
+  margin-top: 1.4375rem !important;
+}
+
+.userProfileVerifiedBadge {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  margin-left: 8rem !important;
+  margin-top: 4.5rem !important;
+}
+
+.userProfileVerifiedBadgeLabel {
+  font-size: 0.4375rem !important;
+  font-weight: 400 !important;
+  line-height: 0.6875rem !important;
+  letter-spacing: 0.0088rem !important;
+  color: #64748b !important;
+}
+
+.userProfileLeftCard {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 10.375rem !important;
+  border-radius: 0.4375rem !important;
+  position: relative !important;
+  background: #f9f9f9 !important;
+  margin-bottom: 0.75rem !important;
+  width: 17.3125rem !important;
+}
+
+.userProfileRightCard {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 10.375rem !important;
+  border-radius: 0.4375rem !important;
+  position: relative !important;
+  background: #f9f9f9 !important;
+  width: 17.3125rem !important;
+  margin-bottom: 0.75rem !important;
+  margin-left: 0.75rem !important;
+}
+
+.userProfilePlaceholderCard {
+  width: 17.3125rem !important;
+}
+
+.userProfileTopSection {
+  position: absolute !important;
+  top: 0rem !important;
+  left: 0rem !important;
+  right: 0rem !important;
+  height: 66px !important;
+  background: #fdd8d8 !important;
+  border-radius: 7px 7px 0rem 0rem !important;
+}
+.userProfileMiddleSection {
+  border-top: 0.0625rem dashed #ccc;
+  margin: 0.625rem 0;
+  height: 1.25rem; /* Adjust the height of the dashed line */
+}
+.dashed-box {
+  border: 0.125rem dashed #ccc;
+  padding: 1.25rem;
+  text-align: center;
+}
+.userProfileEmptyBox {
+  border: 0.1rem dashed #ccc;
+  padding: 3rem;
+  text-align: center;
+  tab-size: 2rem;
+  width: 18rem;
+  margin-left: 2rem;
+}
+
+.addDetailsSymbol {
+  font-size: 32px;
+  color: #aaa;
+  cursor: pointer;
+}
+.plus-sign {
+  font-size: 1.5rem;
+  color: blue;
+}
+.userProfileDash {
+  margin-top: 1rem; /* Adjust margin as needed */
+  margin-left: 1rem; /* Adjust margin as needed */
+  font-size: 1.5rem; /* Adjust font size as needed */
+}
+
+.userNameLabel {
+  margin-top: 0.375rem !important;
+  font-size: 0.4375rem !important;
+  font-weight: 700 !important;
+  line-height: 0.625rem !important;
+  letter-spacing: 0rem !important;
+  color: #64748b !important;
+}
+
+.userProfileInfoTitle {
+  font-size: 0.5  375rem !important;
+  font-weight: 700 !important;
+  line-height: 0.6875rem !important;
+  letter-spacing: 0.0088rem !important;
+  color: #64748b !important;
+}
+
+.userProfileInfoValue {
+  font-size: 7px !important;
+  font-weight: 400 !important;
+  line-height: 11px !important;
+  letter-spacing: 0.1408px !important;
+  color: #64748b !important;
+}
+.circularProgressDiv {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.imageClass {
+  max-width: 100% !important;
+  padding-top: 1rem !important;
+  height: auto !important;
+}
+/* Add a black background color to the top navigation */
+.logo,
+.logo>svg {
+  width: 5.3125rem !important;
+  height: 4.75rem !important;
+}
+.my-custom-steps {
+  width: 468.6px;
+height: 68px;
+top: 254px;
+left: 486px;
+gap: 0.5rem;
+opacity: 0px;
+font-family: Manrope;
+font-size: 8.5296px;
+font-weight: 400;
+line-height: 14.5104px;
+letter-spacing: 0.1424px;
+color: #475569;
+
+
+
+}
+.menuLogo,
+.menuLogo>svg {
+  width: 4.125rem !important;
+  height: 3.75rem !important;
+  margin-bottom: 1.6875rem !important;
+  align-self: center !important;
+}
+.positionRelative {
+  position: relative !important;
+}
+.displayFlex {
+  display: flex !important;
+}
+
+.flexDirectionRow {
+  flex-direction: row !important;
+}
+
+.flexDirectionColumn {
+  flex-direction: column !important;
+}
+.fullWidth {
+  width: 100% !important;
+}
+
+.fullHeight {
+  height: 100% !important;
+}
+
+.alignItemsCenter {
+  align-items: center !important;
+}
+
+.justifyContentCenter {
+  justify-content: center !important;
+}
+
+.justifyContentSpaceBetween {
+  justify-content: space-between !important;
+}
+
+.flex1 {
+  flex: 1 !important;
+}
+
+.marginAuto {
+  margin: auto !important;
+}
+.marginTop24 {
+  margin-top: 1.5rem !important;
+}
+
+.marginRight12 {
+  margin-right: 0.75rem !important;
+}
+
+
+.middlePanel {
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 1.75rem !important;
+  background-color: white;
+}
+ .fullHeight {
+  height: 100% !important;
+}
+.title{
+  text-align: center!important;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif!important;
+  font-size:x-large !important;
+  margin-top: 4rem!important;
+  font-weight: bolder!important;
+
+}
+.description{
+  font-weight: lighter!important;
+font-size: medium!important;
+text-align: center!important;
+margin-top: 0.4rem!important;
+}
+.top-label .ant-form-item-label {
+  align-self: flex-start; /* Position label on top */
+}
+.submitbutton{
+  display: flex!important;
+  flex-direction: row!important;
+  justify-content: center!important;
+}
+.dateofbirth{
+
+  width: 12.5rem!important;
+}
+
+.ant.ant-form-item-label-text{
+font-weight: bold!important;
+border-radius: 25px;
+}
+.paymentbutton{
+  display: flex!important;
+  flex-direction: row!important;
+  justify-content: center!important;
+}
+/* WorkFlowPage.css */
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+  gap: 1rem; /* Gap between grid items */
+}
+
+.listContainer, .cardContainer {
+  width: 100%; /* Take up full width of the grid item */
+}
+
+.listItem {
+  padding: 1rem;
+  background-color: #f0f0f0; /* Light gray background */
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.listItem:hover {
+  background-color: #e0e0e0; /* Darker gray background on hover */
+}
+
+.cardItem {
+  width: 100%; /* Take up full width of the grid item */
+  border-radius: 0.5rem;
+  box-shadow: 0px 0.4rem 0.6rem rgba(0, 0, 0, 0.1); /* Add box shadow */
+  transition: transform 0.3s ease-in-out; /* Add transition effect */
+}
+
+.cardItem:hover {
+  transform: translateY(-0.5rem); /* Add hover effect */
+}
+/* homepage css */
+.container {
+  padding: 1rem; /* Equivalent to 24px assuming 1rem = 16px */
+}
+
+.happyThoughtsLabel {
+  font-size: 1.5rem; /* Equivalent to 24px */
+  margin-bottom: 1rem; /* Equivalent to 16px */
+}
+
+.verifyKhojiContainer {
+  position: relative;
+}
+
+/* .verifyKhojiImage {
+  max-width: 100%;
+  height: auto;
+} */
+
+.verifyKhojiText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  z-index: 1;
+  text-wrap: nowrap;
+}
+
+.verifyKhoji {
+  font-size: 1.5rem; /* Equivalent to 24px */
+  font-weight: bold;
+  display: block;
+  margin-bottom: 1rem; /* Equivalent to 16px */
+}
+
+.verifyKhojiSubtitle {
+  
+font-family: Manrope;
+font-size: 16px;
+font-weight: 700;
+line-height: 22.4px;
+letter-spacing: 0.1424px;
+text-align: left;
+
+}
+
+.verifyKhojiButton {
+  display: block;
+  margin-top: 1rem; /* Equivalent to 16px */
+}
+
+
+.verifyKhojiImage,
+.verifyKhojiImage>svg {
+  width: 33.75rem !important;
+  height: 13.5625rem !important;
+}
+.khoji-id-input {
+  margin-top: 2rem;
+  border-radius: 2rem;
+  height: 2rem;
+}
+
+.khoji-id-button {
+  margin-top: 2rem;
+  background-color: blue;
+  border-radius: 2rem;
+  width: 18rem;
+  height: 2rem;
+}
+
+.dont-have-id {
+  margin-top: 1rem;
+}
+
+.verify-khoji-form {
+  margin-top: 2rem;
+}
+
+.verify-khoji-otp-input {
+  border-radius: 2rem;
+  height: 2rem;
+}
+
+.verify-khoji-buttons {
+  margin-bottom: 1rem;
+}
+
+.verify-khoji-not-you-button {
+  border-radius: 2rem;
+  font-weight: bold;
+  margin-right: 1rem;
+  height: 2rem;
+}
+
+.verify-khoji-verify-button {
+  background-color: blue;
+  border-radius: 2rem;
+  width: 10rem;
+  height: 2rem;
+}
+.userProfileContainer {
+  display: flex;
+  flex-direction: row; /* Display cards horizontally */
+}
+
+.userProfileCard {
+  margin-right: 16px; /* Add margin between cards */
+  /* Add any other necessary styling properties */
+}
+.userProfileCard:first-child {
+  margin-left: 16px;
+}
+.centerButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+/* .container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.topPart {
+  width: 1440px;
+height: 394px;
+padding: 171px 396.08px 111px 396px;
+gap: 0px;
+opacity: 0px;
+background: #A6D4DB;
+
+
+}
+
+.bottomPart {
+  width: Hug (346.6496px)px;
+  height: Hug (313.72px)px;
+  top: 466px;
+  left: 418px;
+  gap: 50px;
+  opacity: 0px;
+  margin-top: 72px;
+  
+} */
+.topPart {
+  width: 1940px;
+height: 394px;
+padding: 171px 396.08px 111px 396px;
+gap: 0px;
+opacity: 0px;
+background: #A6D4DB;
+
+
+}
+.topPart {
+  flex: 1;
+  background-color: #A6D4DB;
+  height: Hug (313.72px)px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.bottomPart {
+  flex: 2;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.logoTitleWrapper {
+  display: flex;
+  align-items: center;
+}
+.loginRightPanel {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  justify-content: center !important;
+  padding-left: 7.625rem !important;
+  padding-right: 7.625rem !important;
+  margin-left: 27.125rem !important;
+}
+
+.loginRightPanelTitle {
+  width: 75px;
+height: 34px;
+left: 1px;
+gap: 0px;
+opacity: 0px;
+  color: #000000;
+
+}
+
+.loginRightPanelSubtitle {
+  width: 346.6496px;
+  height: 31px;
+  top: 45px;
+  gap: 0px;
+  opacity: 0px;
+  font-family: Manrope;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 30.6px;
+  letter-spacing: 0.2128px;
+  text-align: left;
+  color: #64748B;
+
+}
+
+.custom-menu {
+  font-family: Manrope;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19.6px;
+  letter-spacing: -0.7104px;
+  text-align: left;
+  color: #52565D;
+  margin-top: 2rem;
+
+}
+.center-steps {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Adjust as needed */
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Adjust as needed */
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+/* Optional: Add a max-width to limit the content width */
+.center-content > div {
+  max-width: 1200px; /* Adjust as needed */
+}
+.buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1px; /* Adjust the gap between buttons as needed */
+
+}
+
+.logoTitleWrapper {
+  display: flex;
+  align-items: center;
+}
+.customs-steps .ant-steps-item-process > .ant-steps-item-icon {
+  background-color: red;
+}
+
+.customs-steps .ant-steps-item-icon {
+  background-color: black;
+}
+.steps-card {
+  display: flex;
+  align-items: center;
+}
+
+.vertical-line {
+  border-left: 1px solid #000;
+  height: 100%;
+  margin-left: 8px;
+}
+.infolabel{
+  font-family: "Manrope";
+  font-size: "14px";
+  font-weight : 400;
+  line-Height: "1.225rem";
+  letter-Spacing: "-0.7104px";
+  text-Align: "left";
+  color: "#334155";
+                
+}
+
+.modelpopup{
+font-family: Manrope;
+font-size: 0.625rem;
+font-weight: 400;
+line-height: 0.875rem;
+letter-spacing: 0.009rem; 
+text-align: left;
 }

@@ -1,0 +1,93 @@
+html,
+body {
+  font-display: swap !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+  width: 100% !important;
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+.mainContentWrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background-color: #fff !important;
+}
+
+/* Media Queries for Ant Design breakpoints */
+@media screen and (max-width: 574px) {
+  html,
+  body {
+    font-size: 14px !important;
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+@media screen and (min-width: 576px) {
+  html,
+  body {
+    font-size: 16px !important;
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  html,
+  body {
+    font-size: 18px !important;
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+@media screen and (min-width: 992px) {
+  html,
+  body {
+    font-size: 20px !important;
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  html,
+  body {
+    font-size: 22px !important;
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  html,
+  body {
+    font-size: 24px !important;
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+
+
+
