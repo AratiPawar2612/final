@@ -49,7 +49,7 @@ export default function HomePage() {
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [failureModalVisible, setFailureModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState('khojiID');
-  const { data: session } = useSession()
+  const { data: session } = useSession();
  
 
 
@@ -59,7 +59,8 @@ export default function HomePage() {
         
         const response = await fetch('/api/getsession');
         const sessionData = await response.json();
-        console.log('Session Data:', sessionData);
+        console.log('Session Data:', sessionData?.session?.accessToken);
+        setUserName(sessionData?.session?.user?.name)
         setSessionEmail(sessionData?.session?.user?.email);
         setSessionToken(sessionData?.session?.accessToken);
         
@@ -727,7 +728,7 @@ export default function HomePage() {
           }}>
           Welcome,
           <br />
-          {session?.user?.name}
+          {username}
         </div>
 
         <Row

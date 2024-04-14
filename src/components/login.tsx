@@ -12,121 +12,121 @@ import { AuthOptions } from 'next-auth';
 export default function   Login() {
   const router = useRouter();
   const gapRem = '50px';
-   const { data: session } = useSession()
+ 
   
 
 
   useEffect(() => {
-    if(!session) {
-      router.push('/onboarding/homepage');
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/getsession');
+        const sessionData = await response.json();
   
-    }
-   
+        if (sessionData?.session) {
+          router.push('/onboarding/homepage');
+        } else {
+          console.log('User is not authenticated. Redirecting to Login page.');
+          router.push('/login'); // Redirect to login page
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData(); 
   }, []); 
   
 
+  
+
   const handleSignInGoogle = () => {
-    signIn('keycloak',  { kc_idp_hint: 'google' });
+    signIn('keycloak',{},  { kc_idp_hint: 'google' });
   };
 
   const handleSignInApple = () => {
-    signIn('keycloak', { kc_idp_hint: 'apple' });
+    signIn('keycloak', {},{ kc_idp_hint: 'apple' });
   };
 
-  if (session) {
-    return (
-      <>
-        Signed in as {session?.user?.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
-  }
-  return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn('keycloak',  { kc_idp_hint: 'google' })}>Sign in</button>
-    </>
-  )
 
-  // return (
-  //   <MainLayout>
-  //     <div className="topPart">
-  //       <Row>
-  //         <Col>
-  //           <div className="logoTitleWrapper">
-  //             <div
-  //               style={{
-  //                 display: 'flex',
-  //                 width: 'Hug (647.92px)px',
-  //                 height: 'Hug (112px)px',
-  //                 top: '171px',
-  //                 left: '396px',
-  //                 gap: '35px',
-  //                 opacity: '0px',
-  //               }}>
-  //               <LoginIcon />
-  //               <div className="loginTitle">
-  //                 Welcome to
-  //                 <div />
-  //                 Tejgyan Global Foundation
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </Col>
-  //       </Row>
-  //     </div>
+  return (
+    <MainLayout>
+      <div className="topPart">
+        <Row>
+          <Col>
+            <div className="logoTitleWrapper">
+              <div
+                style={{
+                  display: 'flex',
+                  width: 'Hug (647.92px)px',
+                  height: 'Hug (112px)px',
+                  top: '171px',
+                  left: '396px',
+                  gap: '35px',
+                  opacity: '0px',
+                }}>
+                <LoginIcon />
+                <div className="loginTitle">
+                  Welcome to
+                  <div />
+                  Tejgyan Global Foundation
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </div>
 
       
-  //       <div className="bottomPart">
-  //         <Row justify="center">
-  //           <Col span={24}>
-  //             <label className="loginRightPanelTitle">Sign in</label>
-  //           </Col>
-  //           <Col span={24}>
-  //             <label className="loginRightPanelSubtitle">
-  //               Please Sign in using
-  //             </label>
-  //           </Col>
-  //           <Col span={24} style={{ textAlign: 'center', marginTop: gapRem }}>
-  //             <div className="buttonsContainer">
-  //               <Button
-  //                 icon={<GoogleIcon />}
-  //                 className="continueWithGoogleButton"
-  //                 onClick={handleSignInGoogle}>
-  //                 Continue With Google
-  //               </Button>
-  //               <Button
-  //                 icon={<AppleIcon />}
-  //                 className="continueWithAppleButton"
-  //                 onClick={handleSignInApple}>
-  //                 Continue With Apple
-  //               </Button>
-  //             </div>
-  //           </Col>
-  //         </Row>
-  //         <Row justify="center">
-  //           <Col span={24}>
-  //             <div
-  //               style={{
-  //                 width: '305px',
-  //                 height: '60px',
-  //                 top: '127.72px',
-  //                 left: '40px',
-  //                 gap: ' 0px',
-  //                 opacity: '0px',
-  //                 marginRight: '2rem',
-  //               }}>
-  //               <InfoIcon />
-  //               <label className="infolabel">
-  //                 {' '}
-  //                 Lorem ipsum Lorem ipsum doplet lorem ipsum doplet sit. Lorem
-  //                 ipsum Lorem ipsum doplet lorem ipsum doplet sit
-  //               </label>{' '}
-  //             </div>
-  //           </Col>
-  //         </Row>
-  //       </div>
+        <div className="bottomPart">
+          <Row justify="center">
+            <Col span={24}>
+              <label className="loginRightPanelTitle">Sign in</label>
+            </Col>
+            <Col span={24}>
+              <label className="loginRightPanelSubtitle">
+                Please Sign in using
+              </label>
+            </Col>
+            <Col span={24} style={{ textAlign: 'center', marginTop: gapRem }}>
+              <div className="buttonsContainer">
+                <Button
+                  icon={<GoogleIcon />}
+                  className="continueWithGoogleButton"
+                  onClick={handleSignInGoogle}>
+                  Continue With Google
+                </Button>
+                <Button
+                  icon={<AppleIcon />}
+                  className="continueWithAppleButton"
+                  onClick={handleSignInApple}>
+                  Continue With Apple
+                </Button>
+              </div>
+            </Col>
+          </Row>
+          <Row justify="center">
+            <Col span={24}>
+              <div
+                style={{
+                  width: '305px',
+                  height: '60px',
+                  top: '127.72px',
+                  left: '40px',
+                  gap: ' 0px',
+                  opacity: '0px',
+                  marginRight: '2rem',
+                }}>
+                <InfoIcon />
+                <label className="infolabel">
+                  {' '}
+                  Lorem ipsum Lorem ipsum doplet lorem ipsum doplet sit. Lorem
+                  ipsum Lorem ipsum doplet lorem ipsum doplet sit
+                </label>{' '}
+              </div>
+            </Col>
+          </Row>
+        </div>
      
-  //   </MainLayout>
-  // );
+    </MainLayout>
+  );
 }

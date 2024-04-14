@@ -19,16 +19,39 @@ const CustomMenu = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+  async function logout() {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        console.log('Logout successful');
+        // Perform any additional actions after successful logout
+      } else {
+        console.error('Logout failed:', response.statusText);
+        // Handle logout failure
+      }
+    } catch (error) {
+      console.error('Error logging out:');
+      // Handle error
+    }
+  }
 
   const handleTopMenuClick = (e: any) =>
     console.log('Top Menu Clicked:', e.key);
   const handleLogout = () => {
-    // Handle logout logic here
+    logout();
   }
 
   const handleHome = () => {
     router.push('/onboarding/homepage');
+   
   };
+  
 
   const menuItems = [
     { key: 'home', icon: <HomeOutlined />, label: 'Home', onClick: handleHome },
@@ -67,10 +90,7 @@ const CustomMenu = () => {
             <Item
               key={item.key}
               onClick={item.onClick}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}>
+              >
               {item.icon}
               <span>{item.label}</span>
             </Item>

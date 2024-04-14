@@ -13,6 +13,9 @@ export default function CompleteAndApplyPage() {
   const router = useRouter();
   const [data, setData] = useState<any>([]);
   const [selectedValues, setSelectedValues] = useState([]);
+  const [purposeOptions, setPurposeOptions] = useState<any[]>([]); // Define purposeOptions state
+  const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
+
 
   const handleChange = (selectedItems: any) => {
     setSelectedValues(selectedItems);
@@ -23,91 +26,60 @@ export default function CompleteAndApplyPage() {
   };
 
   useEffect(() => {
-    const loadMoreData = () => {
-      axios
-        .get(
-          'https://randomuser.me/api/?results=2&inc=name,gender,email,nat,picture&noinfo',
-        )
-        .then((response: AxiosResponse<any>) => {
-          // Handle the successful response.
-          const postData = response.data;
-          setData(postData.results);
-        })
-        .catch((error: AxiosError) => {
-          // Handle any errors that occurred during the request.
+    const loadMoreData = async() => {
+      const sessionresponse = await fetch('/api/getsession');
+      const sessionData = await sessionresponse.json();
+      console.log('Session Data:', sessionData?.session?.accessToken);
+     
 
-          if (error.response) {
-            // The request was made, but the server responded with a status code other than 2xx.
-            console.error(
-              'Server responded with an error:',
-              error.response.status,
-            );
-            console.error('Data:', error.response.data);
-          } else if (error.request) {
-            // The request was made, but no response was received.
-            console.error(
-              'No response received. Check your internet connection or the server.',
-            );
-          } else {
-            // Something happened in setting up the request that triggered an error.
-            console.error('Error:', error.message);
-          }
-        });
-    };
+            const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
+                    const userResponse = await fetch(userApiUrl, {
+                        headers: {
 
-    loadMoreData();
+                            Authorization: `Bearer ${ sessionData?.session?.accessToken}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    const userDataResponse = await userResponse.json();
+                    const userDataResults1 = userDataResponse.results ?? [];
+                  const userDataResults = userDataResponse.results[0] ?? [];
+                    setData(userDataResults1);
+                    console.log("userDataResults",userDataResponse.results[0].user?.id);
+                    const userid=userDataResponse.results[0].user?.id;
+                    const purposeApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/?user=${userid}`;
+const purposeResponse = await fetch(purposeApiUrl, {
+    headers: {
+        Authorization: `Bearer ${sessionData?.session?.accessToken}`,
+        "Content-Type": "application/json",
+    },
+});
+const purposeDataResponse = await purposeResponse.json();
+
+if (purposeDataResponse.results.length > 0) {
+  const purpose = purposeDataResponse.results[0];
+  const options = [{
+      key: purpose.id,
+      value: purpose.id,
+      label: purpose.label
+  }];
+  // Now you have options array containing data from the first record of the API response
+  console.log(options);
+  setPurposeOptions(options); // Update purposeOptions state
+                  
+} else {
+  console.error("No data available in purposeDataResponse.results");
+}
+                    
+                   
+                        
+                      
+                  
+  };
+
+  loadMoreData();
   }, []);
 
-  //   function buildUserCard(user: any, index: any) {
-  //     return user ? (
-  //       <div
-  //         className={`${
-  //           index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
-  //         }`}
-  //         key={user.id}
-  //       >
-  //         <div className="userProfileTopSection" />
-  //         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-  //           <Avatar className="userProfileImage" src={user.picture.large} />
-  //           <div className="userProfileVerifiedBadge">
-  //             <label className="userProfileVerifiedBadgeLabel">Verified</label>
-  //             <VerifiedIcon />
-  //           </div>
-  //         </div>
-  //         <div className="displayFlex flexDirectionColumn marginLeft16">
-  //           <label className="userNameLabel">{user.email}</label>
-  //           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-  //             <div className="displayFlex flexDirectionColumn flex1">
-  //               <label className="userProfileInfoTitle">Tejashtan</label>
-  //               <label className="userProfileInfoValue">Lorem Ipsum</label>
-  //             </div>
-  //             <div className="displayFlex flexDirectionColumn flex1">
-  //               <label className="userProfileInfoTitle">Address</label>
-  //               <label className="userProfileInfoValue">Lorem Ipsum</label>
-  //             </div>
-  //             <div className="displayFlex flexDirectionColumn flex1">
-  //               <label className="userProfileInfoTitle">DOB</label>
-  //               <label className="userProfileInfoValue">Lorem Ipsum</label>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     ) : (
-  //       <div className="userProfilePlaceholderCard" />
-  //     );
-  //   }
-
-  //   function buildProfiles() {
-  //     return (
-  //       <div className="userProfileContainer">
-  //         {data.map((user:any, index:any) => (
-  //           <div key={index} className="userProfileCard">
-  //             {buildUserCard(user, index)}
-  //           </div>
-  //         ))}
-  //       </div>
-  //     );
-  //   }
+  
   function buildUserCard(user: any, index: any) {
     return user ? (
       <div
@@ -117,26 +89,34 @@ export default function CompleteAndApplyPage() {
         key={user.id}>
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-          <Avatar className="userProfileImage" src={user.picture.large} />
+          <Avatar className="userProfileImage" src={user.avtar} />
           <div className="userProfileVerifiedBadge">
             <label className="userProfileVerifiedBadgeLabel">Verified</label>
             <VerifiedIcon />
           </div>
         </div>
         <div className="displayFlex flexDirectionColumn marginLeft16">
-          <label className="userNameLabel">{user.email}</label>
+          <label className="userNameLabel">{user.user.email}</label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div className="displayFlex flexDirectionColumn flex1">
-              <label className="userProfileInfoTitle">Tejashtan</label>
-              <label className="userProfileInfoValue">Lorem Ipsum</label>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
+              <label className="userProfileInfoTitle">Name</label>
+              <label className="userProfileInfoValue">
+                {user.user.first_name} {user.user.last_name}{' '}
+              </label>
             </div>
-            <div className="displayFlex flexDirectionColumn flex1">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
               <label className="userProfileInfoTitle">Address</label>
-              <label className="userProfileInfoValue">Lorem Ipsum</label>
+              <label className="userProfileInfoValue">{user.location}</label>
             </div>
-            <div className="displayFlex flexDirectionColumn flex1">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
               <label className="userProfileInfoTitle">DOB</label>
-              <label className="userProfileInfoValue">Lorem Ipsum</label>
+              <label className="userProfileInfoValue">{user.dob}</label>
             </div>
           </div>
         </div>
@@ -198,14 +178,13 @@ export default function CompleteAndApplyPage() {
         className="verifyKhojiSubtitle"
         style={{ whiteSpace: 'pre-wrap', marginLeft: '2rem' }}>
         {`Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever`}
+       `}
       </div>
 
       <Row gutter={16}>{buildProfiles()}</Row>
       <div>
         <Row gutter={[16, 16]}>
-          {' '}
-          {/* Adjust the values as per your spacing requirement */}
+          
           <Col span={4}>
             <div style={{ fontSize: '0.9rem', marginLeft: '1rem' }}>
               Preferred Date
@@ -218,21 +197,20 @@ export default function CompleteAndApplyPage() {
             <div style={{ fontSize: '0.9rem', marginLeft: '1rem' }}>
               Purpose of Darshan
             </div>
-            <Select
-              mode="multiple"
-              style={{ width: '100%', height: '2rem' }}
-              placeholder="Select Purpose"
-              value={selectedValues} // Controlled by state
-              onChange={handleChange} // Handle change event
-            >
-              <Option value="option1">Lorem Ipsum</Option>
-              <Option value="option2">Lorem Dopler</Option>
-              <Option value="option3">Lorem Dopler sit</Option>
-              <Option value="option1">Lorem Ipsum</Option>
-              <Option value="option2">Lorem Dople</Option>
-              <Option value="option3">Lorem Dopler sit</Option>
-              {/* Add more options as needed */}
-            </Select>
+            
+                    <Select
+                    mode='tags'
+  style={{ width: '100%', height: 'auto' }}
+  placeholder="Select Purpose"
+  value={purposeOptions} // Set the value of the selected option
+  onChange={value => setSelectedPurpose(value)} // Update selectedPurpose state when an option is selected
+>
+  {purposeOptions.map(option => (
+    <Option key={option.key} value={option.value}>
+      {option.title}
+    </Option>
+  ))}
+</Select>
           </Col>
         </Row>
       </div>
@@ -241,7 +219,7 @@ export default function CompleteAndApplyPage() {
         <div style={{ fontSize: '0.9rem', marginTop: '2rem' }}>Note added</div>
         <div className="verifyKhojiSubtitle" style={{ whiteSpace: 'pre-wrap' }}>
           {`Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever`}
+         `}
         </div>
       </div>
       <div style={{ marginTop: '2rem' }}>

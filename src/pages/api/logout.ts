@@ -1,36 +1,51 @@
-// pages/api/logout.ts
+// Import 'NextApiRequest' from the correct package
+import { NextApiRequest, NextApiResponse } from 'next';
 
-import { NextRequest, NextResponse } from 'next/server';
-import { JWT, getToken } from 'next-auth/jwt';
+// Import 'destroyCookie' for clearing cookies
+import { destroyCookie } from 'nookies';
 
-function logoutParams(token: JWT): Record<string, string> {
+function logoutParams(token: any): Record<string, string> {
   return {
     id_token_hint: token.idToken as string,
-    post_logout_redirect_uri: process.env.NEXTAUTH_URL?? '',
+    post_logout_redirect_uri: process.env.NEXTAUTH_URL ?? '',
   };
 }
 
 function handleEmptyToken() {
   const response = { error: 'No session present' };
   const responseHeaders = { status: 400 };
-  return NextResponse.json(response, responseHeaders);
+  return response; // Return response directly without using NextResponse.json
 }
 
-function sendEndSessionEndpointToURL(token: JWT) {
+async function logoutUser(req: NextApiRequest, res: NextApiResponse) {
+  // Clear session data or cookies
+  destroyCookie({ res }, 'your_session_cookie_name'); // Corrected syntax
+}
+
+function sendEndSessionEndpointToURL(token: any) {
   const endSessionEndPoint = new URL(
     `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout`,
   );
   const params: Record<string, string> = logoutParams(token);
   const endSessionParams = new URLSearchParams(params);
   const response = { url: `${endSessionEndPoint.href}/?${endSessionParams}` };
-  return NextResponse.json(response);
+  return response; // Return response directly without using NextResponse.json
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const token = await getToken({ req });
-    if (token) {
-      return sendEndSessionEndpointToURL(token);
+    const sessionresponse = await fetch('/api/getsession');
+    const sessionData = await sessionresponse.json();
+    console.log('Session Data:', sessionData?.session?.accessToken);
+   
+   // const token = await getToken({ req });
+    if (sessionData?.session?.accessToken) {
+      // Logout the user
+      await logoutUser(req, res);
+      
+      // Once user is logged out, send end session endpoint URL
+      const endSessionResponse = sendEndSessionEndpointToURL(sessionData?.session?.accessToken);
+      return endSessionResponse; // Return response directly without using NextResponse.json
     }
     return handleEmptyToken();
   } catch (error) {
@@ -41,6 +56,6 @@ export async function GET(req: NextRequest) {
     const responseHeaders = {
       status: 500,
     };
-    return NextResponse.json(response, responseHeaders);
+    return response; // Return response directly without using NextResponse.json
   }
 }

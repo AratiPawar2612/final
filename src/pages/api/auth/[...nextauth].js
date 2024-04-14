@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import KeycloakProvider from 'next-auth/providers/keycloak';
 
+
+
 export const authOptions = {
  
   providers: [
@@ -23,6 +25,31 @@ export const authOptions = {
       // Send properties to the client, like an access_token from a provider.
       session.accessToken = token.accessToken
       return session
+    },
+    async refreshToken({ token, account, isNewSession }) {
+      
+      const response = await fetch('https://your-keycloak-domain/auth/realms/your-realm/protocol/openid-connect/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          grant_type: 'refresh_token',
+          refresh_token: token.refreshToken,
+          client_id: process.env.KEYCLOAK_CLIENT_ID,
+          client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Failed to refresh token');
+      }
+      return {
+        ...token,
+        accessToken: data.access_token,
+        accessTokenExpires: Date.now() + data.expires_in * 1000,
+        refreshToken: data.refresh_token ?? token.refreshToken, // Use existing refresh token if not returned
+      };
     }
   }
 }

@@ -4,10 +4,71 @@ import { Button, Divider, Steps, Card, Row, Col, Avatar } from 'antd';
 import MainLayout from '@/components/mainlayout';
 import CustomMenu from '@/components/custommenu';
 import { ArrowLeftOutlined, UserOutlined } from '@ant-design/icons';
+import { useEffect,useState } from 'react';
 
 export default function ViewStatusPage() {
   const { Step } = Steps;
   const router = useRouter();
+  const [data, setData] = useState<any>([]);
+  const[username,serUsername]=useState('');
+
+
+  useEffect(() => {
+    const loadMoreData = async() => {
+      const sessionresponse = await fetch('/api/getsession');
+      const sessionData = await sessionresponse.json();
+      console.log('Session Data:', sessionData?.session?.accessToken);
+      serUsername(sessionData?.session?.user.name);
+     
+
+            const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
+                    const userResponse = await fetch(userApiUrl, {
+                        headers: {
+
+                            Authorization: `Bearer ${ sessionData?.session?.accessToken}`,
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    const userDataResponse = await userResponse.json();
+                    const userDataResults1 = userDataResponse.results ?? [];
+      
+                    setData(userDataResults1);
+                    console.log("userDataResults",userDataResponse.results[0].user?.id);
+
+                    const userid=userDataResponse.results[0].user?.id;
+                    const purposeApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/?user=${userid}`;
+const purposeResponse = await fetch(purposeApiUrl, {
+    headers: {
+        Authorization: `Bearer ${sessionData?.session?.accessToken}`,
+        "Content-Type": "application/json",
+    },
+});
+const purposeDataResponse = await purposeResponse.json();
+
+if (purposeDataResponse.results.length > 0) {
+  const purpose = purposeDataResponse.results[0];
+  const options = [{
+      key: purpose.id,
+      value: purpose.id,
+      label: purpose.label
+  }];
+  // Now you have options array containing data from the first record of the API response
+  console.log(options);
+  //setPurposeOptions(options); // Update purposeOptions state
+                  
+} else {
+  console.error("No data available in purposeDataResponse.results");
+}
+                    
+                   
+                        
+                      
+                  
+  };
+
+  loadMoreData();
+  }, []);
+
 
   const cardData = [
     { title: 'Lorem Ipsum 1', content: 'Content for card 1' },
@@ -61,8 +122,8 @@ export default function ViewStatusPage() {
         {' '}
         Congratulations! You’re application had been submitted successfully
       </div>
-      <div style={{ marginTop: '1rem', marginLeft: '36rem' }}>
-        <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>Hi Xyz,</div>
+      <div style={{ marginTop: '1rem', marginLeft: '33.5rem' }}>
+        <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>Hi {username},</div>
         <label style={{ textWrap: 'nowrap' }}>
           {`Here's the status of your Krupa Darshan application`}
         </label>

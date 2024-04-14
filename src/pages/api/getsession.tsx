@@ -1,9 +1,8 @@
 // pages/api/token.js
-import { getServerSession } from "next-auth/next"
-import { authOptions } from '../api/auth/[...nextauth]';
+import { getSession } from 'next-auth/react';
 
 export default async function handler(req: any, res: any) {
-  const session = await getServerSession(authOptions);
+  const session = await getSession({ req });
 
   if (session) {
     res.status(200).json({ session });

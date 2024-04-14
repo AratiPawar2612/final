@@ -1,4 +1,4 @@
-"use strict"
+
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
@@ -23,10 +23,9 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import { VerifiedIcon } from '@/icons/icon';
 import { ArrowLeftIcon } from '@/icons/icon';
 import { PlusOutlined } from '@ant-design/icons';
-import { useSession } from 'next-auth/react';
-import { getServerSession } from "next-auth/next"
-import { authOptions } from '../api/auth/[...nextauth]';
-authOptions
+import moment from 'moment';
+
+
 const { Option } = Select;
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -51,9 +50,26 @@ export default function AddPersonalDeatilsPage() {
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [options, setOptions] = useState<Option[]>([]); // Specify Option[] as the type
-  const { data: session } = useSession()
-  console.log("session",session?.user?.name)
- 
+  const [userid,setUserid]=useState('');
+  const [token, setToken] = useState('');
+  const [startdate, setStartdate] = useState('');
+  const [enddate, setEnddate] = useState('');
+  const [addnote, setAddNote] = useState('');
+  const [khojirel, setKhojirel] = useState('');
+  const [guestrel, setguestrel] = useState('');
+  const [purposeOptions, setPurposeOptions] = useState<any[]>([]); // Define purposeOptions state
+  const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
+  const isFamilyKrupaDarshan: boolean | undefined =
+  typeof router.query === 'boolean' ? router.query : undefined;
+  const [selectedRecord, setSelectedRecord] = useState(null); // State to store the selected record
+  const [searchdata, setsearchdata] = useState([]); // State to store the fetched data
+  const [form] = Form.useForm(); // Create a form instance
+  const [dobValue, setDobValue] = useState<Date | null>(null);
+  const [khojiuserid, setkhojiuserid] = useState('');
+  const [userdata, setUserData] = useState<any>([]);
+  const handleRowSelect = (record:any) => {
+    setSelectedRecord(record); // Update the selected record state
+  };
 
   const handleSearch = (value:any) => {
         const newOptions: Option[] = [
@@ -64,127 +80,265 @@ export default function AddPersonalDeatilsPage() {
     setOptions(newOptions);
   };
 
-  useEffect(() => {
-    const loadMoreData = async() => {
+    useEffect(() => {
+      const loadMoreData = async() => {
+        const sessionresponse = await fetch('/api/getsession');
+        const sessionData = await sessionresponse.json();
+        console.log('Session Data:', sessionData?.session?.accessToken);
+        setToken(sessionData?.session?.accessToken);
 
-      axios
-        .get(
-          'https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo',
-        )
-        .then((response: AxiosResponse<any>) => {
-          // Handle the successful response.
-          const postData = response.data;
-          setData(postData.results);
-        })
-        .catch((error: AxiosError) => {
-          // Handle any errors that occurred during the request.
+        const purposeApiUrl = 'https://hterp.tejgyan.org/django-app/event/purposes/';
+                      const purposeResponse = await fetch(purposeApiUrl, {
+                          headers: {
 
-          if (error.response) {
-            // The request was made, but the server responded with a status code other than 2xx.
-            console.error(
-              'Server responded with an error:',
-              error.response.status,
-            );
-            console.error('Data:', error.response.data);
-          } else if (error.request) {
-            // The request was made, but no response was received.
-            console.error(
-              'No response received. Check your internet connection or the server.',
-            );
-          } else {
-            // Something happened in setting up the request that triggered an error.
-            console.error('Error:', error.message);
-          }
-        });
+                              Authorization: `Bearer ${ sessionData?.session?.accessToken}`,
+                              "Content-Type": "application/json",
+                          },
+                      });
+                      const purposeDataResponse = await purposeResponse.json();
+                      const options = purposeDataResponse.results.map((purpose: any) => ({
+                        key: purpose.id,
+                        value: purpose.id,
+                        label: purpose.label
+                      }));
+                    
+                     setPurposeOptions(options); // Update purposeOptions state
+                      console.log("purposeDataResponse",purposeDataResponse);
+                      // const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
+                      const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/me/';
+                      const userResponse = await fetch(userApiUrl, {
+                          headers: {
+
+                              Authorization: `Bearer ${ sessionData?.session?.accessToken}`,
+                              "Content-Type": "application/json",
+                          },
+                      });
+                      const userDataResults = await userResponse.json();
+                      //const userDataResults1 = userDataResponse.results ?? [];
+                   // const userDataResults =  userDataResponse;
+                      setData(userDataResults);
+                      console.log("userDataResults",userDataResults);
+                     
+                          setFirstName(userDataResults?.user?.first_name);
+                          setLastName(userDataResults?.user?.last_name);
+                          setMobile(userDataResults?.contact_no);
+                          setEmail(userDataResults?.user?.email);
+                          setUserid(userDataResults?.user?.id)
+                          console.log(userDataResults?.user?.email);
+if(true)
+  {
+    const getRequestOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${sessionData?.session?.accessToken}`
+      }
+    };
+  
+    // Make the GET request
+    const getResponse = await fetch('https://hterp.tejgyan.org/django-app/event/participants/', getRequestOptions);
+    if (!getResponse.ok) {
+      throw new Error('Network response was not ok');
+    }
+  
+    // Parse the response data for GET request
+    const responseData = await getResponse.json();
+    console.log('Response data from GET request:', responseData);
+    const participantdata = responseData.results ?? [];
+    setUserData(participantdata);
+
+  }
+                        
+                        
+                    
     };
 
     loadMoreData();
   }, []);
-  useEffect(() => {
-    if (data.length > 0) {
-      setVisibleData(data.slice(0, 2));
-      setRemainingData(data.slice(2));
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (userdata.length > 0) {
+  //      setVisibleData(data(0, 2));
+  //     setRemainingData(userdata.slice(2));
+  //   }
+  // }, [data]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
- 
+  const [isModalVisible1, setIsModalVisible1] = useState(false);
+
   const showModal = () => {
     setIsModalVisible(true);
     setInputType('khoji');
     setIsPopupVisible(true);
   };
+
+  const handleaddclick = async () => {
   
+    try {
+     
+      const requestBody = {
+      status: "PUB",
+      sort: 1,
+      user:userid,
+      relation_with:khojiuserid,
+      relation: khojirel.toUpperCase()
+    };
+    
+    // Convert JavaScript object to JSON string
+    const requestBodyJSON = JSON.stringify(requestBody);
+    
+    // Fetch request configuration
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: requestBodyJSON
+    };
+    
+    fetch('https://hterp.tejgyan.org/django-app/event/participants/', requestOptions)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Response from server:', data);
+        alert("Participant Added successfully");
+        form.resetFields();
+      })
+      .catch(error => {
+        console.error('There was a problem with your fetch operation:', error);
+      });
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+   
+  const handleseachclick = async () => {
+    // let url ='https://hterp.tejgyan.org/django-app/iam/users/?';
+    let url ='';
+    try {
+      const requestOption = {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+      // if(khojiID)
+      //   {
+      //     url = `192.168.1.248:8000/iam/users/?khoji_id=${khojiID}`;
+
+      //   }
+      //   else if(firstName){
+      //     url = `192.168.1.248:8000/iam/users/?firat_Name=${firstName}&last_name=${lastName}`;
+      //   }
+      const response = await fetch(`https://hterp.tejgyan.org/django-app/iam/users/?khoji_id=${khojiID}`, requestOption);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseData = await response.json();
+     
+      console.log("search data",responseData.results[0]);
+      setkhojiuserid(responseData.results[0].user.id);
+    ;
+      if (searchdata.length = 1) {
+        console.log("hi");
+        form.setFieldsValue(responseData.results[0]);
+       
+        setsearchdata(responseData.results[0]);
+        console.log("searchdata[0]", searchdata[0]);
+    
+      } else {
+        setsearchdata(responseData.results[0]);
+     
+       
+      }
+     
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+   
+    
+  const renderRows = () => {
+    return data.map((record:any) => (
+      <tr key={record.id}>
+        <td>{record.id}</td>
+        <td>{record.name}</td>
+        <td>{record.email}</td>
+        <td>
+          <button onClick={() => handleRowSelect(record)}>Select</button>
+        </td>
+      </tr>
+    ));
+  };
 
 
   const onclickNextBtn  = async () => {
-    try {
-      
-         const session = await getServerSession(authOptions);
-      
-      const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
-                    const userResponse = await fetch(userApiUrl, {
-                        headers: {
-
-                            Authorization: `Bearer ${session?.accessToken}`,
-                            "Content-Type": "application/json",
-                        },
-                    });
-                    const userDataResponse = await userResponse.json();
-                  const userDataResults = userDataResponse.results ?? [];
-                   // setUserData(userDataResults);
-                    setData(userDataResults);
-                    console.log("userDataResults",userDataResults);
-
-
-
-
-//       const baseURL = 'https://hterp.tejgyan.org/django-app/';
-//       const requestBody = {
-//         "user": "76f62a58-5404-486d-9afc-07bded328704",
-//   "status": "Submitted",
-//   "sort": null,
-//   "have_participant": false,  
-//   "participant": "string",    
-//   "purpose": "string",	     
-//   "preferred_start_date": "2019-08-24T14:15:22Z",
-//   "preferred_end_date": "2019-08-24T14:15:22Z",
-//   "khoji_note": {
-//     "property1": null,
-//     "property2": null
-//   },
-//   "dkd_note": {
-//     "property1": null,
-//     "property2": null
-//   }, 
-//   headers: {
-
-//     Authorization: `Bearer ${session?.accessToken}`,
-//     "Content-Type": "application/json",
-// },
-//       };
-  
-//       // Make the POST request
-//       const response = await axios.post(`${baseURL}/event/applications/`, requestBody);
-  
-//       // Handle the response
-//       console.log('Response:', response.data);
-// //       // Add your logic here to handle the response as needed
-    } catch (error: unknown) {
-      // If the error is of type AxiosError, handle it
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError;
-        console.error('Axios Error:', axiosError.message);
-        console.error('Axios Error Response:', axiosError.response);
-        // Add your error handling logic here
-      } else {
-        // Handle other types of errors
-        console.error('Unknown Error:', error);
-        // Add your error handling logic here
+   
+    const requestBody = {
+      user: userid,
+      status: "Submitted",
+      sort: null,
+      have_participant: isFamilyKrupaDarshan === true, // Assign true or false based on isFamilyKrupaDarshan
+      participant: null, 
+      // purpose: selectedPurpose?.map((purpose) => purpose?.id),
+      purpose: selectedPurpose,
+      preferred_start_date: startdate,
+      preferred_end_date: enddate,
+      khoji_note: {
+        property1: addnote,
+        property2: addnote
       }
+    };
+    const formData = new FormData();
+
+    Object.entries(requestBody).forEach(([key, value]) => {
+      if (value === null || value === undefined) {
+        // Handle null or undefined values by converting them to an empty string
+        formData.append(key, '');
+      } else if (typeof value === 'boolean') {
+        // Handle boolean values by converting them to a string representation
+        formData.append(key, value.toString());
+      } else if (typeof value === 'object') {
+        // Handle objects (like khoji_note) by stringifying them
+        formData.append(key, JSON.stringify(value));
+      } else {
+        // For other types (like string or number), directly append the value
+        formData.append(key, String(value));
+      }
+    });
+    
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    };
+    console.log("request body",requestBody)
+    
+    // Make the POST request
+    try {
+      const response = await fetch('https://hterp.tejgyan.org/django-app/event/applications/', requestOptions);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      else{
+        alert("Application Submitted successfully")
+        router.push('/krupadarshan/completeandapply');
+      }
+      const data = await response.json();
+      console.log('API Response:', data);
+    } catch (error) {
+      console.error('There was a problem with your fetch operation:');
     }
-  // router.push('/krupadarshan/completeandapply');
+  
   };
+ 
+  
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -219,16 +373,17 @@ export default function AddPersonalDeatilsPage() {
     }
   };
   const renderInputComponent = () => {
-    // Render input components based on inputType state
+  
     if (inputType === 'khoji') {
       return (
-        <Form>
+        <Form form={form}> 
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
                 label="Enter Khoji ID"
                 labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}>
+                wrapperCol={{ span: 24 }}
+                name="khojiID">
                 <Input
                   placeholder="Enter Khoji ID"
                   value={khojiID}
@@ -249,14 +404,15 @@ export default function AddPersonalDeatilsPage() {
                 label="First Name"
                 name={['user', 'first_name']}
                 labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}>
+                wrapperCol={{ span: 24 }}
+               >
                 <Input
                   style={{
                     borderRadius: '2rem',
                     height: '2rem',
                     width: 'auto',
                   }}
-                  value={firstName}
+                 
                   onChange={e => setFirstName(e.target.value)}
                 />
               </Form.Item>
@@ -273,35 +429,46 @@ export default function AddPersonalDeatilsPage() {
                     height: '2rem',
                     width: 'auto',
                   }}
-                  value={lastName}
+                  
                   onChange={e => setLastName(e.target.value)}
                 />
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Date of birth"
-                name="purpose"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}>
-                <DatePicker
-                  style={{
-                    borderRadius: '2rem',
-                    height: '2rem',
-                    width: '100%',
-                  }}
-                  value={dateOfBirth}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
+          {/* <Row gutter={16}>
+                <Col span={24}>
+                <Form.Item
+  label="Date of birth"
+  name="dob" // Make sure this matches the name of the field in your form
+  labelCol={{ span: 24 }}
+  wrapperCol={{ span: 24 }}
+>
+  <DatePicker
+    style={{
+      borderRadius: '2rem',
+      height: '2rem',
+      width: '100%',
+    }}
+    // Set the value of dob here
+    // Assuming dobValue is the variable containing the date of birth value
+    value={moment(dobValue)}
+    onChange={(date, dateString) => {
+      if (date) {
+        setDobValue(date.toDate()); // Convert Moment object to Date
+      } else {
+        setDobValue(null);
+      }
+    }}// Assuming setDobValue is the function to update the dobValue state
+  />
+</Form.Item>
+     
+                </Col>
+            </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
                 label="Email ID"
-                name="email"
+                name={['user', 'email']}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}>
                 <Input
@@ -310,7 +477,7 @@ export default function AddPersonalDeatilsPage() {
                     height: '2rem',
                     width: '100%',
                   }}
-                  value={email}
+                 
                   onChange={e => setEmail(e.target.value)}
                 />
               </Form.Item>
@@ -320,7 +487,7 @@ export default function AddPersonalDeatilsPage() {
             <Col span={24}>
               <Form.Item
                 label="Mobile Number"
-                name="mobile"
+                name="contact_no"
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}>
                 <Input
@@ -329,14 +496,13 @@ export default function AddPersonalDeatilsPage() {
                     height: '2rem',
                     width: '100%',
                   }}
-                  value={mobile}
                   onChange={e => setMobile(e.target.value)}
                 />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={24}>
               <Form.Item
                 label="Choose Purpose of Darshan"
@@ -368,7 +534,7 @@ export default function AddPersonalDeatilsPage() {
                 />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -382,6 +548,8 @@ export default function AddPersonalDeatilsPage() {
                     height: '2rem',
                     width: '100%',
                   }}
+                  value={khojirel}
+                  onChange={e => setKhojirel(e.target.value)}
                 />
               </Form.Item>
             </Col>
@@ -396,9 +564,27 @@ export default function AddPersonalDeatilsPage() {
               marginBottom: '1rem',
               borderRadius:"1rem",
               fontSize:"11.38px"
-            }}>
+            }}
+            onClick={handleaddclick}
+            >
             Add
           </Button>
+          <Button
+            type="primary"
+            style={{
+              marginTop: '1rem',
+              backgroundColor: 'black',
+              width: '100%',
+              height:"2.4888rem",
+              marginBottom: '1rem',
+              borderRadius:"1rem",
+              fontSize:"11.38px"
+            }}
+            onClick={handleseachclick}
+            >
+            Search
+          </Button>
+          
         </Form>
       );
     } else if (inputType === 'guest') {
@@ -408,7 +594,7 @@ export default function AddPersonalDeatilsPage() {
             <Col span={12}>
               <Form.Item
                 label="First Name"
-                name={['user', 'first_name']}
+                // name={['user', 'first_name']}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}>
                 <Input
@@ -417,7 +603,7 @@ export default function AddPersonalDeatilsPage() {
                     height: '2rem',
                     width: 'auto',
                   }}
-                  value={firstName}
+                  // value={firstName}
                   onChange={e => setFirstName(e.target.value)}
                 />
               </Form.Item>
@@ -425,7 +611,7 @@ export default function AddPersonalDeatilsPage() {
             <Col span={12}>
               <Form.Item
                 label="Last Name"
-                name={['user', 'last_name']}
+                // name={['user', 'last_name']}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}>
                 <Input
@@ -434,7 +620,7 @@ export default function AddPersonalDeatilsPage() {
                     height: '2rem',
                     width: 'auto',
                   }}
-                  value={lastName}
+                  // value={lastName}
                   onChange={e => setLastName(e.target.value)}
                 />
               </Form.Item>
@@ -496,7 +682,7 @@ export default function AddPersonalDeatilsPage() {
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={24}>
               <Form.Item
                 label="Choose Purpose of Darshan"
@@ -512,8 +698,8 @@ export default function AddPersonalDeatilsPage() {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row gutter={16}>
+          </Row> */}
+          {/* <Row gutter={16}>
             <Col span={24}>
               <Form.Item
                 label="Add Note"
@@ -529,7 +715,7 @@ export default function AddPersonalDeatilsPage() {
                 />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -543,6 +729,8 @@ export default function AddPersonalDeatilsPage() {
                     height: '2rem',
                     width: '100%',
                   }}
+                  value={guestrel}
+                  onChange={e => setguestrel(e.target.value)}
                 />
               </Form.Item>
             </Col>
@@ -571,7 +759,7 @@ export default function AddPersonalDeatilsPage() {
               lg={12}
               xl={12}
               style={{ marginBottom: '16px' }}>
-              {buildUserCard(user, index)}
+              {buildUserCard(user, 0)}
             </Col>
           ))}
         </Row>
@@ -587,40 +775,37 @@ export default function AddPersonalDeatilsPage() {
         className={`${
           index === 1 ? 'userProfileRightCard' : 'userProfileLeftCard'
         }`}
-        key={user.id}
-        style={{
-          
-          borderRadius: '0.625rem', // Keep the border radius
-          padding: '1rem', // Add padding for better spacing
-          marginBottom: '1rem', // Add margin to separate cards
-          boxShadow: '0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.1)', // Add box shadow for depth
-          backgroundColor: 'white', // Set background color
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}>
+        key={user.id}>
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-          <Avatar className="userProfileImage" src={user.picture.large} />
+          <Avatar className="userProfileImage" src={user.avtar} />
           <div className="userProfileVerifiedBadge">
             <label className="userProfileVerifiedBadgeLabel">Verified</label>
             <VerifiedIcon />
           </div>
         </div>
         <div className="displayFlex flexDirectionColumn marginLeft16">
-          <label className="userNameLabel">{user.email}</label>
+          <label className="userNameLabel">{user.user.email}</label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div className="displayFlex flexDirectionColumn flex1">
-              <label className="userProfileInfoTitle">Tejashtan</label>
-              <label className="userProfileInfoValue">Lorem Ipsum</label>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
+              <label className="userProfileInfoTitle">Name</label>
+              <label className="userProfileInfoValue">
+                {user.user.first_name} {user.user.last_name}{' '}
+              </label>
             </div>
-            <div className="displayFlex flexDirectionColumn flex1">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
               <label className="userProfileInfoTitle">Address</label>
-              <label className="userProfileInfoValue">Lorem Ipsum</label>
+              <label className="userProfileInfoValue">{user.location}</label>
             </div>
-            <div className="displayFlex flexDirectionColumn flex1">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
               <label className="userProfileInfoTitle">DOB</label>
-              <label className="userProfileInfoValue">Lorem Ipsum</label>
+              <label className="userProfileInfoValue">{user.dob}</label>
             </div>
           </div>
         </div>
@@ -630,7 +815,7 @@ export default function AddPersonalDeatilsPage() {
     );
   }
   
-  
+ 
 
   function buildProfiles() {
     const chunkedData = [];
@@ -689,14 +874,16 @@ export default function AddPersonalDeatilsPage() {
       <div style={{ marginLeft: '3rem' }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Form style={{ width: '100%', maxWidth: '500px' }}>
+            <Form style={{ width: '100%', maxWidth: '500px' }}  >
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
                     label="First Name"
-                    name={['user', 'first_name']}
+                    name={firstName}
                     labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    wrapperCol={{ span: 24 }}
+                    initialValue={firstName}
+                    >
                     <Input
                       style={{
                         borderRadius: '2rem',
@@ -709,9 +896,10 @@ export default function AddPersonalDeatilsPage() {
                 <Col span={12}>
                   <Form.Item
                     label="Last Name"
-                    name={['user', 'last_name']}
+                    name={lastName}
                     labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    wrapperCol={{ span: 24 }}
+                    initialValue={lastName}>
                     <Input
                       style={{
                         borderRadius: '2rem',
@@ -726,9 +914,10 @@ export default function AddPersonalDeatilsPage() {
                 <Col span={24}>
                   <Form.Item
                     label="Email ID"
-                    name="email"
+                    name={email}
                     labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    wrapperCol={{ span: 24 }}
+                    initialValue={email}>
                     <Input
                       style={{
                         borderRadius: '2rem',
@@ -743,14 +932,16 @@ export default function AddPersonalDeatilsPage() {
                 <Col span={24}>
                   <Form.Item
                     label="Mobile Number"
-                    name="mobile"
+                    name={mobile}
                     labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    wrapperCol={{ span: 24 }}
+                    initialValue={mobile}>
                     <Input
                       style={{
                         borderRadius: '2rem',
                         height: '2rem',
                         width: '100%',
+                       
                       }}
                     />
                   </Form.Item>
@@ -761,19 +952,21 @@ export default function AddPersonalDeatilsPage() {
                   <Form.Item
                     label="Choose the purpose of the Darshan"
                     name="purpose"
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    labelCol={{ span: 24 }}>
                     <Select
-                      mode="multiple"
-                      style={{ width: '100%', height: '2rem' }}
-                      placeholder="Select Purpose">
-                      <Option value="option1">Lorem Ipsum</Option>
-                      <Option value="option2">Lorem Dopler</Option>
-                      <Option value="option3">Lorem Dopler sit</Option>
-                      <Option value="option1">Lorem Ipsum</Option>
-                      <Option value="option2">Lorem Dople</Option>
-                      <Option value="option3">Lorem Dopler sit</Option>
-                    </Select>
+                    mode='tags'
+  style={{ width: '100%', height: 'auto' }}
+  placeholder="Select Purpose"
+  value={selectedPurpose} // Set the value of the selected option
+  onChange={value => setSelectedPurpose(value)} // Update selectedPurpose state when an option is selected
+>
+  {purposeOptions.map(option => (
+    <Option key={option.key} value={option.value}>
+      {option.title}
+    </Option>
+  ))}
+</Select>
+
                   </Form.Item>
                 </Col>
               </Row>
@@ -781,7 +974,7 @@ export default function AddPersonalDeatilsPage() {
                 <Col span={12}>
                   <Form.Item
                     label="Select preferred date"
-                    name={['user', 'first_name']}
+                    name={["startdate"]}
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}>
                     <DatePicker
@@ -790,6 +983,11 @@ export default function AddPersonalDeatilsPage() {
                         height: '2rem',
                         width: '100%',
                       
+                      }}
+                      onChange={(date, dateString) => {
+                        if (typeof dateString === 'string') {
+                          setStartdate(dateString);
+                        }
                       }}
                     />
                   </Form.Item>
@@ -806,6 +1004,11 @@ export default function AddPersonalDeatilsPage() {
                         height: '2rem',
                         width: '100%',
                       }}
+                      onChange={(date, dateString) => {
+                        if (typeof dateString === 'string') {
+                          setEnddate(dateString);
+                        }
+                      }}
                     />
                   </Form.Item>
                 </Col>
@@ -819,7 +1022,8 @@ export default function AddPersonalDeatilsPage() {
                     wrapperCol={{ span: 24 }}>
                      <TextArea
         style={{width:"30.75rem",height:"4rem",borderRadius:"1rem"}}
-        
+        value={addnote}
+        onChange={(e) => setAddNote(e.target.value)}
         autoSize={{ minRows: 3, maxRows: 5 }}
       />
                   </Form.Item>
@@ -865,8 +1069,9 @@ export default function AddPersonalDeatilsPage() {
                 sm={24}
                 md={12}
                 lg={12}
-                xl={12}
+                xl={10}
                 style={{ marginBottom: '16px' }}>
+                
                 <div
                   style={{
                     width: '80%',
@@ -960,6 +1165,7 @@ export default function AddPersonalDeatilsPage() {
                     </div>
                   </Modal>
                 </div>
+                  
               </Col>
             </Row>
           </Col>
@@ -968,3 +1174,4 @@ export default function AddPersonalDeatilsPage() {
     </MainLayout>
   );
 }
+
