@@ -23,6 +23,7 @@ import {
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { FileExclamationTwoTone, CheckOutlined } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
+import Login from '@/components/login';
 const { Meta } = Card;
 
 
@@ -60,89 +61,12 @@ export default function HomePage() {
         const response = await fetch('/api/getsession');
         const sessionData = await response.json();
         console.log('Session Data:', sessionData?.session?.accessToken);
+        if(!sessionData.session)
+          {
+            <Login/>
+          }
         setUserName(sessionData?.session?.user?.name)
-        setSessionEmail(sessionData?.session?.user?.email);
-        setSessionToken(sessionData?.session?.accessToken);
-        
-        // const migrated = await fetch(
-        //     'https://hterp.tejgyan.org/django-app/hterp/khoji/is_migrated/',
-        //     {
-        //         headers: {
-        //             Authorization: `Bearer ${sessionToken}`,
-        //         },
-        //     },
-        // );
-
-        // const isMigratedresponse = await migrated.json();
-        // console.log("token",sessionData?.session?.accessToken);
-        // setIsMigrated(isMigratedresponse?.is_migrated);
-        // setIsMigrated("true");
-        // console.log("isMigratedresponse",ismigrated);
-
-        // if (!isMigratedresponse.is_migrated) {
-        //     console.log("hello")
-        //     buildNonVerifiedUserCard(0,null);
-
-        // console.log("emAIL", sessionData?.session?.user?.email);
-
-        // const apiUrl = `https://hterp.tejgyan.org/django-app/hterp/khoji/getkhoji/?email=${sessionData?.session?.user?.email}`;
-
-        // const searchResponse = await fetch(
-        //     apiUrl,
-        //     {
-        //         headers: {
-        //             Authorization: `Bearer ${sessionData?.session?.accessToken}`,
-        //         },
-        //     },
-        // );
-        // const searchData = await searchResponse.json();
-        // console.log(searchData)
-        // if (searchData.khojiList || searchData.khojiList.length > 0) {
-
-        //     const apiUrl = 'https://hterp.tejgyan.org/django-app/hterp/khoji/instant_verify/';
-        //     console.log("khojiid:",searchData.khojiList[0].khoji_id)
-        //     const payload = {
-        //         khoji_id: searchData.khojiList[0].khoji_id
-        //     };
-
-        //     const instantResponse = await fetch(apiUrl, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             Authorization: `Bearer ${sessionData.session.accessToken}`,
-        //         },
-        //         body: JSON.stringify(payload),
-        //     });
-
-        //     // Handle the response
-        //     if (instantResponse.ok) {
-        //         const instantdata = await instantResponse.json();
-        //         console.log(instantdata);
-        //         // Further processing based on the response
-        //         if (instantdata.is_migrated) {
-        //             const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
-        //             const userResponse = await fetch(userApiUrl, {
-        //                 headers: {
-
-        //                     Authorization: `Bearer ${sessionData.session.accessToken}`,
-        //                     "Content-Type": "application/json",
-        //                 },
-        //             });
-        //             const userDataResponse = await userResponse.json();
-        //             const userDataResults = userDataResponse.results ?? [];
-        //             setUserData(userDataResults);
-        //             setData(userDataResults);
-
-        //             console.log(data);
-        //         }
-        //     } else {
-        //         console.error('Failed to fetch data:', instantResponse.statusText);
-        //     }
-
-        // }
-
-        //}
-
+      
         
           const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/me/';
           const userResponse = await fetch(userApiUrl, {
@@ -152,8 +76,7 @@ export default function HomePage() {
             },
           });
           const userDataResponse = await userResponse.json();
-         // const userDataResults = userDataResponse.results ?? [];
-
+        
           setData(userDataResponse);
 
           console.log('userDataResultsimverified', userDataResponse);

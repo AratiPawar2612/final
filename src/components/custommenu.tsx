@@ -4,6 +4,7 @@ import { LogoIcon, LogoutIcon, NotificationIcon, SavedIcon } from '@/icons/icon'
 import { HomeOutlined, MenuOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import axios from 'axios'; 
+import Login from './login';
 
 const CustomMenu = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -30,7 +31,7 @@ const CustomMenu = () => {
   
       if (response.ok) {
         console.log('Logout successful');
-        // Perform any additional actions after successful logout
+        <Login/>
       } else {
         console.error('Logout failed:', response.statusText);
         // Handle logout failure

@@ -5,6 +5,7 @@ import MainLayout from '@/components/mainlayout';
 import CustomMenu from '@/components/custommenu';
 import { ArrowLeftOutlined, UserOutlined } from '@ant-design/icons';
 import { useEffect,useState } from 'react';
+import { title } from 'process';
 
 export default function ViewStatusPage() {
   const { Step } = Steps;
@@ -52,9 +53,8 @@ if (purposeDataResponse.results.length > 0) {
       value: purpose.id,
       label: purpose.label
   }];
-  // Now you have options array containing data from the first record of the API response
+  
   console.log(options);
-  //setPurposeOptions(options); // Update purposeOptions state
                   
 } else {
   console.error("No data available in purposeDataResponse.results");
@@ -68,16 +68,13 @@ if (purposeDataResponse.results.length > 0) {
 
   loadMoreData();
   }, []);
-
+  const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
 
   const cardData = [
-    { title: 'Lorem Ipsum 1', content: 'Content for card 1' },
-    { title: 'Lorem Ipsum 2', content: 'Content for card 2' },
-    { title: 'Lorem Ipsum 3', content: 'Content for card 3' },
-    { title: 'Lorem Ipsum 4', content: 'Content for card 4' },
-    { title: 'Lorem Ipsum 5', content: 'Content for card 5' },
-    { title: 'Lorem Ipsum 6', content: 'Content for card 6' },
-    { title: 'Lorem Ipsum 7', content: 'Content for card 7' },
+    { title: 'Application reviewed', content: 'Content for card 1' },
+    { title: 'Event assigned', content: 'Content for card 2' },
+    { title: 'Event Confirmed', content: 'Content for card 3' },
+   
   ];
 
   return (
@@ -168,18 +165,28 @@ if (purposeDataResponse.results.length > 0) {
           <Row
             gutter={[16, 16]}
             style={{ marginBottom: '1rem', marginLeft: '8rem' }}>
-            {cardData.map((card, index) => (
-              <React.Fragment key={index}>
-                <Col span={12}>
-                  <Steps current={-1} className="customs-steps">
-                    <Step />
-                  </Steps>
-                </Col>
-                <Col span={12}>
-                  <Card title={`Card ${index + 1}`}>{card.content}</Card>
-                </Col>
-              </React.Fragment>
-            ))}
+        {cardData.map((card, index) => (
+  <React.Fragment key={index}>
+    <Col span={6}>
+      <Steps current={selectedCardIndex === index ? 0 : -1} className="customs-steps">
+        <Step />
+      </Steps>
+    </Col>
+    <Col span={18}>
+      <Card title={card.title}>
+        {card.content}
+        {card.title === 'Event assigned' && (
+          <div style={{ marginTop: '1rem' ,display:"flex",flexDirection:"row"}}>
+            <Button style={{ marginRight: '1rem' }}>Reschedule</Button>
+            <Button type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
+          </div>
+        )}
+      </Card>
+    </Col>
+  </React.Fragment>
+))}
+
+
           </Row>
         </Col>
       </Row>

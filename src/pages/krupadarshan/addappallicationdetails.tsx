@@ -27,6 +27,7 @@ export default function AddApplicationDetailsPage() {
       setButtonSize('middle');
     }
   };
+  
 
   const handleContinueClick = () => {
     const isFamilyKrupaDarshan = selectedCard === 'Family Krupa Darshan';
