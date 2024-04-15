@@ -63,7 +63,7 @@ export default function HomePage() {
         console.log('Session Data:', sessionData?.session?.accessToken);
         if(!sessionData.session)
           {
-            <Login/>
+            router.push("/");
           }
         setUserName(sessionData?.session?.user?.name)
       
@@ -80,8 +80,7 @@ export default function HomePage() {
           setData(userDataResponse);
 
           console.log('userDataResultsimverified', userDataResponse);
-          console.log('data', data);
-        
+         
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error as any);
@@ -446,7 +445,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="displayFlex flexDirectionColumn marginLeft16">
-          {/* <label className="userNameLabel">{user.user.email}</label> */}
+          <label className="userNameLabel">{user.user.email}</label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
@@ -605,8 +604,6 @@ export default function HomePage() {
   }
 
   function buildProfiles() {
-    console.log("hi build");
-    console.log("Data:", data); // Check the data being received
   
     // Ensure that data is not empty
     if (!data || Object.keys(data).length === 0) {

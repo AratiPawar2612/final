@@ -48,11 +48,11 @@ const purposeDataResponse = await purposeResponse.json();
 
 if (purposeDataResponse.results.length > 0) {
   const purpose = purposeDataResponse.results[0];
-  const options = [{
-      key: purpose.id,
-      value: purpose.id,
-      label: purpose.label
-  }];
+  const options = purposeDataResponse.results.map((purpose: any) => ({
+    key: purpose.id,
+    value: purpose.id,
+    label: purpose.title // Change this to purpose.title
+  }));
   
   console.log(options);
                   

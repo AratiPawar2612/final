@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Layout, Avatar, Drawer } from 'antd';
-import { LogoIcon, LogoutIcon, NotificationIcon, SavedIcon } from '@/icons/icon';
+import { Menu, Layout, Drawer } from 'antd';
 import { HomeOutlined, MenuOutlined } from '@ant-design/icons';
+import { LogoIcon, LogoutIcon, NotificationIcon, SavedIcon } from '@/icons/icon';
 import { useRouter } from 'next/router';
-import axios from 'axios'; 
 import Login from './login';
 
 const CustomMenu = () => {
-  const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
-  const { Item, SubMenu } = Menu;
+  const { Item } = Menu;
   const { Sider } = Layout;
 
   useEffect(() => {
@@ -20,6 +19,7 @@ const CustomMenu = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
   async function logout() {
     try {
       const response = await fetch('/api/logout', {
@@ -42,7 +42,7 @@ const CustomMenu = () => {
     }
   }
 
-  const handleTopMenuClick = (e: any) =>
+  const handleTopMenuClick = (e:any) =>
     console.log('Top Menu Clicked:', e.key);
   const handleLogout = () => {
     logout();
@@ -50,9 +50,7 @@ const CustomMenu = () => {
 
   const handleHome = () => {
     router.push('/onboarding/homepage');
-   
   };
-  
 
   const menuItems = [
     { key: 'home', icon: <HomeOutlined />, label: 'Home', onClick: handleHome },
@@ -90,8 +88,7 @@ const CustomMenu = () => {
           {menuItems.map(item => (
             <Item
               key={item.key}
-              onClick={item.onClick}
-              >
+              onClick={item.onClick}>
               {item.icon}
               <span>{item.label}</span>
             </Item>
@@ -106,13 +103,12 @@ const CustomMenu = () => {
       <Sider
         theme="light"
         collapsible
-        // collapsed={collapsed}
-        // onCollapse={setCollapsed}
+        collapsed={collapsed}
+        onCollapse={() => setCollapsed(!collapsed)}
         style={{
           height: '100vh',
           position: 'fixed',
-          left: '27px',
-          width: '200px',
+          left: 0,
         }}>
         <div
           style={{
@@ -121,52 +117,39 @@ const CustomMenu = () => {
             justifyContent: 'center',
           }}>
           <LogoIcon className="logologin" />
+          {/* Display menu items */}
           <Menu
-  mode="inline"
-  onClick={handleTopMenuClick}
-  className="custom-menu"
-  defaultSelectedKeys={['home']}
-  style={{ color: '#52565D' }}>
-  {menuItems.map(item => (
-    <Item
-      key={item.key}
-      onClick={item.onClick}
-      style={{ display: 'flex', alignItems: 'center',flexDirection:"column" }}>
-      {item.icon}
-      <span style={{ marginLeft: '8px' }}>{item.label}</span>
-    </Item>
-  ))}
-</Menu>
-
-
-          {/* <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '15rem',
-            }}>
-            <Avatar size={64} src="/your-avatar-url.jpg" />{' '}
-            {/* Replace src with your actual avatar URL */}
-          {/* </div>  */}
+            mode="inline"
+            onClick={handleTopMenuClick}
+            className="custom-menu"
+            defaultSelectedKeys={['home']}
+            style={{ color: '#52565D' }}>
+            {menuItems.map(item => (
+              <Item
+                key={item.key}
+                onClick={item.onClick}>
+                {item.icon}
+                <span>{item.label}</span>
+              </Item>
+            ))}
+          </Menu>
         </div>
       </Sider>
-      {/* {collapsed && (
-        <MenuOutlined
-          className="menu-toggle-icon"
-          onClick={handleMenuToggle}
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            left: '10px',
-            fontSize: '24px',
-            color: '#fff',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            padding: '10px',
-            borderRadius: '50%',
-          }}
-        />
-      )} */}
+      <MenuOutlined
+        className="menu-toggle-icon"
+        onClick={handleMenuToggle}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          fontSize: '24px',
+          color: '#fff',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          padding: '10px',
+          borderRadius: '50%',
+          display: collapsed ? 'block' : 'none', // Show only when collapsed
+        }}
+      />
       {renderMobileMenu()}
     </Layout>
   );

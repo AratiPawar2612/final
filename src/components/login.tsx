@@ -25,7 +25,7 @@ export default function   Login() {
           router.push('/onboarding/homepage');
         } else {
           console.log('User is not authenticated. Redirecting to Login page.');
-         <Login/>
+          router.push('/');
         }
       } catch (error) {
         console.error('Error fetching data:', error);

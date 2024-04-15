@@ -61,10 +61,11 @@ export default function CompleteAndApplyPage() {
 
                   if (purposeDataResponse.results.length > 0) {
                     const purpose = purposeDataResponse.results[0];
+                    console.log("purpose",purpose);
                     const options = [{
                         key: purpose.id,
                         value: purpose.id,
-                        label: purpose.label
+                        label: purpose.title 
                     }];
   
   console.log(options);
@@ -219,7 +220,7 @@ export default function CompleteAndApplyPage() {
                      >
                       {purposeOptions.map(option => (
                         <Option key={option.key} value={option.value}>
-                          {option.title}
+                          {option.label}
                         </Option>
                       ))}
                     </Select>

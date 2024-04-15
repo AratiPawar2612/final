@@ -39,8 +39,6 @@ export default function AddPersonalDeatilsPage() {
   const router = useRouter();
   const [note, setNote] = useState(''); // State to track the note text
   const [data, setData] = useState<any>([]);
-  const [visibleData, setVisibleData] = useState<any>([]);
-  const [remainingData, setRemainingData] = useState<any>([]);
   const [inputType, setInputType] = useState('khojiID'); // State to track the selected input type
   const [khojiID, setKhojiID] = useState('');
   const [email, setEmail] = useState('');
@@ -63,14 +61,14 @@ export default function AddPersonalDeatilsPage() {
   const [guestrel, setguestrel] = useState('');
   const [purposeOptions, setPurposeOptions] = useState<any[]>([]); // Define purposeOptions state
   const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
-  const isFamilyKrupaDarshan: boolean | undefined =
-  typeof router.query === 'boolean' ? router.query : undefined;
+  const { isFamilyKrupaDarshan } = router.query;
   const [selectedRecord, setSelectedRecord] = useState(null); // State to store the selected record
   const [searchdata, setsearchdata] = useState([]); // State to store the fetched data
   const [form] = Form.useForm(); // Create a form instance
   const [dobValue, setDobValue] = useState<Date | null>(null);
   const [khojiuserid, setkhojiuserid] = useState('');
   const [userdata, setUserData] = useState<any>([]);
+  console.log("isFamilyKrupaDarshan",isFamilyKrupaDarshan);
   const handleRowSelect = (record:any) => {
     setSelectedRecord(record); // Update the selected record state
   };
@@ -103,7 +101,7 @@ export default function AddPersonalDeatilsPage() {
                       const options = purposeDataResponse.results.map((purpose: any) => ({
                         key: purpose.id,
                         value: purpose.id,
-                        label: purpose.label
+                        label: purpose.title // Change this to purpose.title
                       }));
                     
                      setPurposeOptions(options); // Update purposeOptions state
@@ -158,7 +156,7 @@ if(true)
     };
 
     loadMoreData();
-  }, []);
+  }, [data ,userdata]);
   
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -276,7 +274,7 @@ if(true)
       user: userid,
       status: "SUBMITTED",
       sort: null,
-      have_participant: true, // Assign true or false based on isFamilyKrupaDarshan
+      have_participant: isFamilyKrupaDarshan, // Assign true or false based on isFamilyKrupaDarshan
       participant: null, 
       // khoji_id:"-",
       purposes: selectedPurpose,
@@ -289,7 +287,7 @@ if(true)
     };
     const formData = new FormData();
 
-    Object.entries(requestBody).forEach(([key, value]) => {
+    Object.entries(requestBody).forEach(([key, value]: [string, any]) =>  {
       if (value === null || value === undefined) {
         // Handle null or undefined values by converting them to an empty string
         formData.append(key, '');
@@ -331,6 +329,7 @@ if(true)
     }
   
   };
+ 
  
   
   const handleCancel = () => {
@@ -621,40 +620,6 @@ if(true)
               </Form.Item>
             </Col>
           </Row>
-          {/* <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Choose Purpose of Darshan"
-                name="purpose"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}>
-                <Input
-                  style={{
-                    borderRadius: '2rem',
-                    height: '2rem',
-                    width: '100%',
-                  }}
-                />
-              </Form.Item>
-            </Col>
-          </Row> */}
-          {/* <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Add Note"
-                name="addnote"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}>
-                <Input
-                  style={{
-                    borderRadius: '2rem',
-                    height: '2rem',
-                    width: '100%',
-                  }}
-                />
-              </Form.Item>
-            </Col>
-          </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -691,7 +656,7 @@ if(true)
         const users = userdata.results;
         return (
             <Row gutter={[16, 16]} style={{ justifyContent: 'space-between' }}>
-               {users.slice(1).map((user: any, index: any) => (
+               {users.map((user: any, index: any) => (
                     <Col
                         key={index}
                         xs={12}
@@ -808,10 +773,7 @@ if(true)
  
 
   function buildProfiles() {
-    console.log("hi build");
-    console.log("Data:", data); // Check the data being received
-  
-    // Ensure that data is not empty
+   
     if (!data || Object.keys(data).length === 0) {
       console.error("Data is not available or empty.");
       return null;
@@ -994,7 +956,7 @@ if(true)
 >
   {purposeOptions.map(option => (
     <Option key={option.key} value={option.value}>
-      {option.title}
+      {option.label}
     </Option>
   ))}
 </Select>
@@ -1125,7 +1087,7 @@ if(true)
                 lg={12}
                 xl={12}
                 style={{ marginBottom: '16px' }}>
-                
+              {isFamilyKrupaDarshan === 'true' && (
                 <div
                   style={{
                     width: '80%',
@@ -1216,10 +1178,11 @@ if(true)
                         </div>
                         {renderInputComponent()}
                       </div>
+
                     </div>
                   </Modal>
                 </div>
-                  
+              )}
               </Col>
             </Row>
           </Col>
