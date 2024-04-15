@@ -28,7 +28,7 @@ export const authOptions = {
     },
     async refreshToken({ token, account, isNewSession }) {
       
-      const response = await fetch('https://your-keycloak-domain/auth/realms/your-realm/protocol/openid-connect/token', {
+      const response = await fetch(`${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

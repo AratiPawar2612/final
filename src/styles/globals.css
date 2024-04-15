@@ -388,6 +388,15 @@ text-align: left;
 .userProfilePlaceholderCard {
   width: 17.3125rem !important;
 }
+.userCardsContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.userCard {
+  margin-right: 16px; /* Adjust margin as needed */
+}
+
 
 .userProfileTopSection {
   position: absolute !important;

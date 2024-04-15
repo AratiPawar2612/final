@@ -143,8 +143,8 @@ export default function HomePage() {
 
         //}
 
-        if (true) {
-          const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
+        
+          const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/me/';
           const userResponse = await fetch(userApiUrl, {
             headers: {
               Authorization: `Bearer ${sessionData.session.accessToken}`,
@@ -152,13 +152,13 @@ export default function HomePage() {
             },
           });
           const userDataResponse = await userResponse.json();
-          const userDataResults = userDataResponse.results ?? [];
+         // const userDataResults = userDataResponse.results ?? [];
 
-          setData(userDataResults);
+          setData(userDataResponse);
 
-          console.log('userDataResultsimverified', userDataResults);
-        } else {
-        }
+          console.log('userDataResultsimverified', userDataResponse);
+          console.log('data', data);
+        
       } catch (error) {
         console.error('Error fetching data:', error);
         setError(error as any);
@@ -507,6 +507,7 @@ export default function HomePage() {
   };
 
   function buildUserCard(user: any, index: any) {
+    console.log("hi");
     return user ? (
       <div
         className={`${
@@ -522,14 +523,14 @@ export default function HomePage() {
           </div>
         </div>
         <div className="displayFlex flexDirectionColumn marginLeft16">
-          <label className="userNameLabel">{user.user.email}</label>
+          {/* <label className="userNameLabel">{user.user.email}</label> */}
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: '1rem' }}>
               <label className="userProfileInfoTitle">Name</label>
               <label className="userProfileInfoValue">
-                {user.user.first_name} {user.user.last_name}{' '}
+                {user?.user?.first_name} {user?.user?.last_name}{' '}
               </label>
             </div>
             <div
@@ -551,7 +552,10 @@ export default function HomePage() {
       <div className="userProfilePlaceholderCard" />
     );
   }
+  
+  
   function buildNonVerifiedUserCard(user: any, index: any) {
+    console.log("hi");
     return user ? (
       <div
         className={`${index === 1 ? 'userProfileRightCard' : 'userProfileLeftCard'}`}
@@ -678,35 +682,39 @@ export default function HomePage() {
   }
 
   function buildProfiles() {
-    const chunkArray = (array: any[], size: number) => {
-      const chunkedArray = [];
-      for (let i = 0; i < array.length; i += size) {
-        chunkedArray.push(array.slice(i, i + size));
-      }
-      return chunkedArray;
-    };
-
-    const chunkSize = 2;
-    const chunkedData =
-      data && data.length > 0 ? chunkArray(data, chunkSize) : [];
-
-    return (
-      <div className="displayFlex flexDirectionColumn">
-        {chunkedData.map((chunk, index) => (
-          <div
-            key={index}
-            className="displayFlex flexDirectionRow marginRight16 alignSelfCenter">
-            {!ismigrated
-              ? buildUserCard(chunk[0], index * 2)
-              : buildNonVerifiedUserCard(chunk[0], index * 2)}
-            {ismigrated
-              ? buildUserCard(chunk[1], index * 2 + 1)
-              : buildNonVerifiedUserCard(chunk[1], index * 2 + 1)}
+    console.log("hi build");
+    console.log("Data:", data); // Check the data being received
+  
+    // Ensure that data is not empty
+    if (!data || Object.keys(data).length === 0) {
+      console.error("Data is not available or empty.");
+      return null;
+    }
+  
+    if (true) {
+      // Render verified user card
+      return (
+        <div className="displayFlex flexDirectionColumn">
+          <div className="displayFlex flexDirectionRow marginRight16 alignSelfCenter">
+            {buildUserCard(data, 0)}
           </div>
-        ))}
-      </div>
-    );
+        </div>
+      );
+    } else {
+      // Render non-verified user card
+      return (
+        <div className="displayFlex flexDirectionColumn">
+          <div className="displayFlex flexDirectionRow marginRight16 alignSelfCenter">
+            {buildNonVerifiedUserCard(data, 0)}
+          </div>
+        </div>
+      );
+    }
+    
   }
+  
+  
+  
 
   const handleGetStarted = () => {
    

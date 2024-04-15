@@ -47,6 +47,10 @@ export default function AddPersonalDeatilsPage() {
   const [mobile, setMobile] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [khojifirstName, setkhojifirstName] = useState('');
+  const [khojilastName, setkhojilastName] = useState('');
+  const [khojiemail, setkhojiemail] = useState('');
+  const [khojimobile, setkhojimobile] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [options, setOptions] = useState<Option[]>([]); // Specify Option[] as the type
@@ -104,7 +108,6 @@ export default function AddPersonalDeatilsPage() {
                     
                      setPurposeOptions(options); // Update purposeOptions state
                       console.log("purposeDataResponse",purposeDataResponse);
-                      // const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
                       const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/me/';
                       const userResponse = await fetch(userApiUrl, {
                           headers: {
@@ -142,9 +145,11 @@ if(true)
   
     // Parse the response data for GET request
     const responseData = await getResponse.json();
-    console.log('Response data from GET request:', responseData);
-    const participantdata = responseData.results ?? [];
-    setUserData(participantdata);
+   
+    // const participantdata = responseData.results ?? [];
+    // console.log('Response data from GET request:', participantdata);
+    setUserData(responseData);
+
 
   }
                         
@@ -154,15 +159,10 @@ if(true)
 
     loadMoreData();
   }, []);
-  // useEffect(() => {
-  //   if (userdata.length > 0) {
-  //      setVisibleData(data(0, 2));
-  //     setRemainingData(userdata.slice(2));
-  //   }
-  // }, [data]);
+  
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalVisible1, setIsModalVisible1] = useState(false);
+  
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -234,7 +234,15 @@ if(true)
       //   else if(firstName){
       //     url = `192.168.1.248:8000/iam/users/?firat_Name=${firstName}&last_name=${lastName}`;
       //   }
-      const response = await fetch(`https://hterp.tejgyan.org/django-app/iam/users/?khoji_id=${khojiID}`, requestOption);
+      if(khojiID)
+        {
+          url=`https://hterp.tejgyan.org/django-app/iam/users/?khoji_id=${khojiID}`;
+        }
+        else if(firstName)
+        {
+          url=`https://hterp.tejgyan.org/django-app/iam/users/?first_name=${firstName}`;
+        }
+      const response = await fetch(url, requestOption);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -243,7 +251,7 @@ if(true)
       console.log("search data",responseData.results[0]);
       setkhojiuserid(responseData.results[0].user.id);
     ;
-      if (searchdata.length = 1) {
+      if (searchdata && searchdata.length<=1) {
         console.log("hi");
         form.setFieldsValue(responseData.results[0]);
        
@@ -251,8 +259,7 @@ if(true)
         console.log("searchdata[0]", searchdata[0]);
     
       } else {
-        setsearchdata(responseData.results[0]);
-     
+        alert("No data found");
        
       }
      
@@ -261,31 +268,18 @@ if(true)
     }
   }
    
-    
-  const renderRows = () => {
-    return data.map((record:any) => (
-      <tr key={record.id}>
-        <td>{record.id}</td>
-        <td>{record.name}</td>
-        <td>{record.email}</td>
-        <td>
-          <button onClick={() => handleRowSelect(record)}>Select</button>
-        </td>
-      </tr>
-    ));
-  };
 
 
   const onclickNextBtn  = async () => {
    
     const requestBody = {
       user: userid,
-      status: "Submitted",
+      status: "SUBMITTED",
       sort: null,
-      have_participant: isFamilyKrupaDarshan === true, // Assign true or false based on isFamilyKrupaDarshan
+      have_participant: true, // Assign true or false based on isFamilyKrupaDarshan
       participant: null, 
-      // purpose: selectedPurpose?.map((purpose) => purpose?.id),
-      purpose: selectedPurpose,
+      // khoji_id:"-",
+      purposes: selectedPurpose,
       preferred_start_date: startdate,
       preferred_end_date: enddate,
       khoji_note: {
@@ -368,7 +362,7 @@ if(true)
       setInputType(type);
       setIsModalVisible(true);
     } else {
-      // For other types, simply set the inputType state
+      
       setInputType(type);
     }
   };
@@ -413,7 +407,7 @@ if(true)
                     width: 'auto',
                   }}
                  
-                  onChange={e => setFirstName(e.target.value)}
+                  onChange={e => setkhojifirstName(e.target.value)}
                 />
               </Form.Item>
             </Col>
@@ -430,40 +424,11 @@ if(true)
                     width: 'auto',
                   }}
                   
-                  onChange={e => setLastName(e.target.value)}
+                  onChange={e => setkhojilastName(e.target.value)}
                 />
               </Form.Item>
             </Col>
           </Row>
-          {/* <Row gutter={16}>
-                <Col span={24}>
-                <Form.Item
-  label="Date of birth"
-  name="dob" // Make sure this matches the name of the field in your form
-  labelCol={{ span: 24 }}
-  wrapperCol={{ span: 24 }}
->
-  <DatePicker
-    style={{
-      borderRadius: '2rem',
-      height: '2rem',
-      width: '100%',
-    }}
-    // Set the value of dob here
-    // Assuming dobValue is the variable containing the date of birth value
-    value={moment(dobValue)}
-    onChange={(date, dateString) => {
-      if (date) {
-        setDobValue(date.toDate()); // Convert Moment object to Date
-      } else {
-        setDobValue(null);
-      }
-    }}// Assuming setDobValue is the function to update the dobValue state
-  />
-</Form.Item>
-     
-                </Col>
-            </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -478,7 +443,7 @@ if(true)
                     width: '100%',
                   }}
                  
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={e => setkhojiemail(e.target.value)}
                 />
               </Form.Item>
             </Col>
@@ -496,45 +461,11 @@ if(true)
                     height: '2rem',
                     width: '100%',
                   }}
-                  onChange={e => setMobile(e.target.value)}
+                  onChange={e => setkhojimobile(e.target.value)}
                 />
               </Form.Item>
             </Col>
           </Row>
-
-          {/* <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Choose Purpose of Darshan"
-                name="purpose"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}>
-                 <AutoComplete
-      style={{ width: 200 }}
-      onSearch={handleSearch}
-      placeholder="input here"
-      options={options}
-    />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Add Note"
-                name="addnote"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}>
-                <Input
-                  style={{
-                    borderRadius: '2rem',
-                    height: '2rem',
-                    width: '100%',
-                  }}
-                />
-              </Form.Item>
-            </Col>
-          </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -554,27 +485,13 @@ if(true)
               </Form.Item>
             </Col>
           </Row>
+          <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
           <Button
             type="primary"
             style={{
               marginTop: '1rem',
               backgroundColor: 'black',
-              width: '100%',
-              height:"2.4888rem",
-              marginBottom: '1rem',
-              borderRadius:"1rem",
-              fontSize:"11.38px"
-            }}
-            onClick={handleaddclick}
-            >
-            Add
-          </Button>
-          <Button
-            type="primary"
-            style={{
-              marginTop: '1rem',
-              backgroundColor: 'black',
-              width: '100%',
+              width: '8rem',
               height:"2.4888rem",
               marginBottom: '1rem',
               borderRadius:"1rem",
@@ -584,6 +501,28 @@ if(true)
             >
             Search
           </Button>
+          <Button
+            type="primary"
+            style={{
+              marginTop: '1rem',
+              backgroundColor: 'black',
+              width: '8rem',
+              height:"2.4888rem",
+              marginBottom: '1rem',
+              borderRadius:"1rem",
+              fontSize:"11.38px"
+            }}
+            onClick={handleaddclick}
+            
+            >
+            Add
+          </Button>
+          
+         
+          
+          </div>
+      
+            
           
         </Form>
       );
@@ -748,26 +687,77 @@ if(true)
         </Form>
       );
     } else if (inputType === 'View all') {
-      return (
-        <Row gutter={[16, 16]} style={{ justifyContent: 'space-between' }}>
-          {remainingData.map((user: any, index: any) => (
-            <Col
-              key={index}
-              xs={24}
-              sm={24}
-              md={12}
-              lg={12}
-              xl={12}
-              style={{ marginBottom: '16px' }}>
-              {buildUserCard(user, 0)}
-            </Col>
-          ))}
-        </Row>
-      );
-    }
+      if (userdata && userdata.results && Array.isArray(userdata.results)) {
+        const users = userdata.results;
+        return (
+            <Row gutter={[16, 16]} style={{ justifyContent: 'space-between' }}>
+               {users.slice(1).map((user: any, index: any) => (
+                    <Col
+                        key={index}
+                        xs={12}
+                        sm={24}
+                        md={12}
+                        lg={12}
+                        xl={12}
+                        style={{ marginBottom: '16px', marginLeft: "1rem" }}>
+                        {buildUserdataCard(user, index)}
+                    </Col>
+                ))}
+            </Row>
+        );
+    } else {
+        return <div>No user data available</div>;
+    }}
+    
 
     return null;
   };
+  function buildUserdataCard(user: any, index: any) {
+    return user ? (
+      <div
+        className={`${
+          index === 1 ? 'userProfileRightCard' : 'userProfileLeftCard'
+        }`}
+        key={user.id}>
+        <div className="userProfileTopSection" />
+        <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
+          <Avatar className="userProfileImage" src={user.avtar} />
+          <div className="userProfileVerifiedBadge">
+            <label className="userProfileVerifiedBadgeLabel">Verified</label>
+            <VerifiedIcon />
+          </div>
+        </div>
+        <div className="displayFlex flexDirectionColumn marginLeft16">
+          <label className="userNameLabel">{user.relation_with?.email}</label>
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
+              <label className="userProfileInfoTitle">Name</label>
+              <label className="userProfileInfoValue">
+                {user.relation_with?.first_name} {user.relation_with?.last_name}{' '}
+              </label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
+              <label className="userProfileInfoTitle">Relation</label>
+              <label className="userProfileInfoValue">{user.relation}</label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: '1rem' }}>
+              <label className="userProfileInfoTitle">DOB</label>
+              <label className="userProfileInfoValue">{user.dob}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div className="userProfilePlaceholderCard" />
+    );
+  }
+  
 
   function buildUserCard(user: any, index: any) {
     return user ? (
@@ -818,25 +808,32 @@ if(true)
  
 
   function buildProfiles() {
-    const chunkedData = [];
-    for (let i = 0; i < data.length; i += 2) {
-      const chunk = [data[i], i + 1 < data.length ? data[i + 1] : null];
-      chunkedData.push(chunk);
+    console.log("hi build");
+    console.log("Data:", data); // Check the data being received
+  
+    // Ensure that data is not empty
+    if (!data || Object.keys(data).length === 0) {
+      console.error("Data is not available or empty.");
+      return null;
     }
-
-    return (
-      <div className="displayFlex flexDirectionColumn">
-        {chunkedData.map((chunk, index) => (
-          <div
-            key={index}
-            className="displayFlex flexDirectionRow marginRight16 alignSelfCenter">
-            {buildUserCard(chunk[0], 0)}
-            {buildUserCard(chunk[1], 1)}
+  
+    if (true) {
+      // Render verified user card
+      return (
+        <div className="displayFlex flexDirectionColumn">
+          <div className="displayFlex flexDirectionRow marginRight16 alignSelfCenter">
+            {buildUserCard(data, 0)}
           </div>
-        ))}
-      </div>
-    );
+        </div>
+      );
+    } 
+    
   }
+  const onFinish = (values:any) => {
+    // Perform form submission logic here
+    console.log('Received values:', values);
+    // Call the next step or perform other actions based on the form data
+  };
 
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
@@ -874,7 +871,7 @@ if(true)
       <div style={{ marginLeft: '3rem' }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Form style={{ width: '100%', maxWidth: '500px' }}  >
+            <Form style={{ width: '100%', maxWidth: '500px' }}  onFinish={onFinish} >
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
@@ -883,6 +880,12 @@ if(true)
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={firstName}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your first name!',
+                      },
+                    ]}
                     >
                     <Input
                       style={{
@@ -899,7 +902,14 @@ if(true)
                     name={lastName}
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
-                    initialValue={lastName}>
+                    initialValue={lastName}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your last name!',
+                      },
+                    ]}
+                    >
                     <Input
                       style={{
                         borderRadius: '2rem',
@@ -917,7 +927,14 @@ if(true)
                     name={email}
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
-                    initialValue={email}>
+                    initialValue={email}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your email!',
+                      },
+                    ]}
+                    >
                     <Input
                       style={{
                         borderRadius: '2rem',
@@ -935,7 +952,14 @@ if(true)
                     name={mobile}
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
-                    initialValue={mobile}>
+                    initialValue={mobile}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your Mobile number!',
+                      },
+                    ]}
+                    >
                     <Input
                       style={{
                         borderRadius: '2rem',
@@ -952,13 +976,21 @@ if(true)
                   <Form.Item
                     label="Choose the purpose of the Darshan"
                     name="purpose"
-                    labelCol={{ span: 24 }}>
+                    labelCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please select your puppose!',
+                      },
+                    ]}
+                    >
                     <Select
                     mode='tags'
   style={{ width: '100%', height: 'auto' }}
   placeholder="Select Purpose"
   value={selectedPurpose} // Set the value of the selected option
-  onChange={value => setSelectedPurpose(value)} // Update selectedPurpose state when an option is selected
+  onChange={value => setSelectedPurpose(value)}
+   // Update selectedPurpose state when an option is selected
 >
   {purposeOptions.map(option => (
     <Option key={option.key} value={option.value}>
@@ -976,7 +1008,14 @@ if(true)
                     label="Select preferred date"
                     name={["startdate"]}
                     labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    wrapperCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please select preferred start date!',
+                      },
+                    ]}
+                    >
                     <DatePicker
                       style={{
                         borderRadius: '2rem',
@@ -997,7 +1036,14 @@ if(true)
                     label="    "
                     name={['user', 'last_name']}
                     labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    wrapperCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please select preferred end date!',
+                      },
+                    ]}
+                    >
                     <DatePicker
                       style={{
                         borderRadius: '2rem',
@@ -1019,7 +1065,14 @@ if(true)
                     label="Add Note"
                     name="addnote"
                     labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}>
+                    wrapperCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your Add note!',
+                      },
+                    ]}
+                    >
                      <TextArea
         style={{width:"30.75rem",height:"4rem",borderRadius:"1rem"}}
         value={addnote}
@@ -1051,25 +1104,26 @@ if(true)
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Row gutter={[16, 16]} style={{ justifyContent: 'space-between' }}>
-              {visibleData.map((user: any, index: any) => (
+             
                 <Col
-                  key={index}
+                 
                   xs={24}
                   sm={24}
                   md={12}
                   lg={12}
                   xl={12}
                   style={{ marginBottom: '16px' }}>
-                  {buildUserCard(user, index)}
+                    {buildProfiles()}
+                
                 </Col>
-              ))}
+             
 
               <Col
                 xs={24}
                 sm={24}
                 md={12}
                 lg={12}
-                xl={10}
+                xl={12}
                 style={{ marginBottom: '16px' }}>
                 
                 <div

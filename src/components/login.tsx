@@ -1,12 +1,11 @@
-"use client"
+
 import { useEffect, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import MainLayout from './mainlayout';
 import { Row, Col, Button, Avatar } from 'antd';
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from '@/icons/icon';
 import { useRouter } from 'next/navigation';
-import { useSession,signOut } from "next-auth/react"
-import { AuthOptions } from 'next-auth';
+
 
 
 export default function   Login() {
@@ -26,7 +25,7 @@ export default function   Login() {
           router.push('/onboarding/homepage');
         } else {
           console.log('User is not authenticated. Redirecting to Login page.');
-          router.push('/login'); // Redirect to login page
+         <Login/>
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -108,12 +107,12 @@ export default function   Login() {
             <Col span={24}>
               <div
                 style={{
-                  width: '305px',
-                  height: '60px',
-                  top: '127.72px',
-                  left: '40px',
-                  gap: ' 0px',
-                  opacity: '0px',
+                  width: '19.0625rem',
+                  height: '3.75rem',
+                  top: '7.9825rem',
+                  left: '2.5rem',
+                  gap: ' 0rem',
+                  opacity: '0rem',
                   marginRight: '2rem',
                 }}>
                 <InfoIcon />

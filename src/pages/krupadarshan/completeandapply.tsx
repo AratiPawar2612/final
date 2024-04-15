@@ -13,8 +13,8 @@ export default function CompleteAndApplyPage() {
   const router = useRouter();
   const [data, setData] = useState<any>([]);
   const [selectedValues, setSelectedValues] = useState([]);
-  const [purposeOptions, setPurposeOptions] = useState<any[]>([]); // Define purposeOptions state
-  const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
+  const [purposeOptions, setPurposeOptions] = useState<any[]>([]); 
+  const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); 
 
 
   const handleChange = (selectedItems: any) => {
@@ -32,7 +32,7 @@ export default function CompleteAndApplyPage() {
       console.log('Session Data:', sessionData?.session?.accessToken);
      
 
-            const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
+            const userApiUrl = 'https://hterp.tejgyan.org/django-app/event/participants/';
                     const userResponse = await fetch(userApiUrl, {
                         headers: {
 
@@ -42,27 +42,31 @@ export default function CompleteAndApplyPage() {
                     });
                     const userDataResponse = await userResponse.json();
                     const userDataResults1 = userDataResponse.results ?? [];
-                  const userDataResults = userDataResponse.results[0] ?? [];
-                    setData(userDataResults1);
-                    console.log("userDataResults",userDataResponse.results[0].user?.id);
-                    const userid=userDataResponse.results[0].user?.id;
-                    const purposeApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/?user=${userid}`;
-const purposeResponse = await fetch(purposeApiUrl, {
-    headers: {
-        Authorization: `Bearer ${sessionData?.session?.accessToken}`,
-        "Content-Type": "application/json",
-    },
-});
-const purposeDataResponse = await purposeResponse.json();
+                //  const userDataResults = userDataResponse.results[0] ?? [];
+                    setData(userDataResponse);
+                    
+                    console.log("userDataResults",userDataResults1);
 
-if (purposeDataResponse.results.length > 0) {
-  const purpose = purposeDataResponse.results[0];
-  const options = [{
-      key: purpose.id,
-      value: purpose.id,
-      label: purpose.label
-  }];
-  // Now you have options array containing data from the first record of the API response
+                    const userid = userDataResults1[0].user;
+                    console.log("userid",userid);
+                  
+                  const purposeApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/?user=${userid}`;
+                  const purposeResponse = await fetch(purposeApiUrl, {
+                      headers: {
+                          Authorization: `Bearer ${sessionData?.session?.accessToken}`,
+                          "Content-Type": "application/json",
+                      },
+                  });
+                  const purposeDataResponse = await purposeResponse.json();
+
+                  if (purposeDataResponse.results.length > 0) {
+                    const purpose = purposeDataResponse.results[0];
+                    const options = [{
+                        key: purpose.id,
+                        value: purpose.id,
+                        label: purpose.label
+                    }];
+  
   console.log(options);
   setPurposeOptions(options); // Update purposeOptions state
                   
@@ -80,7 +84,7 @@ if (purposeDataResponse.results.length > 0) {
   }, []);
 
   
-  function buildUserCard(user: any, index: any) {
+  function buildUserdataCard(user: any, index: any) {
     return user ? (
       <div
         className={`${
@@ -96,21 +100,21 @@ if (purposeDataResponse.results.length > 0) {
           </div>
         </div>
         <div className="displayFlex flexDirectionColumn marginLeft16">
-          <label className="userNameLabel">{user.user.email}</label>
+          <label className="userNameLabel">{user.relation_with?.email}</label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: '1rem' }}>
               <label className="userProfileInfoTitle">Name</label>
               <label className="userProfileInfoValue">
-                {user.user.first_name} {user.user.last_name}{' '}
+                {user.relation_with?.first_name} {user.relation_with?.last_name}{' '}
               </label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: '1rem' }}>
-              <label className="userProfileInfoTitle">Address</label>
-              <label className="userProfileInfoValue">{user.location}</label>
+              <label className="userProfileInfoTitle">Relation</label>
+              <label className="userProfileInfoValue">{user.relation}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
@@ -125,29 +129,12 @@ if (purposeDataResponse.results.length > 0) {
       <div className="userProfilePlaceholderCard" />
     );
   }
+ 
+  
+  
 
-  function buildProfiles() {
-    // Manually split data into arrays of 2 elements each
-    const chunkedData = [];
-    for (let i = 0; i < data.length; i += 2) {
-      const chunk = [data[i], i + 1 < data.length ? data[i + 1] : null];
-      chunkedData.push(chunk);
-    }
-
-    return (
-      <div className="displayFlex flexDirectionColumn">
-        {chunkedData.map((chunk, index) => (
-          <div
-            key={index}
-            className="displayFlex flexDirectionRow marginRight16 alignSelfCenter"
-            style={{ marginLeft: '2rem' }}>
-            {buildUserCard(chunk[0], 0)}
-            {buildUserCard(chunk[1], 1)}
-          </div>
-        ))}
-      </div>
-    );
-  }
+  
+  
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
       <div style={{ marginLeft: '1rem' }}>
@@ -181,7 +168,32 @@ if (purposeDataResponse.results.length > 0) {
        `}
       </div>
 
-      <Row gutter={16}>{buildProfiles()}</Row>
+      <Row gutter={16}>
+   
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+  {data.results && data.results.length > 0 ? (
+    <Row gutter={[16, 16]} style={{ flex: '1', flexWrap: 'wrap' }}>
+      {data.results.map((user: any, index: any) => (
+        <Col
+          key={index}
+          xs={12}
+          sm={24}
+          md={12}
+          lg={12}
+          xl={12}
+          style={{ marginBottom: '16px', marginLeft: '1rem', flex: '0 0 auto' }}
+        >
+          {buildUserdataCard(user, index)}
+        </Col>
+      ))}
+    </Row>
+  ) : (
+    <div>No user data available</div>
+  )}
+</div>
+
+
+</Row>
       <div>
         <Row gutter={[16, 16]}>
           
@@ -200,51 +212,51 @@ if (purposeDataResponse.results.length > 0) {
             
                     <Select
                     mode='tags'
-  style={{ width: '100%', height: 'auto' }}
-  placeholder="Select Purpose"
-  value={purposeOptions} // Set the value of the selected option
-  onChange={value => setSelectedPurpose(value)} // Update selectedPurpose state when an option is selected
->
-  {purposeOptions.map(option => (
-    <Option key={option.key} value={option.value}>
-      {option.title}
-    </Option>
-  ))}
-</Select>
-          </Col>
-        </Row>
-      </div>
+                    style={{ width: '100%', height: 'auto' }}
+                    placeholder="Select Purpose"
+                    value={purposeOptions} // Set the value of the selected option
+                    onChange={value => setSelectedPurpose(value)} // Update selectedPurpose state when an option is selected
+                     >
+                      {purposeOptions.map(option => (
+                        <Option key={option.key} value={option.value}>
+                          {option.title}
+                        </Option>
+                      ))}
+                    </Select>
+                              </Col>
+                            </Row>
+                          </div>
 
-      <div style={{ marginLeft: '1rem' }}>
-        <div style={{ fontSize: '0.9rem', marginTop: '2rem' }}>Note added</div>
-        <div className="verifyKhojiSubtitle" style={{ whiteSpace: 'pre-wrap' }}>
-          {`Lorem Ipsum is simply dummy text of the printing and typesetting
-         `}
-        </div>
-      </div>
-      <div style={{ marginTop: '2rem' }}>
-        <Button
-          style={{
-            borderRadius: '2rem',
-            marginLeft: '1rem',
-            width: '10rem',
-            height: '2rem',
-          }}>
-          Edit
-        </Button>
-        <Button
-          type="primary"
-          style={{
-            borderRadius: '2rem',
-            marginLeft: '1rem',
-            width: '12rem',
-            height: '2rem',
-            backgroundColor: 'black',
-          }}
-          onClick={onclicksaveandapplybtn}>
-          Save and apply
-        </Button>
-      </div>
-    </MainLayout>
-  );
-}
+                          <div style={{ marginLeft: '1rem' }}>
+                            <div style={{ fontSize: '0.9rem', marginTop: '2rem' }}>Note added</div>
+                            <div className="verifyKhojiSubtitle" style={{ whiteSpace: 'pre-wrap' }}>
+                              {`Lorem Ipsum is simply dummy text of the printing and typesetting
+                            `}
+                            </div>
+                          </div>
+                          <div style={{ marginTop: '2rem' }}>
+                            <Button
+                              style={{
+                                borderRadius: '2rem',
+                                marginLeft: '1rem',
+                                width: '10rem',
+                                height: '2rem',
+                              }}>
+                              Edit
+                            </Button>
+                            <Button
+                              type="primary"
+                              style={{
+                                borderRadius: '2rem',
+                                marginLeft: '1rem',
+                                width: '12rem',
+                                height: '2rem',
+                                backgroundColor: 'black',
+                              }}
+                              onClick={onclicksaveandapplybtn}>
+                              Save and apply
+                            </Button>
+                          </div>
+                        </MainLayout>
+                      );
+                    }
