@@ -31,7 +31,7 @@ const { Meta } = Card;
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
-
+  const [applicationdata, setApplicationdata] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   const router = useRouter();
   const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/';
@@ -82,6 +82,22 @@ export default function HomePage() {
           setData(userDataResponse);
 
           console.log('userDataResultsimverified', userDataResponse);
+         
+          const applicationresponse = await fetch('https://hterp.tejgyan.org/django-app/event/applications/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionData?.session?.access_token}`, // Include the access token in the Authorization header
+      },
+    });
+
+    if (!applicationresponse.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data = await applicationresponse.json();
+    const data1=data.results ?? [];
+    setApplicationdata(data1)
+    console.log('Fetched data:', data1);
          
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -635,7 +651,15 @@ export default function HomePage() {
     
   }
   
-  
+  const handleHistoryCardClick = () => {
+    // Check if applicationdata has data
+    if (applicationdata.length > 0) {
+      router.push('/krupadarshan/viewstatus');
+    } else {
+      // Do nothing if applicationdata is empty
+      // You can show a message to the user indicating that there are no applications yet
+    }
+  };
   
 
   const handleGetStarted = () => {
@@ -756,7 +780,7 @@ export default function HomePage() {
             justifyContent: 'space-between',
           }}>
           <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <Card style={{ width: '15rem' }}>
+            <Card style={{ width: '15rem' }} onClick={handleHistoryCardClick}>
               <Meta
                 style={{
                   display: 'flex',

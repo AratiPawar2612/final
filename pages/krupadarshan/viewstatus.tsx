@@ -13,6 +13,8 @@ export default function ViewStatusPage() {
   const [data, setData] = useState<any>([]);
   const[username,serUsername]=useState('');
   const[status,setStatus]=useState('');
+  const[token,settoken]=useState('');
+  const[appliid,setappliid]=useState('');
 
 
 
@@ -20,11 +22,27 @@ export default function ViewStatusPage() {
     const loadMoreData = async() => {
       const sessionresponse = await fetch('/api/getsession');
       const sessionData = await sessionresponse.json();
-      console.log('Session Data:', sessionData?.session?.accessToken);
+      console.log('Session Data:', sessionData?.session?.access_token);
       serUsername(sessionData?.session?.user.name);
      
+      settoken(sessionData?.session?.access_token);
+      console.log("token",token);
+      const ApiUrl = 'https://hterp.tejgyan.org/django-app/event/applications/';
+      const getapplicationid = await fetch(ApiUrl, {
+          headers: {
 
-      const userApiUrl = 'https://hterp.tejgyan.org/django-app/event/applications/';
+              Authorization: `Bearer ${sessionData?.session?.access_token}`,
+              "Content-Type": "application/json",
+          },
+      });
+      const appliidres = await getapplicationid.json();
+      const userDataResults1 = appliidres.results ?? [];
+      console.log("userDat",userDataResults1);
+      setappliid(userDataResults1[0]?.id);
+
+
+      const userApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/`;
+
       const userResponse = await fetch(userApiUrl, {
           headers: {
 
@@ -39,11 +57,11 @@ export default function ViewStatusPage() {
       console.log("userDataResults",userDataResponse);
      
       setStatus(userDataResults?.status);
-      console.log("status",status);
+      console.log("status",userDataResults?.status);
   };
 
   loadMoreData();
-  }, [status]);
+  }, [token,status]);
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
 
   const cardData = [
@@ -53,6 +71,34 @@ export default function ViewStatusPage() {
    
   ];
 
+  const handleconfirmclick  = async () => {
+   
+    
+    try {
+      const response = await fetch(`https://hterp.tejgyan.org/django-app/event/applications/${appliid}/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include the access token in the Authorization header
+        },
+        body: JSON.stringify({ status:"ACCEPTED_BY_KHOJI" }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update application status');
+      }
+  
+      // If the request is successful, you may handle the response here
+      const responseData = await response.json();
+      console.log('Updated application:', responseData);
+      return responseData; // Return the updated data if needed
+    } catch (error) {
+      console.error('Error updating application status:');
+      // Handle error scenarios
+      throw error;
+    }
+}
+ 
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
       <div>
@@ -152,7 +198,7 @@ export default function ViewStatusPage() {
               ? index < 2
                 ? index
                 : -1
-              : status === 'EVENT_CONFIRM'
+              : status === 'ACCEPTED_BY_KHOJI'
               ? index
               : -1
           }
@@ -167,7 +213,7 @@ export default function ViewStatusPage() {
           className={
             (status === 'SUBMITTED' && index === 0) ||
             (status === 'APPROVED_BY_DKD' && index < 2) ||
-            (status === 'EVENT_CONFIRM' && index === 2)
+            (status === 'ACCEPTED_BY_KHOJI' && index === 2)
               ? 'enabled-card'
               : 'disabled-card'
           }
@@ -176,7 +222,7 @@ export default function ViewStatusPage() {
           {card.title === 'Event assigned' && (
             <div style={{ marginTop: '1rem', display: "flex", flexDirection: "row" }}>
               <Button style={{ marginRight: '1rem' }}>Reschedule</Button>
-              <Button type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
+              <Button onClick={handleconfirmclick} type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
             </div>
           )}
         </Card>
