@@ -10,6 +10,7 @@ const nextConfig = {
     KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
     KEYCLOAK_CLIENT_SECRET: process.env.KEYCLOAK_CLIENT_SECRET,
     KEYCLOAK_ISSUER: process.env.KEYCLOAK_ISSUER,
+    NEXTAUTH_SECRET:process.env.NEXTAUTH_SECRET,
   },
   transpilePackages: [
     "@ant-design",

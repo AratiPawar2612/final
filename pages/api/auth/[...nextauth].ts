@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 export const authOptions = {
+  secret : process.env.NEXTAUTH_SECRET || "",
   providers: [
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID || "",
