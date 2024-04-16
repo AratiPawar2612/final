@@ -2,10 +2,10 @@ html,
 body {
   font-display: swap !important;
   font-weight: 400 !important;
-  font-size: 16px !important;
+  font-size: 1rem !important;
   width: 100% !important;
-  margin: 0px !important;
-  padding: 0px !important;
+  margin: 0rem !important;
+  padding: 0rem !important;
 }
 
 .mainContentWrapper {
@@ -19,7 +19,7 @@ body {
 @media screen and (max-width: 574px) {
   html,
   body {
-    font-size: 14px !important;
+    font-size: 0.875rem !important;
   }
 
   .mainContentWrapperBody {
@@ -31,7 +31,7 @@ body {
 @media screen and (min-width: 576px) {
   html,
   body {
-    font-size: 16px !important;
+    font-size: 1rem !important;
   }
 
   .mainContentWrapperBody {
@@ -43,7 +43,7 @@ body {
 @media screen and (min-width: 768px) {
   html,
   body {
-    font-size: 18px !important;
+    font-size: 1.125rem !important;
   }
 
   .mainContentWrapperBody {
@@ -55,7 +55,7 @@ body {
 @media screen and (min-width: 992px) {
   html,
   body {
-    font-size: 20px !important;
+    font-size: 1.25rem !important;
   }
 
   .mainContentWrapperBody {
@@ -67,7 +67,7 @@ body {
 @media screen and (min-width: 1200px) {
   html,
   body {
-    font-size: 22px !important;
+    font-size: 1.375rem !important;
   }
 
   .mainContentWrapperBody {
@@ -79,7 +79,7 @@ body {
 @media screen and (min-width: 1600px) {
   html,
   body {
-    font-size: 24px !important;
+    font-size: 1.5rem !important;
   }
 
   .mainContentWrapperBody {
@@ -87,7 +87,3 @@ body {
     max-width: calc(100% - 2rem);
   }
 }
-
-
-
-

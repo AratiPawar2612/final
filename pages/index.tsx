@@ -1,33 +1,21 @@
+import useSafeReplace from "@/components/useSafeReplace";
+import { Button, Col, Row } from "antd";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
-import MainLayout from "./mainlayout";
-import { Row, Col, Button, Avatar } from "antd";
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from "@/icons/icon";
-import { useRouter } from "next/navigation";
 
-export default function Login() {
-  const router = useRouter();
-  const gapRem = "50px";
+export default function Index() {
+  const { data: session, status } = useSession();
+  const [isSessionLoading, setIsSessionLoading] = useState(false);
+  const { safeReplace } = useSafeReplace();
+  const gapRem = "3.125rem";
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/getsession");
-        const sessionData = await response.json();
-
-        if (sessionData?.session) {
-          router.push("/onboarding/homepage");
-        } else {
-          console.log("User is not authenticated. Redirecting to Login page.");
-          router.push("/");
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+    setIsSessionLoading(status === "loading");
+    if (status === "authenticated" && session && safeReplace) {
+      safeReplace("/home");
+    }
+  }, [status, session, safeReplace]);
 
   const handleSignInGoogle = () => {
     signIn("keycloak", {}, { kc_idp_hint: "google" });
@@ -37,8 +25,10 @@ export default function Login() {
     signIn("keycloak", {}, { kc_idp_hint: "apple" });
   };
 
-  return (
-    <MainLayout>
+  return isSessionLoading ? (
+    <div>Loading...</div>
+  ) : status === "unauthenticated" ? (
+    <div>
       <div className="topPart">
         <Row>
           <Col>
@@ -46,12 +36,12 @@ export default function Login() {
               <div
                 style={{
                   display: "flex",
-                  width: "Hug (647.92px)px",
-                  height: "Hug (112px)px",
-                  top: "171px",
-                  left: "396px",
-                  gap: "35px",
-                  opacity: "0px",
+                  width: "40.495rem",
+                  height: "7rem",
+                  top: "10.6875rem",
+                  left: "24.75rem",
+                  gap: "2.1875rem",
+                  opacity: "0rem",
                 }}
               >
                 <LoginIcon />
@@ -118,6 +108,8 @@ export default function Login() {
           </Col>
         </Row>
       </div>
-    </MainLayout>
+    </div>
+  ) : (
+    <div />
   );
 }
