@@ -13,7 +13,9 @@ export default function Index() {
   useEffect(() => {
     setIsSessionLoading(status === "loading");
     if (status === "authenticated" && session && safeReplace) {
-      safeReplace("/home");
+     safeReplace("/onboarding/homepage");
+     
+      console.log("session",session);
     }
   }, [status, session, safeReplace]);
 
