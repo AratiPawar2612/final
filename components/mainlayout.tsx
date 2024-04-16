@@ -1,24 +1,34 @@
-
+import { useSession } from "next-auth/react";
 import { Layout, Spin } from 'antd';
 
 import { useRouter } from 'next/navigation';
 
-import { useEffect, useState } from 'react';
-
 const { Content, Sider } = Layout;
+import { useEffect, useState } from "react";
+import useSafeReplace from "./useSafeReplace";
 
 export default function MainLayout(props: any) {
   const { siderChildren, siderClassName, children, rightPanelChildren } = props;
-  const router = useRouter();
+
+  const { data: session, status } = useSession();
+  const [isSessionLoading, setIsSessionLoading] = useState(false);
+  const { safeReplace } = useSafeReplace();
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleMenu = () => {
     setCollapsed(!collapsed);
   };
 
-  return (
+  useEffect(() => {
+    setIsSessionLoading(status === "loading");
+    if (status === "unauthenticated" && safeReplace) {
+      safeReplace("/");
+    }
+  }, [status, session, safeReplace]);
+
+  return isSessionLoading ? <div>Loading...</div> : (
     <Layout className="leftpanel">
-      {siderChildren && siderClassName && (
+       {siderChildren && siderClassName && (
         <Sider
           trigger={null}
           collapsible

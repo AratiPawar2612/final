@@ -24,6 +24,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import { FileExclamationTwoTone, CheckOutlined } from '@ant-design/icons';
 import { getSession, useSession } from 'next-auth/react';
 import useSafeReplace from "@/components/useSafeReplace";
+import { signOut } from "next-auth/react";
 const { Meta } = Card;
 
 
@@ -59,25 +60,20 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
+       
        
         const response = await fetch('/api/getsession');
         const sessionData = await response.json();
         console.log('Session Data:', sessionData);
         console.log('Sessio', session);
         
-        setIsSessionLoading(status === "loading");
-        if (status === "authenticated" && session && safeReplace) {
-          safeReplace("/onboarding/homepage");
-        }
-        // const username=sessionData?.session?.user?.name;
-        // setUserName(username)
-      
+       
+        setUserName(sessionData?.session?.user?.name)
         
           const userApiUrl = 'https://hterp.tejgyan.org/django-app/iam/users/me/';
           const userResponse = await fetch(userApiUrl, {
             headers: {
-              Authorization: `Bearer ${sessionData.session.accessToken}`,
+              Authorization: `Bearer ${sessionData?.session?.access_token}`,
               'Content-Type': 'application/json',
             },
           });
@@ -94,7 +90,7 @@ export default function HomePage() {
       }
     };
     fetchData();
-  }, [session,status,safeReplace]);
+  },[session]);
 
   const showModal = () => {
     setVisible(true);
@@ -664,7 +660,7 @@ export default function HomePage() {
           <br />
           {username}
         </div>
-
+      
         <Row
           gutter={[16, 16]}
           style={{ marginTop: '0.8rem' }}

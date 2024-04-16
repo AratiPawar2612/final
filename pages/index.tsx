@@ -13,10 +13,11 @@ export default function Index() {
   useEffect(() => {
     setIsSessionLoading(status === "loading");
     if (status === "authenticated" && session && safeReplace) {
-     safeReplace("/onboarding/homepage");
-     
+       safeReplace("/onboarding/homepage");
+     // safeReplace("/home");
       console.log("session",session);
     }
+   
   }, [status, session, safeReplace]);
 
   const handleSignInGoogle = () => {

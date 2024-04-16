@@ -9,7 +9,7 @@ export default function Home() {
           await signOut();
         }}
       >
-        Logout
+        Logouts
       </div>
     </MainLayout>
   );

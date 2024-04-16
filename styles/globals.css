@@ -908,3 +908,11 @@ background: #A6D4DB;
   letter-spacing: 0.009rem;
   text-align: left;
 }
+.enabled-card {
+  border: 2px solid blue; /* Add blue border for the enabled card */
+}
+
+.disabled-card {
+  opacity: 0.5; /* Reduce opacity for disabled cards */
+  pointer-events: none; /* Disable pointer events for disabled cards */
+}

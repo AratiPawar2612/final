@@ -23,7 +23,6 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import { VerifiedIcon } from '@/icons/icon';
 import { ArrowLeftIcon } from '@/icons/icon';
 import { PlusOutlined } from '@ant-design/icons';
-import moment from 'moment';
 
 
 const { Option } = Select;
@@ -86,14 +85,14 @@ export default function AddPersonalDeatilsPage() {
       const loadMoreData = async() => {
         const sessionresponse = await fetch('/api/getsession');
         const sessionData = await sessionresponse.json();
-        console.log('Session Data:', sessionData?.session?.accessToken);
-        setToken(sessionData?.session?.accessToken);
+        console.log('Session Data:', sessionData?.session?.access_token );
+        setToken(sessionData?.session?.access_token);
 
         const purposeApiUrl = 'https://hterp.tejgyan.org/django-app/event/purposes/';
                       const purposeResponse = await fetch(purposeApiUrl, {
                           headers: {
 
-                              Authorization: `Bearer ${ sessionData?.session?.accessToken}`,
+                              Authorization: `Bearer ${sessionData?.session?.access_token}`,
                               "Content-Type": "application/json",
                           },
                       });
@@ -110,7 +109,7 @@ export default function AddPersonalDeatilsPage() {
                       const userResponse = await fetch(userApiUrl, {
                           headers: {
 
-                              Authorization: `Bearer ${ sessionData?.session?.accessToken}`,
+                              Authorization: `Bearer ${sessionData?.session?.access_token}`,
                               "Content-Type": "application/json",
                           },
                       });
@@ -126,30 +125,27 @@ export default function AddPersonalDeatilsPage() {
                           setEmail(userDataResults?.user?.email);
                           setUserid(userDataResults?.user?.id)
                           console.log(userDataResults?.user?.email);
-if(true)
-  {
+
     const getRequestOptions = {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${sessionData?.session?.accessToken}`
+        Authorization: `Bearer ${sessionData?.session?.access_token}`
       }
     };
   
-    // Make the GET request
     const getResponse = await fetch('https://hterp.tejgyan.org/django-app/event/participants/', getRequestOptions);
+   
     if (!getResponse.ok) {
       throw new Error('Network response was not ok');
     }
   
-    // Parse the response data for GET request
+ 
     const responseData = await getResponse.json();
-   
-    // const participantdata = responseData.results ?? [];
-    // console.log('Response data from GET request:', participantdata);
     setUserData(responseData);
+    console.log("responseData",userdata);
 
 
-  }
+  
                         
                         
                     
@@ -180,10 +176,9 @@ if(true)
       relation: khojirel.toUpperCase()
     };
     
-    // Convert JavaScript object to JSON string
     const requestBodyJSON = JSON.stringify(requestBody);
     
-    // Fetch request configuration
+
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -274,8 +269,8 @@ if(true)
       user: userid,
       status: "SUBMITTED",
       sort: null,
-      have_participant: isFamilyKrupaDarshan, // Assign true or false based on isFamilyKrupaDarshan
-      participant: null, 
+      have_participant: false, // Assign true or false based on isFamilyKrupaDarshan
+      // participant: null, 
       // khoji_id:"-",
       purposes: selectedPurpose,
       preferred_start_date: startdate,

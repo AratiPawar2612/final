@@ -29,14 +29,14 @@ export default function CompleteAndApplyPage() {
     const loadMoreData = async() => {
       const sessionresponse = await fetch('/api/getsession');
       const sessionData = await sessionresponse.json();
-      console.log('Session Data:', sessionData?.session?.accessToken);
+      console.log('Session Data:', sessionData?.session?.access_token);
      
 
-            const userApiUrl = 'https://hterp.tejgyan.org/django-app/event/participants/';
+            const userApiUrl = 'https://hterp.tejgyan.org/django-app/event/applications/';
                     const userResponse = await fetch(userApiUrl, {
                         headers: {
 
-                            Authorization: `Bearer ${ sessionData?.session?.accessToken}`,
+                            Authorization: `Bearer ${sessionData?.session?.access_token}`,
                             "Content-Type": "application/json",
                         },
                     });
@@ -47,13 +47,13 @@ export default function CompleteAndApplyPage() {
                     
                     console.log("userDataResults",userDataResults1);
 
-                    const userid = userDataResults1[0].user;
+                    const userid = userDataResults1[0].user?.id;
                     console.log("userid",userid);
                   
                   const purposeApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/?user=${userid}`;
                   const purposeResponse = await fetch(purposeApiUrl, {
                       headers: {
-                          Authorization: `Bearer ${sessionData?.session?.accessToken}`,
+                          Authorization: `Bearer ${sessionData?.session?.access_token}`,
                           "Content-Type": "application/json",
                       },
                   });

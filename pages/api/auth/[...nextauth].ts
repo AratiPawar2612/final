@@ -15,8 +15,8 @@ export const authOptions = {
       const { exp } = token;
 
       if (account) {
-        const { refresh_token } = account;
-        return { ...token, ...user, refresh_token };
+        const { refresh_token, access_token } = account;
+        return { ...token, ...user, refresh_token, access_token };
       } else if (exp) {
         const isValidToken = Date.now() < exp * 1000;
         if (isValidToken) {
@@ -62,9 +62,10 @@ export const authOptions = {
         return { ...token, ...user };
       }
     },
-    async session({ session, token, user }: any) {
+    async session({ session, token, user }: any) {session.access_token = token.access_token;
+      session.refresh_token = token.refresh_token;
       return session;
-    },
+},
   },
 };
 
