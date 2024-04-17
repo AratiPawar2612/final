@@ -106,7 +106,7 @@ export default function AddPersonalDeatilsPage() {
         if (participantUserResponseData && Array.isArray(participantUserResponseData.results)) {
           // Map over the results array and append userProfileId to each participant object
           const updatedParticipantData = participantUserResponseData.results.map((participant:any) => participant.id);
-  console.log("participantUserResponseData", updatedParticipantData)
+         console.log("participantUserResponseData", updatedParticipantData)
           setParticipantUserid(updatedParticipantData);
           setUserData(participantUserResponseData);
           console.log("participantUserResponseData", participantUserResponseData);
