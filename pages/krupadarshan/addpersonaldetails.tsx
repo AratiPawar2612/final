@@ -122,7 +122,11 @@ export default function AddPersonalDeatilsPage() {
     loadMoreData();
   }, []);
   
+  const [selectedRelationship, setSelectedRelationship] = useState("");
 
+  const handleSelectChange = (event:any) => {
+    setSelectedRelationship(event.target.value);
+  };
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
@@ -130,6 +134,32 @@ export default function AddPersonalDeatilsPage() {
     setInputType("khoji");
     setIsPopupVisible(true);
   };
+  const relationshipOptions = [
+    { label: "Mother", value: "MOTHER" },
+    { label: "Father", value: "FATHER" },
+    { label: "Sister", value: "SISTER" },
+    { label: "Brother", value: "BROTHER" },
+    { label: "Grandmother", value: "GRANDMOTHER" },
+    { label: "Grandfather", value: "GRANDFATHER" },
+    { label: "Aunt", value: "AUNT" },
+    { label: "Uncle", value: "UNCLE" },
+    { label: "Cousin", value: "COUSIN" },
+    { label: "Nephew", value: "NEPHEW" },
+    { label: "Niece", value: "NIECE" },
+    { label: "Friend", value: "FRIEND" },
+    { label: "Colleague", value: "COLLEAGUE" },
+    { label: "Wife", value: "WIFE" },
+    { label: "Husband", value: "HUSBAND" },
+    { label: "Acquaintance", value: "ACQUAINTANCE" },
+    { label: "Mother-in-law", value: "MOTHER_IN_LAW" },
+    { label: "Father-in-law", value: "FATHER_IN_LAW" },
+    { label: "Sister-in-law", value: "SISTER_IN_LAW" },
+    { label: "Brother-in-law", value: "BROTHER_IN_LAW" },
+    { label: "Son-in-law", value: "SON_IN_LAW" },
+    { label: "Daughter-in-law", value: "DAUGHTER_IN_LAW" },
+    { label: "Other", value: "OTHER" }
+  ];
+
 
   const onFinish = () => {
     form
@@ -152,7 +182,7 @@ export default function AddPersonalDeatilsPage() {
         sort: 1,
         user: userid,
         relation_with: khojiuserid,
-        relation: khojirel.toUpperCase(),
+        relation:selectedRelationship,
       };
 
       const requestBodyJSON = JSON.stringify(requestBody);
@@ -402,15 +432,21 @@ export default function AddPersonalDeatilsPage() {
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
               >
-                <Select
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
-                  value={khojirel}
-                
-                />
+               <select
+      style={{
+        borderRadius: "2rem",
+        height: "2rem",
+        width: "100%",
+      }}
+      value={selectedRelationship}
+      onChange={handleSelectChange}
+    >
+      {relationshipOptions.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
               </Form.Item>
             </Col>
           </Row>
@@ -499,7 +535,6 @@ export default function AddPersonalDeatilsPage() {
             <Col span={24}>
               <Form.Item
                 label="Date of birth"
-                name="purpose"
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
               >
