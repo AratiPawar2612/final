@@ -3,7 +3,7 @@ import { Button, Col, Row } from "antd";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from "@/icons/icon";
-
+import MainLayout from "@/components/mainlayout";
 export default function Index() {
   const { data: session, status } = useSession();
   const [isSessionLoading, setIsSessionLoading] = useState(false);
@@ -28,7 +28,8 @@ export default function Index() {
     signIn("keycloak", {}, { kc_idp_hint: "apple" });
   };
 
-  return isSessionLoading ? (
+  return (
+    <MainLayout>{isSessionLoading ? (
     <div>Loading...</div>
   ) : status === "unauthenticated" ? (
     <div>
@@ -44,11 +45,10 @@ export default function Index() {
                   top: "10.6875rem",
                   left: "24.75rem",
                   gap: "2.1875rem",
-                  opacity: "0rem",
                 }}
               >
                 <LoginIcon />
-                <div className="loginTitle">
+                <div className="loginTitle" style={{justifyContent:"center"}}>
                   Welcome to
                   <div />
                   Tejgyan Global Foundation
@@ -97,16 +97,15 @@ export default function Index() {
                 top: "7.9825rem",
                 left: "2.5rem",
                 gap: " 0rem",
-                opacity: "0rem",
                 marginRight: "2rem",
               }}
             >
-              <InfoIcon />
+              {/* <InfoIcon />
               <label className="infolabel">
                 {" "}
                 Lorem ipsum Lorem ipsum doplet lorem ipsum doplet sit. Lorem
                 ipsum Lorem ipsum doplet lorem ipsum doplet sit
-              </label>{" "}
+              </label>{" "} */}
             </div>
           </Col>
         </Row>
@@ -114,5 +113,8 @@ export default function Index() {
     </div>
   ) : (
     <div />
-  );
+  )}
+  
+  </MainLayout> 
+  )
 }

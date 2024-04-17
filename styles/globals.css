@@ -79,7 +79,6 @@
 .loginTitle {
   width: 31.5625rem;
   height: 7rem;
-  gap: 0rem;
   font-family: Manrope;
   font-size: 2.5rem;
   font-weight: 700;
@@ -479,7 +478,6 @@
   top: 15.875rem;
   left: 30.375rem;
   gap: 0.5rem;
-  opacity: 0rem;
   font-family: Manrope;
   font-size: 0.5331rem;
   font-weight: 400;
@@ -739,39 +737,17 @@
   align-items: center;
   margin-top: 2rem;
 }
-/* .container {
+.container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
 }
 
-.topPart {
-  width: 90rem;
-height: 24.625rem;
-padding: 10.6875rem 24.755rem 6.9375rem 24.75rem;
-gap: 0rem;
-opacity: 0rem;
-background: #A6D4DB;
 
-
-}
-
-.bottomPart {
-  width: 21.6656rem;
-  height: 19.6075rem;
-  top: 29.125rem;
-  left: 26.125rem;
-  gap: 3.125rem;
-  opacity: 0rem;
-  margin-top: 4.5rem;
-  
-} */
 .topPart {
   width: 121.25rem;
   height: 24.625rem;
-  padding: 10.6875rem 24.755rem 6.9375rem 24.75rem;
-  gap: 0rem;
   background: #a6d4db;
 }
 .topPart {
@@ -813,7 +789,6 @@ background: #A6D4DB;
   height: 2.125rem;
   left: 0.0625rem;
   gap: 0rem;
-  opacity: 0rem;
   color: #000000;
 }
 
@@ -822,7 +797,6 @@ background: #A6D4DB;
   height: 1.9375rem;
   top: 2.8125rem;
   gap: 0rem;
-  opacity: 0rem;
   font-family: Manrope;
   font-size: 1.125rem;
   font-weight: 400;
