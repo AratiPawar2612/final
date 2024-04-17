@@ -85,7 +85,7 @@ export default function AddPersonalDeatilsPage() {
       const loadMoreData = async() => {
         const sessionresponse = await fetch('/api/getsession');
         const sessionData = await sessionresponse.json();
-        console.log('Session Data:', sessionData?.session?.access_token );
+        //console.log('Session Data:', sessionData?.session?.access_token );
         setToken(sessionData?.session?.access_token);
 
         const purposeApiUrl = 'https://hterp.tejgyan.org/django-app/event/purposes/';
