@@ -445,7 +445,10 @@ const [showAddButton, setShowAddButton] = useState(false);
               name="contact_no"
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
-              rules={[{ required: true, message: 'Please enter Mobile Number' }]}
+              rules={[
+                { required: true, message: 'Please enter Mobile Number' },
+                { pattern: /^[0-9]{10}$/, message: 'Please enter a valid 10-digit mobile number' }
+              ]}
             >
               <Input
                 style={{
