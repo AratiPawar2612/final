@@ -6,7 +6,7 @@ import CustomMenu from "@/components/custommenu";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { VerifiedIcon } from "@/icons/icon";
 import { ArrowLeftIcon } from "@/icons/icon";
-import { fetchParticipantData ,fetchPurposeOptions} from "../api/applicationapi";
+import { fetchParticipantData ,fetchPurposeOptions,fetchApplicationData} from "../api/applicationapi";
 const { Option } = Select;
 
 export default function CompleteAndApplyPage() {
@@ -30,11 +30,15 @@ export default function CompleteAndApplyPage() {
       setData(participantUserResponseData);
 
       console.log("userDataResults", participantUserResponseData);
-      const userDataResults1 = participantUserResponseData.results ?? [];
-      const userid = userDataResults1[0].user;
-      console.log("userid", userid);
+
+      const applicationData = await fetchApplicationData(sessionData?.session?.access_token);
+      console.log("applicationData", applicationData);
+
+       const userid = applicationData[0]?.user?.id;
+       console.log("userid", userid);
+
       const options = await fetchPurposeOptions(userid, sessionData?.session?.access_token);
-        setPurposeOptions(options);
+      setPurposeOptions(options);
     };
 
     loadMoreData();
@@ -97,7 +101,7 @@ function buildUserdataCard(user: any, index: any) {
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
       <div style={{ marginLeft: "1rem" }}>
-        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+        <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} /> Apply for Krupa
           Darshan
         </div>
@@ -118,8 +122,8 @@ function buildUserdataCard(user: any, index: any) {
         </div>
       </div>
       <Divider style={{ marginTop: "3rem" }} />
-      <div style={{ fontWeight: "bold", fontSize: "1rem", marginLeft: "2rem" }}>
-        Summery
+      <div style={{ fontWeight:"bolder", fontSize: "1rem", marginLeft: "2rem" }}>
+        Summary
       </div>
       <div
         className="verifyKhojiSubtitle"
@@ -128,8 +132,9 @@ function buildUserdataCard(user: any, index: any) {
         {`Lorem Ipsum is simply dummy text of the printing and typesetting
        `}
       </div>
-
+<div style={{ fontWeight: "bold", fontSize: "0.9rem", marginLeft: "2rem" }}>  Added Member</div>
       <Row gutter={16}>
+      
         <div
           style={{
             display: "flex",
@@ -158,7 +163,7 @@ function buildUserdataCard(user: any, index: any) {
               ))}
             </Row>
           ) : (
-            <div>No user data available</div>
+            <div  style={{marginLeft: "1rem"}} >No Added Member</div>
           )}
         </div>
       </Row>
@@ -178,18 +183,18 @@ function buildUserdataCard(user: any, index: any) {
             </div>
 
             <Select
-              mode="tags"
-              style={{ width: "100%", height: "auto" }}
-              placeholder="Select Purpose"
-              value={purposeOptions} // Set the value of the selected option
-              onChange={(value) => setSelectedPurpose(value)} // Update selectedPurpose state when an option is selected
-            >
-              {purposeOptions.map((option) => (
-                <Option key={option.key} value={option.value}>
-                  {option.title}
-                </Option>
-              ))}
-            </Select>
+  mode="tags"
+  style={{ width: "100%", height: "auto" }}
+  placeholder="Select Purpose"
+  value={purposeOptions}
+  onChange={(value) => setSelectedPurpose(value)}
+>
+  {purposeOptions.map((option) => (
+    <Select.Option key={option.key} value={option.value}>
+      {option.label} {/* Change 'title' to 'label' */}
+    </Select.Option>
+  ))}
+</Select>
           </Col>
         </Row>
       </div>

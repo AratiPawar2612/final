@@ -120,7 +120,7 @@ export const submitApplication = async (
 export default submitApplication;
 
 
-export const fetchPurposeOptions = async (userid: string, accessToken: string) => {
+export const fetchPurposeOptions = async (userid :any, accessToken:any) => {
   try {
     const purposeApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/?user=${userid}`;
     const purposeResponse = await fetch(purposeApiUrl, {
@@ -130,16 +130,19 @@ export const fetchPurposeOptions = async (userid: string, accessToken: string) =
       },
     });
     const purposeDataResponse = await purposeResponse.json();
+    console.log("purposeDataResponse",purposeDataResponse)
 
     if (purposeDataResponse.results.length > 0) {
       const purpose = purposeDataResponse.results[0];
+      console.log("purpose",purpose)
       const options = [
         {
           key: purpose.id,
           value: purpose.id,
-          label: purpose.title,
+          label: purpose.purposes[0].description, // Change 'title' to 'label'
         },
       ];
+      console.log("options",options)
 
       return options;
     } else {
@@ -151,6 +154,7 @@ export const fetchPurposeOptions = async (userid: string, accessToken: string) =
     return [];
   }
 };
+
 
 
 

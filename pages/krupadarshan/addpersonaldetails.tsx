@@ -28,6 +28,7 @@ import {
   fetchUserData,
   submitApplication,
 } from "../api/applicationapi";
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -65,9 +66,10 @@ export default function AddPersonalDeatilsPage() {
   const [purposeOptions, setPurposeOptions] = useState<any[]>([]); // Define purposeOptions state
   const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
   const [participantuserid, setParticipantUserid] = useState<any[]>([]); // Define state for selected purpose
-
+  const [showSearchButton, setShowSearchButton] = useState(true);
+const [showAddButton, setShowAddButton] = useState(false);
   const { isFamilyKrupaDarshan } = router.query;
-  const [selectedRecord, setSelectedRecord] = useState(null); // State to store the selected record
+  const [errorMessage, setErrorMessage] = useState('');
   const [searchdata, setsearchdata] = useState([]); // State to store the fetched data
   const [form] = Form.useForm(); // Create a form instance
   const [dobValue, setDobValue] = useState<Date | null>(null);
@@ -123,6 +125,10 @@ export default function AddPersonalDeatilsPage() {
   }, []);
   
   const [selectedRelationship, setSelectedRelationship] = useState("");
+  const disabledDate = (current:any) => {
+    // Disable dates before today and after 30 days from today
+    return current && (current < dayjs().startOf('day') || current > dayjs().add(30, 'day').endOf('day'));
+  };
 
   const handleSelectChange = (event:any) => {
     setSelectedRelationship(event.target.value);
@@ -177,6 +183,10 @@ export default function AddPersonalDeatilsPage() {
 
   const handleaddclick = async () => {
     try {
+      if (!selectedRelationship) {
+        alert('Please fill in all required fields.');
+      } else {
+        
       const requestBody = {
         status: "PUB",
         sort: 1,
@@ -210,6 +220,9 @@ export default function AddPersonalDeatilsPage() {
           console.log("Response from server:", data);
           alert("Participant Added successfully");
           form.resetFields();
+         
+          setShowSearchButton(true);
+          setShowAddButton(false);
         })
         .catch((error) => {
           console.error(
@@ -217,57 +230,68 @@ export default function AddPersonalDeatilsPage() {
             error
           );
         });
+        setErrorMessage('');
+        // Proceed with add logic
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const handleseachclick = async () => {
-    // let url ='https://hterp.tejgyan.org/django-app/iam/users/?';
+   
     let url = "";
     try {
+    
+      // if (!khojiID || !khojifirstName || !khojilastName || !khojiemail || !khojimobile ) {
+         if (!khojiID ) {
+        alert('Please Enter Khoji id .');
+      } else {
+       
       const requestOption = {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      // if(khojiID)
-      //   {
-      //     url = `192.168.1.248:8000/iam/users/?khoji_id=${khojiID}`;
-
-      //   }
-      //   else if(firstName){
-      //     url = `192.168.1.248:8000/iam/users/?firat_Name=${firstName}&last_name=${lastName}`;
-      //   }
       if (khojiID) {
         url = `https://hterp.tejgyan.org/django-app/iam/users/?khoji_id=${khojiID}`;
-      } else if (firstName) {
-        url = `https://hterp.tejgyan.org/django-app/iam/users/?first_name=${firstName}`;
+      } else if (khojifirstName) {
+        url = `https://hterp.tejgyan.org/django-app/iam/users/?first_name=${khojifirstName}`;
       }
       const response = await fetch(url, requestOption);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const responseData = await response.json();
-
-      console.log("search data", responseData.results[0]);
       setkhojiuserid(responseData.results[0].user.id);
-      if (searchdata && searchdata.length <= 1) {
-        console.log("hi");
+      console.log("userid",responseData.results[0].user.id);
+      // Update searchdata with responseData.results[0]
+      setsearchdata(responseData.results[0]);
+      console.log("searchdata",searchdata);
+      if (responseData.results && responseData.results.length > 0) {
+        console.log("Data found");
+        // Update form fields with responseData.results[0]
         form.setFieldsValue(responseData.results[0]);
-
-        setsearchdata(responseData.results[0]);
-        console.log("searchdata[0]", searchdata[0]);
+        console.log("responseData[0]", responseData.results[0]);
+        setShowSearchButton(false);
+        setShowAddButton(true);
       } else {
+  
         alert("No data found");
       }
+
+      
+    }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const onclickNextBtn = async () => {
+    if (!selectedPurpose || !startdate|| !enddate || !addnote) {
+      alert('Please Enter All required field'); 
+    } else {
     const requestBody = {
       user: userid,
       status: "SUBMITTED",
@@ -276,13 +300,13 @@ export default function AddPersonalDeatilsPage() {
       purposes: selectedPurpose,
       preferred_start_date: startdate,
       preferred_end_date: enddate,
-      khoji_note: {
-        property1: addnote,
-        property2: addnote,
-      },
+      khoji_note:addnote,
+       
+    
     };
 
     const applicationSubmitted = await submitApplication(requestBody, token);
+    console.log("applicationSubmitted",applicationSubmitted);
     if (applicationSubmitted) {
       alert("Application Submitted successfully");
       router.push("/krupadarshan/completeandapply");
@@ -290,6 +314,7 @@ export default function AddPersonalDeatilsPage() {
       // Handle submission error
       console.error("Application submission failed");
     }
+  }
   };
 
   const handleCancel = () => {
@@ -325,170 +350,186 @@ export default function AddPersonalDeatilsPage() {
     }
   };
   const renderInputComponent = () => {
-    if (inputType === "khoji") {
+    if (inputType === "khoji" ) {
       return (
         <Form form={form}>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Enter Khoji ID"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                name="khojiID"
-              >
-                <Input
-                  placeholder="Enter Khoji ID"
-                  value={khojiID}
-                  onChange={(e) => setKhojiID(e.target.value)}
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Divider>Or enter</Divider>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="First Name"
-                name={["user", "first_name"]}
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "auto",
-                  }}
-                  onChange={(e) => setkhojifirstName(e.target.value)}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Last Name"
-                name={["user", "last_name"]}
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "auto",
-                  }}
-                  onChange={(e) => setkhojilastName(e.target.value)}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Email ID"
-                name={["user", "email"]}
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
-                  onChange={(e) => setkhojiemail(e.target.value)}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Mobile Number"
-                name="contact_no"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-                <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
-                  onChange={(e) => setkhojimobile(e.target.value)}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Relation With Khoji"
-                name="relation"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-              >
-               <select
-      style={{
-        borderRadius: "2rem",
-        height: "2rem",
-        width: "100%",
-      }}
-      value={selectedRelationship}
-      onChange={handleSelectChange}
-    >
-      {relationshipOptions.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Button
-              type="primary"
-              style={{
-                marginTop: "1rem",
-                backgroundColor: "black",
-                width: "8rem",
-                height: "2.4888rem",
-                marginBottom: "1rem",
-                borderRadius: "1rem",
-                fontSize: "11.38px",
-              }}
-              onClick={handleseachclick}
+          
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item
+              label="Enter Khoji ID"
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              name="khojiID"
+              rules={[{ required: true, message: 'Please enter Khoji ID' }]}
             >
-              Search
-            </Button>
-            <Button
-              type="primary"
-              style={{
-                marginTop: "1rem",
-                backgroundColor: "black",
-                width: "8rem",
-                height: "2.4888rem",
-                marginBottom: "1rem",
-                borderRadius: "1rem",
-                fontSize: "11.38px",
-              }}
-              onClick={handleaddclick}
+              <Input
+                placeholder="Enter Khoji ID"
+                value={khojiID}
+                onChange={(e) => setKhojiID(e.target.value)}
+                style={{
+                  borderRadius: "2rem",
+                  height: "2rem",
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Divider>Or enter</Divider>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label="First Name"
+              name={["user", "first_name"]}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              rules={[{ required: true, message: 'Please enter First Name' }]}
             >
-              Add
-            </Button>
-          </div>
-        </Form>
+              <Input
+                style={{
+                  borderRadius: "2rem",
+                  height: "2rem",
+                  width: "auto",
+                }}
+                onChange={(e) => setkhojifirstName(e.target.value)}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Last Name"
+              name={["user", "last_name"]}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              rules={[{ required: true, message: 'Please enter Last Name' }]}
+            >
+              <Input
+                style={{
+                  borderRadius: "2rem",
+                  height: "2rem",
+                  width: "auto",
+                }}
+                onChange={(e) => setkhojilastName(e.target.value)}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item
+              label="Email ID"
+              name={["user", "email"]}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              rules={[
+                { type: 'email', message: 'Please enter a valid email address' },
+                { required: true, message: 'Please enter Email ID' }
+              ]}
+            >
+              <Input
+                style={{
+                  borderRadius: "2rem",
+                  height: "2rem",
+                  width: "100%",
+                }}
+                onChange={(e) => setkhojiemail(e.target.value)}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item
+              label="Mobile Number"
+              name="contact_no"
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              rules={[{ required: true, message: 'Please enter Mobile Number' }]}
+            >
+              <Input
+                style={{
+                  borderRadius: "2rem",
+                  height: "2rem",
+                  width: "100%",
+                }}
+                onChange={(e) => setkhojimobile(e.target.value)}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item
+              label="Relation With Khoji"
+              name="relation"
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              rules={[{ required: true, message: 'Please select Relationship' }]}
+            >
+              <select
+                style={{
+                  borderRadius: "2rem",
+                  height: "2rem",
+                  width: "100%",
+                }}
+                value={selectedRelationship}
+                onChange={handleSelectChange}
+              >
+                {/* Default option */}
+                <option value="" >
+                  Select Relationship
+                </option>
+                {/* Other options */}
+                {relationshipOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </Form.Item>
+          </Col>
+        </Row>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+         
+         
+          {showSearchButton && (
+   <Button
+   type="primary"
+   style={{
+    marginTop: "1rem",
+    backgroundColor: "black",
+    width: "100%",
+    marginBottom: "1rem",
+  }}
+   onClick={handleseachclick}
+ >
+   Search
+ </Button>
+)}
+{showAddButton && (
+   <Button
+   type="primary"
+   style={{
+    marginTop: "1rem",
+    backgroundColor: "black",
+    width: "100%",
+    marginBottom: "1rem",
+  }}
+   onClick={handleaddclick}
+ >
+   Add
+ </Button>
+)}
+        </div>
+      </Form>
+      
       );
     } else if (inputType === "guest") {
       return (
@@ -811,12 +852,7 @@ export default function AddPersonalDeatilsPage() {
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={firstName}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your first name!",
-                      },
-                    ]}
+                    
                   >
                     <Input
                       style={{
@@ -824,6 +860,7 @@ export default function AddPersonalDeatilsPage() {
                         height: "2rem",
                         width: "100%",
                       }}
+                      disabled
                     />
                   </Form.Item>
                 </Col>
@@ -834,12 +871,7 @@ export default function AddPersonalDeatilsPage() {
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={lastName}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your last name!",
-                      },
-                    ]}
+                   
                   >
                     <Input
                       style={{
@@ -847,6 +879,7 @@ export default function AddPersonalDeatilsPage() {
                         height: "2rem",
                         width: "100%",
                       }}
+                      disabled
                     />
                   </Form.Item>
                 </Col>
@@ -859,12 +892,7 @@ export default function AddPersonalDeatilsPage() {
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={email}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your email!",
-                      },
-                    ]}
+                    
                   >
                     <Input
                       style={{
@@ -872,6 +900,7 @@ export default function AddPersonalDeatilsPage() {
                         height: "2rem",
                         width: "100%",
                       }}
+                      disabled
                     />
                   </Form.Item>
                 </Col>
@@ -884,12 +913,7 @@ export default function AddPersonalDeatilsPage() {
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={mobile}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your Mobile number!",
-                      },
-                    ]}
+                    
                   >
                     <Input
                       style={{
@@ -897,6 +921,7 @@ export default function AddPersonalDeatilsPage() {
                         height: "2rem",
                         width: "100%",
                       }}
+                      disabled
                     />
                   </Form.Item>
                 </Col>
@@ -951,6 +976,7 @@ export default function AddPersonalDeatilsPage() {
                         height: "2rem",
                         width: "100%",
                       }}
+                      disabledDate={disabledDate}
                       onChange={(date, dateString) => {
                         if (typeof dateString === "string") {
                           setStartdate(dateString);
@@ -962,7 +988,7 @@ export default function AddPersonalDeatilsPage() {
                 <Col span={12}>
                   <Form.Item
                     label="    "
-                    name={["user", "last_name"]}
+                    name={["enddate"]}
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     rules={[
@@ -978,6 +1004,7 @@ export default function AddPersonalDeatilsPage() {
                         height: "2rem",
                         width: "100%",
                       }}
+                      disabledDate={disabledDate}
                       onChange={(date, dateString) => {
                         if (typeof dateString === "string") {
                           setEnddate(dateString);
