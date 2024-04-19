@@ -29,7 +29,7 @@ export default function Index() {
   };
 
   return (
-    <MainLayout>{isSessionLoading ? (
+    isSessionLoading ? (
     <div>Loading...</div>
   ) : status === "unauthenticated" ? (
     <div>
@@ -113,8 +113,8 @@ export default function Index() {
     </div>
   ) : (
     <div />
-  )}
+  )
   
-  </MainLayout> 
+ 
   )
 }
