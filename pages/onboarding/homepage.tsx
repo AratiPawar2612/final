@@ -47,6 +47,8 @@ export default function HomePage() {
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [failureModalVisible, setFailureModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState("khojiID");
+  const [status, setStatus] = useState("");
+  const [applicationid, setApplicationid] = useState("");
 
 
 
@@ -68,7 +70,9 @@ export default function HomePage() {
 
           const applicationData = await fetchApplicationData(accessToken);
           setApplicationdata(applicationData);
-          
+          setApplicationid(applicationData[0]?.reference_code)
+          setStatus(applicationData[0]?.status)
+          console.log("status", applicationData[0]?.status);
           console.log("userDataResultsimverified", userDataResponse);
           console.log("Fetched application data:", applicationData);
         } else {
@@ -660,6 +664,7 @@ export default function HomePage() {
   const handleHistoryCardClick = () => {
    
     if (applicationdata.length > 0) {
+
       router.push("/krupadarshan/viewstatus");
     } else {
       
@@ -700,7 +705,6 @@ export default function HomePage() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                // Ensure the column takes full height of the parent Row
               }}
             >
               
@@ -736,19 +740,20 @@ export default function HomePage() {
                 </div>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Button
-                  type="primary"
-                  style={{
-                    backgroundColor: "black",
-                    marginTop: "0.8rem",
-                    borderRadius: "1rem",
-                    width: "159.31px",
-                    height: "39.82px",
-                  }}
-                  onClick={handleGetStarted}
-                >
-                  Get Started
-                </Button>
+              <Button
+  type="primary"
+  style={{
+    backgroundColor: "black",
+    marginTop: "0.8rem",
+    borderRadius: "1rem",
+    width: "159.31px",
+    height: "39.82px",
+  }}
+  onClick={handleGetStarted}
+  disabled={applicationdata.length >0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" } // Disable the button if applicationdata is empty
+>
+  Get Started
+</Button>
                 <div style={{ marginTop: "0.8rem" }}>
                   {" "}
                   <label>
@@ -790,23 +795,42 @@ export default function HomePage() {
             justifyContent: "space-between",
           }}
         >
-          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            <Card style={{ width: "15rem" }} onClick={handleHistoryCardClick}>
-              <Meta
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  textWrap: "wrap",
-                  width: "auto",
-                }}
-                avatar={<Avatar icon={<FileExclamationTwoTone />} />}
-                title="No application yet"
-                description="Your pastDarshan 
-                                appointments will reflect here"
-              />
-            </Card>
-          </Col>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+{applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
+  <Card style={{ width: "15rem" }} onClick={handleHistoryCardClick}>
+    <Meta
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        textWrap: "wrap",
+        width: "auto",
+      }}
+      title="Your Application ID"
+      description={applicationid}
+    />
+    click here to view your status
+  </Card>
+)} 
+{applicationdata.length === 0 || applicationdata[0].status === "ACCEPTED_BY_KHOJI" && (
+  <Card style={{ width: "15rem" }}>
+    <Meta
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        textWrap: "wrap",
+        width: "auto",
+      }}
+      avatar={<Avatar icon={<FileExclamationTwoTone />} />}
+      title="No application yet"
+      description="Your past Darshan appointments will reflect here"
+    />
+  </Card>
+)}
+
+</Col>
+
         </Row>
       </div>
     </MainLayout>

@@ -125,10 +125,15 @@ const [showAddButton, setShowAddButton] = useState(false);
   }, []);
   
   const [selectedRelationship, setSelectedRelationship] = useState("");
-  const disabledDate = (current:any) => {
-    // Disable dates before today and after 30 days from today
-    return current && (current < dayjs().startOf('day') || current > dayjs().add(30, 'day').endOf('day'));
+  const disabledDate = (current: any, startDate: any, endDate: any) => {
+    // Disable dates before today, and dates before the selected start date or after the selected end date
+    return current && (
+      current < dayjs().startOf('day') || 
+      (startDate && current < dayjs(startDate).startOf('day')) || 
+      (endDate && current > dayjs(endDate).endOf('day'))
+    );
   };
+  
 
   const handleSelectChange = (event:any) => {
     setSelectedRelationship(event.target.value);
@@ -187,56 +192,58 @@ const [showAddButton, setShowAddButton] = useState(false);
         alert('Please fill in all required fields.');
       } else {
         
-      const requestBody = {
-        status: "PUB",
-        sort: 1,
-        user: userid,
-        relation_with: khojiuserid,
-        relation:selectedRelationship,
-      };
-
-      const requestBodyJSON = JSON.stringify(requestBody);
-
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: requestBodyJSON,
-      };
-
-      fetch(
-        "https://hterp.tejgyan.org/django-app/event/participants/",
-        requestOptions
-      )
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("Response from server:", data);
-          alert("Participant Added successfully");
-          form.resetFields();
-         
-          setShowSearchButton(true);
-          setShowAddButton(false);
-        })
-        .catch((error) => {
-          console.error(
-            "There was a problem with your fetch operation:",
-            error
-          );
-        });
-        setErrorMessage('');
-        // Proceed with add logic
+        const requestBody = {
+          status: "PUB",
+          sort: 1,
+          user: userid,
+          relation_with: khojiuserid,
+          relation:selectedRelationship,
+        };
+  
+        const requestBodyJSON = JSON.stringify(requestBody);
+  
+        const requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: requestBodyJSON,
+        };
+  
+        fetch(
+          "https://hterp.tejgyan.org/django-app/event/participants/",
+          requestOptions
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Response from server:", data);
+            alert("Participant Added successfully");
+            form.resetFields();
+            setShowSearchButton(true);
+            setShowAddButton(false);
+            // Reload the page
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error(
+              "There was a problem with your fetch operation:",
+              error
+            );
+          });
+          setErrorMessage('');
+          // Proceed with add logic
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
   };
+  
 
   const handleseachclick = async () => {
    
@@ -289,33 +296,37 @@ const [showAddButton, setShowAddButton] = useState(false);
   };
 
   const onclickNextBtn = async () => {
-    if (!selectedPurpose || !startdate|| !enddate || !addnote) {
-      alert('Please Enter All required field'); 
+    if (!selectedPurpose || !startdate || !enddate || !addnote) {
+      alert('Please Enter All required field');
     } else {
-    const requestBody = {
-      user: userid,
-      status: "SUBMITTED",
-      have_participants: isFamilyKrupaDarshan,
-      participants: isFamilyKrupaDarshan ? participantuserid : null,
-      purposes: selectedPurpose,
-      preferred_start_date: startdate,
-      preferred_end_date: enddate,
-      khoji_note:addnote,
-       
-    
-    };
-
-    const applicationSubmitted = await submitApplication(requestBody, token);
-    console.log("applicationSubmitted",applicationSubmitted);
-    if (applicationSubmitted) {
-      alert("Application Submitted successfully");
-      router.push("/krupadarshan/completeandapply");
-    } else {
-      // Handle submission error
-      console.error("Application submission failed");
+      const requestBody = {
+        user: userid,
+        status: "SUBMITTED",
+        have_participants: isFamilyKrupaDarshan,
+        participants: isFamilyKrupaDarshan ? participantuserid : null,
+        purposes: selectedPurpose,
+        preferred_start_date: startdate,
+        preferred_end_date: enddate,
+        khoji_note: addnote,
+      };
+  
+      try {
+        const applicationSubmitted = await submitApplication(requestBody, token);
+        console.log("applicationSubmitted", applicationSubmitted);
+        if (applicationSubmitted) {
+          alert("Application Submitted successfully");
+          router.push("/krupadarshan/completeandapply");
+        } else {
+          // Handle submission error
+          console.error("Application submission failed");
+        }
+      } catch (error) {
+        // Handle error
+        console.error("Error submitting application:", error);
+      }
     }
-  }
   };
+  
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -979,7 +990,7 @@ const [showAddButton, setShowAddButton] = useState(false);
                         height: "2rem",
                         width: "100%",
                       }}
-                      disabledDate={disabledDate}
+                      disabledDate={(current) => disabledDate(current, null, enddate)}
                       onChange={(date, dateString) => {
                         if (typeof dateString === "string") {
                           setStartdate(dateString);
@@ -1007,7 +1018,7 @@ const [showAddButton, setShowAddButton] = useState(false);
                         height: "2rem",
                         width: "100%",
                       }}
-                      disabledDate={disabledDate}
+                      disabledDate={(current) => disabledDate(current, startdate, null)}
                       onChange={(date, dateString) => {
                         if (typeof dateString === "string") {
                           setEnddate(dateString);

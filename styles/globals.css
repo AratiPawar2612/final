@@ -1,17 +1,4 @@
-.leftPanel {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  width: 27.125rem !important;
-  max-width: 27.125rem !important;
-  min-width: 27.125rem !important;
-  padding-left: 4.875rem !important;
-  background: #F4F4F4!important;
-  position: fixed !important;
-  top: 0rem !important;
-  bottom: 0rem !important;
-  left: 0rem !important;
-}
+
 .main-container {
   /* max-width: 75rem; */
   margin: 0 auto;
@@ -68,12 +55,10 @@
 .logo > svg {
   width: 3.6875rem;
   height: 2.7525rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   border: 0.0119rem 0rem 0rem 0rem;
-  align-items: center;
-  margin-left: 1.5rem;
+  align-items: center!important;
+  justify-self: center!important;
+  /* margin-left: 2rem!important; */
 }
 
 .loginTitle {
@@ -164,20 +149,6 @@
   width: 1.125rem !important;
   height: 1.125rem !important;
   fill: white !important;
-}
-
-.leftMenuPanel {
-  display: flex !important;
-  flex-direction: column !important;
-  background: white !important;
-  width: 10.375rem !important;
-  min-width: 10.375rem !important;
-  max-width: 10.375rem !important;
-  padding-top: 2.875rem !important;
-  padding-left: 1.125rem !important;
-  padding-right: 1.125rem !important;
-  padding-bottom: 1.875rem !important;
-  border-right: 0.0444rem solid #00000033;
 }
 
 .menuLogo,
@@ -746,18 +717,14 @@
 
 
 .topPart {
-  width: 121.25rem;
-  height: 24.625rem;
-  background: #a6d4db;
-}
-.topPart {
   flex: 1;
-  background-color: #a6d4db;
-  height: 19.6075rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
+  width:"100vw"!important;
+  background-color: #a6d4db!important;
+  height: 12.6075rem!important;
+  display: flex!important;
+  justify-content: center!important;
+  align-items: center!important;
+  padding: 2rem!important;
 }
 
 .bottomPart {
@@ -886,4 +853,48 @@
 .disabled-card {
   opacity: 0.5; /* Reduce opacity for disabled cards */
   pointer-events: none; /* Disable pointer events for disabled cards */
+}
+.vertical-line {
+  border-left: 1px solid #ccc;
+  height: 100%;
+  margin-left: 10px; /* Adjust as needed */
+} 
+
+
+.step-item.active .step-circle {
+  background-color: black; /* Color for active steps */
+}
+
+.step-item.completed .step-circle {
+  background-color: red; /* Color for completed steps */
+}
+
+.customs-step {
+  display: flex;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #000; /* Change step color here */
+  color: #fff; /* Change text color here */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vertical-line {
+  border-left: 2px solid #ccc; /* Change middle line color here */
+  position: absolute;
+  top: 50%;
+  height: calc(100% - 30px); /* Adjust height to fit between circles */
+  margin-left: 14px; /* Adjust spacing between circles */
+  transform: translateY(-50%);
 }

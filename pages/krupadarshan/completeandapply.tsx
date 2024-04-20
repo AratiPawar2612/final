@@ -23,10 +23,11 @@ export default function CompleteAndApplyPage() {
       const sessionresponse = await fetch("/api/getsession");
       const sessionData = await sessionresponse.json();
       console.log("Session Data:", sessionData?.session?.access_token);
-
+      if (sessionData?.session) {
       const participantUserResponseData = await fetchParticipantData(
         sessionData?.session?.access_token
       );
+      
       setData(participantUserResponseData);
 
       console.log("userDataResults", participantUserResponseData);
@@ -39,10 +40,14 @@ export default function CompleteAndApplyPage() {
 
       const options = await fetchPurposeOptions(userid, sessionData?.session?.access_token);
       setPurposeOptions(options);
+    }
+    else{
+      router.push("/");
+    }
     };
 
     loadMoreData();
-  }, []);
+  }, [router]);
  
   const onclicksaveandapplybtn = () => {
     router.push("/krupadarshan/viewstatus");

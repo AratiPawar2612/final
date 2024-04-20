@@ -3,7 +3,9 @@ import { Button, Col, Row } from "antd";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from "@/icons/icon";
-import MainLayout from "@/components/mainlayout";
+
+
+
 export default function Index() {
   const { data: session, status } = useSession();
   const [isSessionLoading, setIsSessionLoading] = useState(false);
@@ -36,18 +38,18 @@ export default function Index() {
       <div className="topPart">
         <Row>
           <Col>
-            <div className="logoTitleWrapper">
+            <div >
               <div
                 style={{
                   display: "flex",
-                  width: "40.495rem",
-                  height: "7rem",
-                  top: "10.6875rem",
+                  // width: "40.495rem",
+                  // height: "1rem",
+                  top: "11.6875rem",
                   left: "24.75rem",
                   gap: "2.1875rem",
                 }}
               >
-                <LoginIcon />
+                <LoginIcon className="logo"/>
                 <div className="loginTitle" style={{justifyContent:"center"}}>
                   Welcome to
                   <div />

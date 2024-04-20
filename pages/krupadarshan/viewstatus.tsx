@@ -5,7 +5,8 @@ import MainLayout from '@/components/mainlayout';
 import CustomMenu from '@/components/custommenu';
 import { ArrowLeftOutlined, UserOutlined } from '@ant-design/icons';
 import { useEffect,useState } from 'react';
-import { fetchParticipantData } from '../api/applicationapi';
+import useSafeReplace from "@/components/useSafeReplace";
+import { useSession } from 'next-auth/react';
 
 export default function ViewStatusPage() {
   const { Step } = Steps;
@@ -13,11 +14,13 @@ export default function ViewStatusPage() {
   const [data, setData] = useState<any>([]);
   const [particpantdata, setParticpantdata] = useState<any>([]);
   const[username,serUsername]=useState('');
-  const[status,setStatus]=useState('');
+  const[status1,setStatus]=useState('');
   const[token,settoken]=useState('');
   const[appliid,setappliid]=useState('');
   const [reference_code, setReferenceCode] = useState('');
-
+  const { data: session, status } = useSession();
+  const [isSessionLoading, setIsSessionLoading] = useState(false);
+  const { safeReplace } = useSafeReplace();
 
 
   useEffect(() => {
@@ -28,7 +31,7 @@ export default function ViewStatusPage() {
       serUsername(sessionData?.session?.user.name);
      
       settoken(sessionData?.session?.access_token);
-      console.log("token",token);
+      if (sessionData?.session) {
 
       const ApiUrl = 'https://hterp.tejgyan.org/django-app/event/applications/';
       const getapplicationid = await fetch(ApiUrl, {
@@ -47,10 +50,15 @@ export default function ViewStatusPage() {
 
      
 
-      const participantUserResponseData = await fetchParticipantData(
-        sessionData?.session?.access_token
-      );
-      setParticpantdata(participantUserResponseData);
+      // const participantUserResponseData = await fetchParticipantData(
+      //   sessionData?.session?.access_token
+      // );
+      // if(participantUserResponseData.length>0)
+      //   {
+
+      //     setParticpantdata(participantUserResponseData);
+      //   }
+     
 
 
       const userApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/`;
@@ -70,10 +78,14 @@ export default function ViewStatusPage() {
      
       setStatus(userDataResults?.status);
       console.log("status",userDataResults?.status);
+    }
+    else{
+      router.push("/")
+    }
   };
 
   loadMoreData();
-  }, [token,status]);
+  }, [router]);
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
 
   const cardData = [
@@ -83,9 +95,7 @@ export default function ViewStatusPage() {
    
   ];
 
-  const handleconfirmclick  = async () => {
-   
-    
+  const handleconfirmclick = async () => {
     try {
       const response = await fetch(`https://hterp.tejgyan.org/django-app/event/applications/${appliid}/`, {
         method: 'PATCH',
@@ -93,29 +103,29 @@ export default function ViewStatusPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`, // Include the access token in the Authorization header
         },
-        body: JSON.stringify({ status:"ACCEPTED_BY_KHOJI" }),
+        body: JSON.stringify({ status: "ACCEPTED_BY_KHOJI" }),
       });
   
       if (!response.ok) {
         throw new Error('Failed to update application status');
-      }
-      else
-      {
+      } else {
         const responseData = await response.json();
         console.log('Updated application:', responseData);
-        alert("your application is confirmed");
+        alert("Your application is confirmed");
+        // Refresh the page
+        window.location.reload();
         return responseData; // Return the updated data if needed
-        
       }
   
       // If the request is successful, you may handle the response here
-      
+  
     } catch (error) {
-      console.error('Error updating application status:');
+      console.error('Error updating application status:', error);
       // Handle error scenarios
       throw error;
     }
-}
+  }
+  
  
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
@@ -156,8 +166,10 @@ export default function ViewStatusPage() {
           fontWeight: 'bold',
           fontSize: '1.2rem',
         }}>
-        {' '}
-        {'Congratulations! You’re application had been submitted successfully'}
+       {status1 === 'SUBMITTED' && 'Congratulations! Your application has been submitted successfully'}
+  {status1 === 'APPROVED_BY_DKD' && 'Congratulations! Your application has been event assigned'}
+  {status1 === 'ACCEPTED_BY_KHOJI' && 'Congratulations! Your application has been accepted'}
+
       </div>
       <div style={{ marginTop: '1rem', marginLeft: '33.5rem' }}>
         <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>Hi {username},</div>
@@ -203,53 +215,41 @@ export default function ViewStatusPage() {
         </Col>
         <Col span={10}>
         <Row gutter={[16, 16]} style={{ marginBottom: '1rem', marginLeft: '8rem' }}>
-        {cardData.map((card, index) => (
-  <React.Fragment key={index}>
-    <Col span={6}>
-      <Steps
-        current={
-          status === 'SUBMITTED'
-            ? index === 0
-              ? 0
-              : -1
-            : status === 'APPROVED_BY_DKD'
-            ? index < 2
-              ? index
-              : -1
-            : status === 'ACCEPTED_BY_KHOJI'
-            ? index
-            : -1
-        }
-        className="customs-steps"
-      >
-        <Step />
-      </Steps>
-    </Col>
-    <Col span={18}>
-      <Card
-        title={card.title}
-        className={
-          (status === 'SUBMITTED' && index === 0) ||
-          (status === 'APPROVED_BY_DKD' && index < 2) ||
-          (status === 'ACCEPTED_BY_KHOJI' && index === 2)
-            ? 'enabled-card'
-            : 'disabled-card'
-        }
-      >
-        {card.content}
-        {(status === 'APPROVED_BY_DKD' && index === 1) ||
-        (status === 'ACCEPTED_BY_KHOJI' && index === 1) ? (
-          <div style={{ marginTop: '1rem', display: "flex", flexDirection: "row" }}>
-            <Button style={{ marginRight: '1rem' }} type="default">Reschedule</Button>
-            <Button onClick={handleconfirmclick} type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
+  {cardData.map((card, index) => (
+    <React.Fragment key={index}>
+      <Col span={6}>
+        <div className="customs-step">
+          <div className={`step-item ${status1 === 'ACCEPTED_BY_KHOJI' && index <= 2 ? 'completed' : ''}`}>
+            <div className="step-circle">{index + 1}</div>
+            {index < cardData.length - 1 && <div className="vertical-line"></div>}
           </div>
-        ) : null}
-      </Card>
-    </Col>
-  </React.Fragment>
-))}
-
+        </div>
+      </Col>
+      <Col span={18}>
+        <Card
+          title={card.title}
+          className={
+            (status1 === 'SUBMITTED' && index === 0) ||
+            (status1=== 'APPROVED_BY_DKD' && index < 2) ||
+            (status1 === 'ACCEPTED_BY_KHOJI' && index === 2)
+              ? 'enabled-card'
+              : 'disabled-card'
+          }
+        >
+          {card.content}
+          {(status1 === 'APPROVED_BY_DKD' && index === 1) ||
+          (status1 === 'ACCEPTED_BY_KHOJI' && index === 1) ? (
+            <div style={{ marginTop: '1rem', display: "flex", flexDirection: "row" }}>
+              <Button style={{ marginRight: '1rem' }} type="default">Reschedule</Button>
+              <Button onClick={handleconfirmclick} type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
+            </div>
+          ) : null}
+        </Card>
+      </Col>
+    </React.Fragment>
+  ))}
 </Row>
+
 
         </Col>
       </Row>

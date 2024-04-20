@@ -1,4 +1,4 @@
-'use client';
+
 import Icon from '@ant-design/icons';
 import {
   AppleSvg,
@@ -24,9 +24,15 @@ import {
   UserAvatarSvg,
   NotificationSvg,
   LoginSvg,
+  NavigationHomeBarSvg,
+  NavigationBarLogOutSvg,
+  NavigationNotificationBarSvg,
+  NavigationSavedBarSvg,
+  LoginTitleSvg
 } from './svgs';
 
 export const LogoIcon = (props: any) => <Icon component={LogoSvg} {...props} />;
+export const LoginTitleIcon = (props: any) => <Icon component={LoginTitleSvg} {...props} />
 
 export const GoogleIcon = (props: any) => (
   <Icon component={GoogleSvg} {...props} />
@@ -36,7 +42,7 @@ export const AppleIcon = (props: any) => (
   <Icon component={AppleSvg} {...props} />
 );
 
-export const HomeIcon = (props: any) => <Icon component={HomeSvg} {...props} />;
+
 
 export const KhojiProfileIcon = (props: any) => (
   <Icon component={KhojiProfileSvg} {...props} />
@@ -51,9 +57,6 @@ export const MessagesIcon = (props: any) => (
   <Icon component={MessagesSvg} {...props} />
 );
 
-export const SavedIcon = (props: any) => (
-  <Icon component={SavedSvg} {...props} />
-);
 
 export const SettingsIcon = (props: any) => (
   <Icon component={SettingsSvg} {...props} />
@@ -61,9 +64,9 @@ export const SettingsIcon = (props: any) => (
 
 export const HelpIcon = (props: any) => <Icon component={HelpSvg} {...props} />;
 
-export const LogoutIcon = (props: any) => (
-  <Icon component={LogoutSvg} {...props} />
-);
+// export const LogoutIcon = (props: any) => (
+//   <Icon component={LogoutSvg} {...props} />
+// );
 
 export const VerifyKhojiBg = (props: any) => (
   <Icon component={VerifyKhojiSvg} {...props} />
@@ -97,9 +100,19 @@ export const RedDotICon = (props: any) => (
 export const BlackDotICon = (props: any) => (
   <Icon component={BlackdotSvg} {...props} />
 );
-export const NotificationIcon = (props: any) => (
-  <Icon component={NotificationSvg} {...props} />
-);
+
 export const LoginIcon = (props: any) => (
   <Icon component={LoginSvg} {...props} />
+);
+export const LogoutIcon = (props: any) => (
+  <Icon component={NavigationBarLogOutSvg} {...props} />
+);
+export const HomeIcon = (props: any) => (
+  <Icon component={NavigationHomeBarSvg} {...props} />
+);
+export const NotificationIcon = (props: any) => (
+  <Icon component={NavigationNotificationBarSvg} {...props} />
+);
+export const SavedIcon = (props: any) => (
+  <Icon component={NavigationSavedBarSvg} {...props} />
 );
