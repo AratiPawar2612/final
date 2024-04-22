@@ -9,7 +9,7 @@
   background-color:"#F4F4F4"!important;
   padding: 1.25rem!important;
   height: 100vh!important;
-  width: 40vw!important; /* Set left panel width to 30% of viewport width */
+  width: 40vw!important;
   display: flex!important;
   flex-direction: column!important;
   align-items: center!important;
@@ -17,17 +17,7 @@
   text-align: center!important;
 }
 
-/* .right-panel {
-  background-color: #ffffff;
-  padding: 1.25rem;
-  height: 100vh;
-  width: 70vw; /* Set right panel width to 70% of viewport width */
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-} */ */
+
 
 .loginRightPanelTitle {
   margin-bottom: 0.625rem!important;
@@ -366,34 +356,7 @@
   background: #fdd8d8 !important;
   border-radius: 0.4375rem 0.4375rem 0rem 0rem !important;
 }
-/* .userProfileMiddleSection {
-  border-top: 0.0625rem dashed #ccc;
-  margin: 0.625rem 0;
-  height: 1.25rem; /* Adjust the height of the dashed line */
-/* } */
-/* .dashed-box {
-  border: 0.125rem dashed #ccc;
-  padding: 1.25rem;
-  text-align: center;
-} */
-/* .userProfileEmptyBox {
-  border: 0.1rem dashed #ccc;
-  padding: 3rem;
-  text-align: center;
-  tab-size: 2rem;
-  width: 18rem;
-  margin-left: 2rem;
-} */ */
 
-/* .addDetailsSymbol {
-  font-size: 2rem;
-  color: #aaa;
-  cursor: pointer;
-}
-.plus-sign {
-  font-size: 1.5rem!important;
-  color: blue!important;
-} */
 .userProfileDash {
   margin-top: 1rem; /* Adjust margin as needed */
   margin-left: 1rem; /* Adjust margin as needed */
@@ -436,7 +399,7 @@
   padding-top: 1rem !important;
   height: auto !important;
 }
-/* Add a black background color to the top navigation */
+
 .logo,
 .logo > svg {
   width: 5.3125rem !important;
@@ -534,7 +497,7 @@
   margin-top: 0.4rem !important;
 }
 .top-label .ant-form-item-label {
-  align-self: flex-start; /* Position label on top */
+  align-self: flex-start; 
 }
 .submitbutton {
   display: flex !important;
@@ -554,12 +517,11 @@
   flex-direction: row !important;
   justify-content: center !important;
 }
-/* WorkFlowPage.css */
+
 
 .container {
   display: grid!important;
-  grid-template-columns: repeat(2, 1fr)!important; /* 2 columns with equal width */
-  gap: 1rem!important; /* Gap between grid items */
+  gap: 1rem!important; 
 }
 
 .listContainer,
@@ -569,29 +531,28 @@
 
 .listItem {
   padding: 1rem!important;
-  background-color: #f0f0f0!important; /* Light gray background */
+  background-color: #f0f0f0!important;
   border-radius: 0.5rem!important;
   cursor: pointer!important;
-  transition: background-color 0.3s ease!important; /* Smooth transition on hover */
+  transition: background-color 0.3s ease!important;
 }
 
 .listItem:hover {
-  background-color: #e0e0e0!important; /* Darker gray background on hover */
+  background-color: #e0e0e0!important;
 }
 
 .cardItem {
-  width: 100%; /* Take up full width of the grid item */
+  width: 100%;
   border-radius: 0.5rem!important;
-  box-shadow: 0rem 0.4rem 0.6rem rgba(0, 0, 0, 0.1)!important; /* Add box shadow */
-  transition: transform 0.3s ease-in-out!important; /* Add transition effect */
+  box-shadow: 0rem 0.4rem 0.6rem rgba(0, 0, 0, 0.1)!important; 
+  transition: transform 0.3s ease-in-out!important; 
 }
 
 .cardItem:hover {
-  transform: translateY(-0.5rem)!important; /* Add hover effect */
+  transform: translateY(-0.5rem)!important; 
 }
-/* homepage css */
 .container {
-  padding: 1rem!important; /* Equivalent to 24px assuming 1rem = 16px */
+  padding: 1rem!important; 
 }
 
 .happyThoughtsLabel {
@@ -603,10 +564,6 @@
   position: relative!important;
 }
 
-/* .verifyKhojiImage {
-  max-width: 100%;
-  height: auto;
-} */
 
 .verifyKhojiText {
   position: absolute!important;
@@ -620,10 +577,10 @@
 }
 
 .verifyKhoji {
-  font-size: 1.5rem!important; /* Equivalent to 24px */
+  font-size: 1.5rem!important;
   font-weight: bold!important;
   display: block!important;
-  margin-bottom: 1rem!important; /* Equivalent to 16px */
+  margin-bottom: 1rem!important; 
 }
 
 .verifyKhojiSubtitle {
@@ -637,7 +594,7 @@
 
 .verifyKhojiButton {
   display: block!important;
-  margin-top: 1rem!important; /* Equivalent to 16px */
+  margin-top: 1rem!important; 
 }
 
 .verifyKhojiImage,
@@ -691,12 +648,12 @@
 }
 .userProfileContainer {
   display: flex!important;
-  flex-direction: row!important; /* Display cards horizontally */
+  flex-direction: row!important; 
 }
 
 .userProfileCard {
-  margin-right: 1rem!important; /* Add margin between cards */
-  /* Add any other necessary styling properties */
+  margin-right: 1rem!important; 
+ 
 }
 .userProfileCard:first-child {
   margin-left: 1rem!important;
@@ -785,25 +742,25 @@
 .center-steps {
   display: flex!important;
   justify-content: center!important;
-  margin-top: 1.25rem!important; /* Adjust as needed */
+  margin-top: 1.25rem!important; 
 }
 
 .center-content {
   display: flex!important;
   justify-content: center!important;
   align-items: center!important;
-  margin-top: 1.25rem!important; /* Adjust as needed */
-  margin-bottom: 1.25rem!important; /* Adjust as needed */
+  margin-top: 1.25rem!important; 
+  margin-bottom: 1.25rem!important; 
 }
 
-/* Optional: Add a max-width to limit the content width */
+
 .center-content > div {
-  max-width: 75rem!important; /* Adjust as needed */
+  max-width: 75rem!important; 
 }
 .buttonsContainer {
   display: flex!important;
   flex-direction: column!important;
-  gap: 0.0625rem!important; /* Adjust the gap between buttons as needed */
+  gap: 0.0625rem!important; 
 }
 
 .logoTitleWrapper {
@@ -846,26 +803,26 @@
   text-align: left!important;
 }
 .enabled-card {
-  border: 2px solid blue!important; /* Add blue border for the enabled card */
+  border: 2px solid blue!important; 
 }
 
 .disabled-card {
-  opacity: 0.5!important; /* Reduce opacity for disabled cards */
-  pointer-events: none!important; /* Disable pointer events for disabled cards */
+  opacity: 0.5!important; 
+  pointer-events: none!important; 
 }
 .vertical-line {
   border-left: 1px solid #ccc!important;
   height: 100%!important;
-  margin-left: 10px!important; /* Adjust as needed */
+  margin-left: 10px!important; 
 } 
 
 
 .step-item.active .step-circle {
-  background-color: black!important; /* Color for active steps */
+  background-color: black!important; 
 }
 
 .step-item.completed .step-circle {
-  background-color: red!important; /* Color for completed steps */
+  background-color: red!important;
 }
 
 .customs-step {
