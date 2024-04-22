@@ -47,6 +47,35 @@ export default function ViewStatusPage() {
     setIsModalVisible(false);
   };
 
+  const handleconfirmclick = async () => {
+    try {
+      const response = await fetch(`https://hterp.tejgyan.org/django-app/event/applications/${appliid}/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include the access token in the Authorization header
+        },
+        body: JSON.stringify({ status: "ACCEPTED_BY_KHOJI" }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update application status');
+      } else {
+        const responseData = await response.json();
+        console.log('Updated application:', responseData);
+        alert("Your application is confirmed");
+        window.location.reload();
+        return responseData; 
+      }
+  
+  
+    } catch (error) {
+      console.error('Error updating application status:', error);
+      // Handle error scenarios
+      throw error;
+    }
+  }
+
   // Function to handle form submission
   const handleFormSubmit = async () => {
     try {
@@ -306,7 +335,7 @@ export default function ViewStatusPage() {
           </Form.Item>
         </Form>
       </Modal>
-              <Button onClick={handleFormSubmit} type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
+              <Button onClick={handleconfirmclick} type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
             </div>
           ) : null}
         </Card>
