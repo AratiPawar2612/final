@@ -451,7 +451,7 @@ export default function HomePage() {
     return user ? (
       <div
         className={`${
-          index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
+          index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
         }`}
         key={user.id}
       >

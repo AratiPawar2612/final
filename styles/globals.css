@@ -854,3 +854,15 @@
   margin-left: 14px!important;
   transform: translateY(-50%)!important;
 }
+
+.userProfileLeftCards {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 15.375rem !important;
+  border-radius: 0.4375rem !important;
+  position: relative !important;
+  background: #f9f9f9 !important;
+  margin-bottom: 0.75rem !important;
+  width: 17.3125rem !important;
+  
+}

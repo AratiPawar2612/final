@@ -175,22 +175,22 @@ export default function AddPersonalDeatilsPage() {
     { label: "Daughter-in-law", value: "DAUGHTER_IN_LAW" },
     { label: "Other", value: "OTHER" },
   ];
-  const handleRadioChange = (e: any) => {
-    console.log("Radio button clicked"); 
-    const value = e.target.value;
-    console.log("Radio button value:", value); 
-    if (value === "yes") {
+//   const handleRadioChange = (e: any) => {
+//     console.log("Radio button clicked"); 
+//     const value = e.target.value;
+//     console.log("Radio button value:", value); 
+//     if (value === "yes") {
      
-      form.setFieldsValue({
-        khojiID: "",
-        user: { first_name: "", last_name: "", email: "", contact_no: "" },
-        relation: ""
-      });
-    } else {
+//       form.setFieldsValue({
+//         khojiID: "",
+//         user: { first_name: "", last_name: "", email: "", contact_no: "" },
+//         relation: ""
+//       });
+//     } else {
     
-      form.setFieldsValue({ khojiID: "" });
-    }
-};
+//       form.setFieldsValue({ khojiID: "" });
+//     }
+// };
 
   
   // Inside the Form.Item components, add a 'disabled' prop
@@ -301,11 +301,10 @@ export default function AddPersonalDeatilsPage() {
       const responseData = await response.json();
       setkhojiuserid(responseData.results[0].user.id);
       console.log("userid",responseData.results[0].user.id);
-      // Update searchdata with responseData.results[0]
+     
       const user = responseData.results[0];
-          // Set dob to null if it's not available
-          const dob = user.dob || null;
-          setsearchdata({ ...user, dob }); // Update searchdata with dob set to null if not available
+  
+          setsearchdata(responseData.results[0]); // Update searchdata with dob set to null if not available
           form.setFieldsValue(user);
       console.log("searchdata",searchdata);
       if (responseData.results && responseData.results.length > 0) {
@@ -398,7 +397,7 @@ export default function AddPersonalDeatilsPage() {
      
       return (
         <Form form={form}>
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={24}>
            <Form.Item
               label="Have Khoji ID?"
@@ -421,7 +420,7 @@ export default function AddPersonalDeatilsPage() {
               </Radio.Group>
             </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -440,9 +439,7 @@ export default function AddPersonalDeatilsPage() {
                     height: "2rem",
                     width: "100%",
                   }}
-                  disabled={
-                    form.getFieldValue("rdyesno") !== "no"
-                  }
+                  
                 />
               </Form.Item>
             </Col>
@@ -464,9 +461,7 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojifirstName(e.target.value)}
-                  disabled={
-                    form.getFieldValue("rdyesno") !== "yes"
-                  }
+                  
                 />
               </Form.Item>
             </Col>
@@ -485,9 +480,7 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojilastName(e.target.value)}
-                  disabled={
-                    form.getFieldValue("rdyesno") !== "yes"
-                  }
+                 
                 />
               </Form.Item>
             </Col>
@@ -514,14 +507,12 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojiemail(e.target.value)}
-                  disabled={
-                    form.getFieldValue("rdyesno") !== "yes"
-                  }
+                  
                 />
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={24}>
               <Form.Item
                 label="DOB"
@@ -550,7 +541,7 @@ export default function AddPersonalDeatilsPage() {
                 />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
 
           <Row gutter={16}>
             <Col span={24}>
@@ -574,9 +565,7 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojimobile(e.target.value)}
-                  disabled={
-                    form.getFieldValue("rdyesno") !== "yes"
-                  }
+                 
                 />
               </Form.Item>
             </Col>
@@ -601,9 +590,9 @@ export default function AddPersonalDeatilsPage() {
                   value={selectedRelationship}
                   onChange={handleSelectChange}
                 >
-                  {/* Default option */}
-                  <option value="">Select Relationship</option>
-                  {/* Other options */}
+                 
+                  <option value="">--Select Relationship--</option>
+            
                   {relationshipOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -944,7 +933,7 @@ export default function AddPersonalDeatilsPage() {
     return user ? (
       <div
         className={`${
-          index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
+          index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
         }`}
         key={user.id}
       >
@@ -1309,18 +1298,20 @@ export default function AddPersonalDeatilsPage() {
                 {isFamilyKrupaDarshan === "true" && (
                   <div
                     style={{
-                      width: "80%",
+                      width: "13rem",
                       height: "20rem",
                       overflow: "auto",
                       marginLeft: "2rem",
                     }}
                   >
-                    <Card onClick={showModal}>
+                    <Card onClick={showModal} style={{width: "80%",
+                      height: "15.375rem",justifyContent:"center"}}>
                       <div
                         style={{
                           textAlign: "center",
                           color: "gray",
                           fontSize: "2.8rem",
+                          justifyContent:"center"
                         }}
                       >
                         <PlusOutlined />
