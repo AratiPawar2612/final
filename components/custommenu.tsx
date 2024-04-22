@@ -27,7 +27,7 @@ const CustomMenu = () => {
         await signOut();
       };
   return (
-    <Layout className="leftPanel">
+    <Layout>
       <Sider
         theme="light"
         style={{

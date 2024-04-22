@@ -10,7 +10,7 @@ import {
   Avatar,
   Card,
   Modal,
-  message,
+  Image,
 } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
@@ -19,6 +19,7 @@ import {
   VerifiedIcon,
   NotVerifiedIcon,
   UserAvatarIcon,
+  ScannerIcon,
 } from "@/icons/icon";
 import axios from "axios";
 import { FileExclamationTwoTone, CheckOutlined } from "@ant-design/icons";
@@ -462,23 +463,48 @@ export default function HomePage() {
             <VerifiedIcon />
           </div>
         </div>
-        <div className="displayFlex flexDirectionColumn marginLeft16">
-          <label className="userNameLabel">{user?.user?.email}</label>
+        <div className="displayFlex flexDirectionColumn" style={{textAlign:"center"}}>
+          <label className="userNameLabel" style={{marginRight:"12rem"}}>   
+          {user?.user?.first_name} {user?.user?.last_name}</label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: "1rem"}}
             >
-              <label className="userProfileInfoTitle">Name</label>
+              <label className="userProfileInfoTitle">Khoji Id</label>
               <label className="userProfileInfoValue">
-                {user?.user?.first_name} {user?.user?.last_name}{" "}
+                {user.khoji_id}
               </label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
-              <label className="userProfileInfoTitle">Address</label>
+              <label className="userProfileInfoTitle"></label>
+              <label className="userProfileInfoValue"></label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem",marginLeft:"1rem" }}
+            >
+              <ScannerIcon/>
+            </div>
+          </div>
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem"}}
+            >
+              <label className="userProfileInfoTitle">Tejsthan</label>
+              <label className="userProfileInfoValue">
+              {user.location}
+              </label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Shivir level</label>
               <label className="userProfileInfoValue">{user.location}</label>
             </div>
             <div
@@ -674,7 +700,29 @@ export default function HomePage() {
   const handleGetStarted = () => {
     router.push("/krupadarshan/addappallicationdetails");
   };
-
+  function UserProfileCard() {
+    return (
+      <div className="user-profile-card">
+        <Image className="profile-picture" src="profile-picture.jpg" alt="Profile Picture" />
+        <div className="user-details">
+          <h2 className="name">John Doe</h2>
+          <p className="username">@johndoe</p>
+          <p className="bio">Frontend Developer | Coffee Lover | Music Enthusiast</p>
+          <p className="location">New York, USA</p>
+          <a className="website" href="https://www.example.com">www.example.com</a>
+          <div className="social-links">
+            <a href="https://twitter.com/johndoe">Twitter</a>
+            <a href="https://www.linkedin.com/in/johndoe">LinkedIn</a>
+          </div>
+          <div className="stats">
+            <p>Followers: 1000</p>
+            <p>Posts: 500</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
       <div style={{ padding: "1rem" }}>
@@ -693,20 +741,17 @@ export default function HomePage() {
           {username}
         </div>
 
-        <Row
-          gutter={[16, 16]}
-          style={{ marginTop: "0.8rem" }}
-          justify="space-between"
-        >
-          <Col xs={12} sm={24} md={12} lg={12} xl={12}>
-            <Card
-              style={{
-                width: "90%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
+        <Row gutter={[16, 16]} style={{ marginTop: "0.8rem" }} justify="space-between">
+  <Col xs={12} sm={24} md={12} lg={12} xl={12}>
+    <Card
+      style={{
+        width: "90%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%", // Set the height to 100%
+      }}
+    >
               
               <div
                 style={{
@@ -772,6 +817,8 @@ export default function HomePage() {
               }}
             >
               {buildProfiles()}
+              {/* {UserProfileCard()} */}
+              
             </div>
           </Col>
         </Row>

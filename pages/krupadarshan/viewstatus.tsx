@@ -7,6 +7,11 @@ import { ArrowLeftOutlined, UserOutlined } from '@ant-design/icons';
 import { useEffect,useState } from 'react';
 import useSafeReplace from "@/components/useSafeReplace";
 import { useSession } from 'next-auth/react';
+import { fetchParticipantData } from '../api/applicationapi';
+import { Modal, Form, DatePicker } from 'antd';
+import moment from 'moment';
+import dayjs from "dayjs";
+
 
 export default function ViewStatusPage() {
   const { Step } = Steps;
@@ -21,6 +26,54 @@ export default function ViewStatusPage() {
   const { data: session, status } = useSession();
   const [isSessionLoading, setIsSessionLoading] = useState(false);
   const { safeReplace } = useSafeReplace();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [startdate, setStartdate] = useState("");
+  const [enddate, setEnddate] = useState("");
+  
+  const handleOpenModal = () => {
+    setIsModalVisible(true);
+  };
+  const disabledDate = (current: any, startDate: any, endDate: any) => {
+    // Disable dates before today, and dates before the selected start date or after the selected end date
+    return (
+      current &&
+      (current < dayjs().startOf("day") ||
+        (startDate && current < dayjs(startDate).startOf("day")) ||
+        (endDate && current > dayjs(endDate).endOf("day")))
+    );
+  };
+  // Function to handle closing the modal
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
+  // Function to handle form submission
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`https://hterp.tejgyan.org/django-app/event/applications/${appliid}/reschedule/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include the access token in the Authorization header
+        },
+        body: JSON.stringify({ preferred_start_date: startdate ,preferred_end_date:enddate}),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update application status');
+      } else {
+        const responseData = await response.json();
+        console.log('Updated application:', responseData);
+        alert("Your application reschedule");
+        setIsModalVisible(false);
+        window.location.reload();
+        return responseData; 
+      }
+      
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
 
 
   useEffect(() => {
@@ -46,18 +99,22 @@ export default function ViewStatusPage() {
       console.log("userDat",userDataResults1);
       setappliid(userDataResults1[0]?.id);
       setReferenceCode(userDataResults1[0]?.reference_code)
+      console.log("reference_code",userDataResults1[0]?.reference_code);
+      console.log("userDataResults1[0]?.id",userDataResults1[0]?.id);
 
 
      
 
-      // const participantUserResponseData = await fetchParticipantData(
-      //   sessionData?.session?.access_token
-      // );
-      // if(participantUserResponseData.length>0)
-      //   {
+      const participantUserResponseData = await fetchParticipantData(
+        sessionData?.session?.access_token
+      );
+      console.log("participantUserResponseData",participantUserResponseData)  
+      const participantresp = participantUserResponseData.results ?? [];
 
-      //     setParticpantdata(participantUserResponseData);
-      //   }
+      if (participantresp.length > 0) {
+        setParticpantdata(participantresp);
+        console.log("participantUserResponseData", participantresp[0].relation_with.first_name);
+    } 
      
 
 
@@ -95,36 +152,8 @@ export default function ViewStatusPage() {
    
   ];
 
-  const handleconfirmclick = async () => {
-    try {
-      const response = await fetch(`https://hterp.tejgyan.org/django-app/event/applications/${appliid}/`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Include the access token in the Authorization header
-        },
-        body: JSON.stringify({ status: "ACCEPTED_BY_KHOJI" }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to update application status');
-      } else {
-        const responseData = await response.json();
-        console.log('Updated application:', responseData);
-        alert("Your application is confirmed");
-        // Refresh the page
-        window.location.reload();
-        return responseData; // Return the updated data if needed
-      }
-  
-      // If the request is successful, you may handle the response here
-  
-    } catch (error) {
-      console.error('Error updating application status:', error);
-      // Handle error scenarios
-      throw error;
-    }
-  }
+ 
+ 
   
  
   return (
@@ -194,24 +223,24 @@ export default function ViewStatusPage() {
             <label>2 Adults 1 Child</label>
           </Card>
           <Divider />
-          <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
+          <div>
+      {particpantdata ? (
+        particpantdata.map((participant: any) => (
+          <Card
+            key={participant.id}
+            style={{ marginBottom: '1rem', textAlign: 'center' }}
+            bordered
+          >
             <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>
               <Avatar size={64} icon={<UserOutlined />} />
-              Lorem Ipsum
+              {participant.relation_with.first_name} {participant.relation_with.last_name}
             </div>
           </Card>
-          <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
-            <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>
-              <Avatar size={64} icon={<UserOutlined />} />
-              Lorem Ipsum
-            </div>
-          </Card>
-          <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
-            <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>
-              <Avatar size={64} icon={<UserOutlined />} />
-              Lorem Ipsum
-            </div>
-          </Card>
+        ))
+      ) : (
+        <div>No participant data available</div>
+      )}
+    </div>
         </Col>
         <Col span={10}>
         <Row gutter={[16, 16]} style={{ marginBottom: '1rem', marginLeft: '8rem' }}>
@@ -240,8 +269,44 @@ export default function ViewStatusPage() {
           {(status1 === 'APPROVED_BY_DKD' && index === 1) ||
           (status1 === 'ACCEPTED_BY_KHOJI' && index === 1) ? (
             <div style={{ marginTop: '1rem', display: "flex", flexDirection: "row" }}>
-              <Button style={{ marginRight: '1rem' }} type="default">Reschedule</Button>
-              <Button onClick={handleconfirmclick} type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
+              <Button style={{ marginRight: '1rem' }} type="default" onClick={handleOpenModal} >Reschedule</Button>
+              <Modal
+        title="Reschedule Application"
+        visible={isModalVisible}
+        onCancel={handleCloseModal}
+        footer={[
+          <Button key="cancel" onClick={handleCloseModal}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleFormSubmit}>
+            Submit
+          </Button>,
+        ]}
+      >
+        <Form layout="vertical" onFinish={handleFormSubmit}>
+          <Form.Item label="Preferred Start Date" name="preferredStartDate">
+            <DatePicker
+              value={startdate}
+              onChange={(date) => setStartdate(date)}
+              format="YYYY-MM-DD"
+              disabledDate={(current) =>
+                disabledDate(current, null, startdate)
+              }
+            />
+          </Form.Item>
+          <Form.Item label="Preferred End Date" name="preferredEndDate">
+            <DatePicker
+              value={enddate}
+              onChange={(date) => setEnddate(date)}
+              format="YYYY-MM-DD"
+              disabledDate={(current) =>
+                disabledDate(current, null, enddate)
+              }
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+              <Button onClick={handleFormSubmit} type="primary" style={{ backgroundColor: 'green' }}>Confirm</Button>
             </div>
           ) : null}
         </Card>

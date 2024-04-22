@@ -28,11 +28,13 @@ import {
   NavigationBarLogOutSvg,
   NavigationNotificationBarSvg,
   NavigationSavedBarSvg,
-  LoginTitleSvg
+  LoginTitleSvg,
+  ScannerSvg
 } from './svgs';
 
 export const LogoIcon = (props: any) => <Icon component={LogoSvg} {...props} />;
 export const LoginTitleIcon = (props: any) => <Icon component={LoginTitleSvg} {...props} />
+export const ScannerIcon = (props: any) => <Icon component={ScannerSvg} {...props} />
 
 export const GoogleIcon = (props: any) => (
   <Icon component={GoogleSvg} {...props} />

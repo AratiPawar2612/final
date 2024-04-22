@@ -14,13 +14,12 @@ import {
   Modal,
   DatePicker,
   Select,
-  AutoComplete,
+  Radio,
 } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { VerifiedIcon } from "@/icons/icon";
-import { ArrowLeftIcon } from "@/icons/icon";
+import { VerifiedIcon, ArrowLeftIcon, ScannerIcon } from "@/icons/icon";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   fetchParticipantData,
@@ -28,7 +27,7 @@ import {
   fetchUserData,
   submitApplication,
 } from "../api/applicationapi";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -61,18 +60,17 @@ export default function AddPersonalDeatilsPage() {
   const [startdate, setStartdate] = useState("");
   const [enddate, setEnddate] = useState("");
   const [addnote, setAddNote] = useState("");
-  const [khojirel, setKhojirel] = useState("");
   const [guestrel, setguestrel] = useState("");
   const [purposeOptions, setPurposeOptions] = useState<any[]>([]); // Define purposeOptions state
   const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
   const [participantuserid, setParticipantUserid] = useState<any[]>([]); // Define state for selected purpose
   const [showSearchButton, setShowSearchButton] = useState(true);
-const [showAddButton, setShowAddButton] = useState(false);
+  const [showAddButton, setShowAddButton] = useState(false);
   const { isFamilyKrupaDarshan } = router.query;
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [searchdata, setsearchdata] = useState([]); // State to store the fetched data
   const [form] = Form.useForm(); // Create a form instance
-  const [dobValue, setDobValue] = useState<Date | null>(null);
+  const [khojidobValue, setkhojiDobValue] = useState<Date | null>(null);
   const [khojiuserid, setkhojiuserid] = useState("");
   const [userdata, setUserData] = useState<any>([]);
   console.log("isFamilyKrupaDarshan", isFamilyKrupaDarshan);
@@ -83,59 +81,66 @@ const [showAddButton, setShowAddButton] = useState(false);
         const sessionresponse = await fetch("/api/getsession");
         const sessionData = await sessionresponse.json();
         setToken(sessionData?.session?.access_token);
-  
+
         const purposeOptionsResponse = await fetchPurposeData(
           sessionData?.session?.access_token
         );
         setPurposeOptions(purposeOptionsResponse);
         console.log("purposeDataResponse", purposeOptionsResponse);
-  
+
         const userDataResponse = await fetchUserData(
           sessionData?.session?.access_token
         );
         setData(userDataResponse);
         console.log("userDataResults", userDataResponse);
-  
+
         setFirstName(userDataResponse?.user?.first_name);
         setLastName(userDataResponse?.user?.last_name);
         setMobile(userDataResponse?.contact_no);
         setEmail(userDataResponse?.user?.email);
         setUserid(userDataResponse?.user?.id);
-  
+
         const participantUserResponseData = await fetchParticipantData(
           sessionData?.session?.access_token
         );
-        if (participantUserResponseData && Array.isArray(participantUserResponseData.results)) {
+        if (
+          participantUserResponseData &&
+          Array.isArray(participantUserResponseData.results)
+        ) {
           // Map over the results array and append userProfileId to each participant object
-          const updatedParticipantData = participantUserResponseData.results.map((participant:any) => participant.id);
-         console.log("participantUserResponseData", updatedParticipantData)
+          const updatedParticipantData =
+            participantUserResponseData.results.map(
+              (participant: any) => participant.id
+            );
+          console.log("participantUserResponseData", updatedParticipantData);
           setParticipantUserid(updatedParticipantData);
           setUserData(participantUserResponseData);
-          console.log("participantUserResponseData", participantUserResponseData);
+          console.log(
+            "participantUserResponseData",
+            participantUserResponseData
+          );
           console.log("userids", updatedParticipantData);
-        
- 
         }
       } catch (error) {
         console.error("Error loading data:", error);
       }
     };
-  
+
     loadMoreData();
   }, []);
-  
+
   const [selectedRelationship, setSelectedRelationship] = useState("");
   const disabledDate = (current: any, startDate: any, endDate: any) => {
     // Disable dates before today, and dates before the selected start date or after the selected end date
-    return current && (
-      current < dayjs().startOf('day') || 
-      (startDate && current < dayjs(startDate).startOf('day')) || 
-      (endDate && current > dayjs(endDate).endOf('day'))
+    return (
+      current &&
+      (current < dayjs().startOf("day") ||
+        (startDate && current < dayjs(startDate).startOf("day")) ||
+        (endDate && current > dayjs(endDate).endOf("day")))
     );
   };
-  
 
-  const handleSelectChange = (event:any) => {
+  const handleSelectChange = (event: any) => {
     setSelectedRelationship(event.target.value);
   };
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -168,9 +173,32 @@ const [showAddButton, setShowAddButton] = useState(false);
     { label: "Brother-in-law", value: "BROTHER_IN_LAW" },
     { label: "Son-in-law", value: "SON_IN_LAW" },
     { label: "Daughter-in-law", value: "DAUGHTER_IN_LAW" },
-    { label: "Other", value: "OTHER" }
+    { label: "Other", value: "OTHER" },
   ];
+  const handleRadioChange = (e: any) => {
+    console.log("Radio button clicked"); 
+    const value = e.target.value;
+    console.log("Radio button value:", value); 
+    if (value === "yes") {
+     
+      form.setFieldsValue({
+        khojiID: "",
+        user: { first_name: "", last_name: "", email: "", contact_no: "" },
+        relation: ""
+      });
+    } else {
+    
+      form.setFieldsValue({ khojiID: "" });
+    }
+};
 
+  
+  // Inside the Form.Item components, add a 'disabled' prop
+ 
+  
+  
+  
+  
 
   const onFinish = () => {
     form
@@ -182,26 +210,25 @@ const [showAddButton, setShowAddButton] = useState(false);
       })
       .catch((errorInfo) => {
         // Handle validation errors if any
-        console.log('Validation failed:', errorInfo);
+        console.log("Validation failed:", errorInfo);
       });
   };
 
   const handleaddclick = async () => {
     try {
       if (!selectedRelationship) {
-        alert('Please fill in all required fields.');
+        alert("Please fill in all required fields.");
       } else {
-        
         const requestBody = {
           status: "PUB",
           sort: 1,
           user: userid,
           relation_with: khojiuserid,
-          relation:selectedRelationship,
+          relation: selectedRelationship,
         };
-  
+
         const requestBodyJSON = JSON.stringify(requestBody);
-  
+
         const requestOptions = {
           method: "POST",
           headers: {
@@ -210,7 +237,7 @@ const [showAddButton, setShowAddButton] = useState(false);
           },
           body: requestBodyJSON,
         };
-  
+
         fetch(
           "https://hterp.tejgyan.org/django-app/event/participants/",
           requestOptions
@@ -236,25 +263,26 @@ const [showAddButton, setShowAddButton] = useState(false);
               error
             );
           });
-          setErrorMessage('');
-          // Proceed with add logic
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setErrorMessage("");
+        // Proceed with add logic
       }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-  
+
+
 
   const handleseachclick = async () => {
-   
+
     let url = "";
     try {
-    
+
       // if (!khojiID || !khojifirstName || !khojilastName || !khojiemail || !khojimobile ) {
          if (!khojiID ) {
         alert('Please Enter Khoji id .');
       } else {
-       
+
       const requestOption = {
         method: "GET",
         headers: {
@@ -274,7 +302,11 @@ const [showAddButton, setShowAddButton] = useState(false);
       setkhojiuserid(responseData.results[0].user.id);
       console.log("userid",responseData.results[0].user.id);
       // Update searchdata with responseData.results[0]
-      setsearchdata(responseData.results[0]);
+      const user = responseData.results[0];
+          // Set dob to null if it's not available
+          const dob = user.dob || null;
+          setsearchdata({ ...user, dob }); // Update searchdata with dob set to null if not available
+          form.setFieldsValue(user);
       console.log("searchdata",searchdata);
       if (responseData.results && responseData.results.length > 0) {
         console.log("Data found");
@@ -284,11 +316,10 @@ const [showAddButton, setShowAddButton] = useState(false);
         setShowSearchButton(false);
         setShowAddButton(true);
       } else {
-  
+
         alert("No data found");
       }
 
-      
     }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -297,7 +328,7 @@ const [showAddButton, setShowAddButton] = useState(false);
 
   const onclickNextBtn = async () => {
     if (!selectedPurpose || !startdate || !enddate || !addnote) {
-      alert('Please Enter All required field');
+      alert("Please Enter All required field");
     } else {
       const requestBody = {
         user: userid,
@@ -309,9 +340,12 @@ const [showAddButton, setShowAddButton] = useState(false);
         preferred_end_date: enddate,
         khoji_note: addnote,
       };
-  
+
       try {
-        const applicationSubmitted = await submitApplication(requestBody, token);
+        const applicationSubmitted = await submitApplication(
+          requestBody,
+          token
+        );
         console.log("applicationSubmitted", applicationSubmitted);
         if (applicationSubmitted) {
           alert("Application Submitted successfully");
@@ -326,7 +360,6 @@ const [showAddButton, setShowAddButton] = useState(false);
       }
     }
   };
-  
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -361,189 +394,262 @@ const [showAddButton, setShowAddButton] = useState(false);
     }
   };
   const renderInputComponent = () => {
-    if (inputType === "khoji" ) {
+    if (inputType === "khoji") {
+     
       return (
         <Form form={form}>
-          
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item
-              label="Enter Khoji ID"
+          <Row gutter={16}>
+            <Col span={24}>
+           <Form.Item
+              label="Have Khoji ID?"
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
-              name="khojiID"
-              rules={[{ required: true, message: 'Please enter Khoji ID' }]}
+              name="rdyesno"
+              initialValue="yes" // Set initial value to "yes"
+              rules={[{ required: true, message: "Please select an option" }]}
             >
-              <Input
-                placeholder="Enter Khoji ID"
-                value={khojiID}
-                onChange={(e) => setKhojiID(e.target.value)}
-                style={{
-                  borderRadius: "2rem",
-                  height: "2rem",
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Divider>Or enter</Divider>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              label="First Name"
-              name={["user", "first_name"]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              rules={[{ required: true, message: 'Please enter First Name' }]}
-            >
-              <Input
-                style={{
-                  borderRadius: "2rem",
-                  height: "2rem",
-                  width: "auto",
-                }}
-                onChange={(e) => setkhojifirstName(e.target.value)}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              label="Last Name"
-              name={["user", "last_name"]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              rules={[{ required: true, message: 'Please enter Last Name' }]}
-            >
-              <Input
-                style={{
-                  borderRadius: "2rem",
-                  height: "2rem",
-                  width: "auto",
-                }}
-                onChange={(e) => setkhojilastName(e.target.value)}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item
-              label="Email ID"
-              name={["user", "email"]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              rules={[
-                { type: 'email', message: 'Please enter a valid email address' },
-                { required: true, message: 'Please enter Email ID' }
-              ]}
-            >
-              <Input
-                style={{
-                  borderRadius: "2rem",
-                  height: "2rem",
-                  width: "100%",
-                }}
-                onChange={(e) => setkhojiemail(e.target.value)}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item
-              label="Mobile Number"
-              name="contact_no"
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              rules={[
-                { required: true, message: 'Please enter Mobile Number' },
-                { pattern: /^[0-9]{10}$/, message: 'Please enter a valid 10-digit mobile number' }
-              ]}
-            >
-              <Input
-                style={{
-                  borderRadius: "2rem",
-                  height: "2rem",
-                  width: "100%",
-                }}
-                onChange={(e) => setkhojimobile(e.target.value)}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item
-              label="Relation With Khoji"
-              name="relation"
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              rules={[{ required: true, message: 'Please select Relationship' }]}
-            >
-              <select
-                style={{
-                  borderRadius: "2rem",
-                  height: "2rem",
-                  width: "100%",
-                }}
-                value={selectedRelationship}
-                onChange={handleSelectChange}
+              <Radio.Group
+                style={{ display: "flex", justifyContent: "space-evenly" }}
+                onChange={handleRadioChange}
               >
-                {/* Default option */}
-                <option value="" >
-                  Select Relationship
-                </option>
-                {/* Other options */}
-                {relationshipOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                <Radio.Button value="yes" style={{ borderRadius: "50%" }}>
+                  Yes
+                </Radio.Button>
+                <Radio.Button value="no" style={{ borderRadius: "50%" }}>
+                  No
+                </Radio.Button>
+              </Radio.Group>
             </Form.Item>
-          </Col>
-        </Row>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-         
-         
-          {showSearchButton && (
-   <Button
-   type="primary"
-   style={{
-    marginTop: "1rem",
-    backgroundColor: "black",
-    width: "100%",
-    marginBottom: "1rem",
-  }}
-   onClick={handleseachclick}
- >
-   Search
- </Button>
-)}
-{showAddButton && (
-   <Button
-   type="primary"
-   style={{
-    marginTop: "1rem",
-    backgroundColor: "black",
-    width: "100%",
-    marginBottom: "1rem",
-  }}
-   onClick={handleaddclick}
- >
-   Add
- </Button>
-)}
-        </div>
-      </Form>
-      
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label="Enter Khoji ID"
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                name="khojiID"
+                rules={[{ required: true, message: "Please enter Khoji ID" }]}
+              >
+                <Input
+                  placeholder="Enter Khoji ID"
+                  value={khojiID}
+                  onChange={(e) => setKhojiID(e.target.value)}
+                  style={{
+                    borderRadius: "2rem",
+                    height: "2rem",
+                    width: "100%",
+                  }}
+                  disabled={
+                    form.getFieldValue("rdyesno") !== "no"
+                  }
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Divider>Or enter</Divider>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="First Name"
+                name={["user", "first_name"]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                rules={[{ required: true, message: "Please enter First Name" }]}
+              >
+                <Input
+                  style={{
+                    borderRadius: "2rem",
+                    height: "2rem",
+                    width: "100%",
+                  }}
+                  onChange={(e) => setkhojifirstName(e.target.value)}
+                  disabled={
+                    form.getFieldValue("rdyesno") !== "yes"
+                  }
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Last Name"
+                name={["user", "last_name"]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                rules={[{ required: true, message: "Please enter Last Name" }]}
+              >
+                <Input
+                  style={{
+                    borderRadius: "2rem",
+                    height: "2rem",
+                    width: "100%",
+                  }}
+                  onChange={(e) => setkhojilastName(e.target.value)}
+                  disabled={
+                    form.getFieldValue("rdyesno") !== "yes"
+                  }
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label="Email ID"
+                name={["user", "email"]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    type: "email",
+                    message: "Please enter a valid email address",
+                  },
+                  { required: true, message: "Please enter Email ID" },
+                ]}
+              >
+                <Input
+                  style={{
+                    borderRadius: "2rem",
+                    height: "2rem",
+                    width: "100%",
+                  }}
+                  onChange={(e) => setkhojiemail(e.target.value)}
+                  disabled={
+                    form.getFieldValue("rdyesno") !== "yes"
+                  }
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label="DOB"
+                name="dob"
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    type: "email",
+                    message: "Please enter a valid email address",
+                  },
+                  { required: true, message: "Please enter Email ID" },
+                ]}
+              >
+                <DatePicker
+                  style={{
+                    borderRadius: "2rem",
+                    height: "2rem",
+                    width: "100%",
+                  }}
+                  picker="date"
+                  onChange={(value) => setkhojiDobValue(value.toDate())} // Convert Dayjs value to Date
+                  disabled={
+                    form.getFieldValue("rdyesno") !== "yes"
+                  }
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label="Mobile Number"
+                name="contact_no"
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  { required: true, message: "Please enter Mobile Number" },
+                  {
+                    pattern: /^[0-9]{10}$/,
+                    message: "Please enter a valid 10-digit mobile number",
+                  },
+                ]}
+              >
+                <Input
+                  style={{
+                    borderRadius: "2rem",
+                    height: "2rem",
+                    width: "100%",
+                  }}
+                  onChange={(e) => setkhojimobile(e.target.value)}
+                  disabled={
+                    form.getFieldValue("rdyesno") !== "yes"
+                  }
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label="Relation With Khoji"
+                name="relation"
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  { required: true, message: "Please select Relationship" },
+                ]}
+              >
+                <select
+                  style={{
+                    borderRadius: "2rem",
+                    height: "2rem",
+                    width: "100%",
+                  }}
+                  value={selectedRelationship}
+                  onChange={handleSelectChange}
+                >
+                  {/* Default option */}
+                  <option value="">Select Relationship</option>
+                  {/* Other options */}
+                  {relationshipOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </Form.Item>
+            </Col>
+          </Row>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            {showSearchButton && (
+              <Button
+                type="primary"
+                style={{
+                  marginTop: "1rem",
+                  backgroundColor: "black",
+                  width: "100%",
+                  marginBottom: "1rem",
+                }}
+                onClick={handleseachclick}
+              >
+                Search
+              </Button>
+            )}
+            {showAddButton && (
+              <Button
+                type="primary"
+                style={{
+                  marginTop: "1rem",
+                  backgroundColor: "black",
+                  width: "100%",
+                  marginBottom: "1rem",
+                }}
+                onClick={handleaddclick}
+              >
+                Add
+              </Button>
+            )}
+          </div>
+        </Form>
       );
     } else if (inputType === "guest") {
       return (
@@ -704,6 +810,55 @@ const [showAddButton, setShowAddButton] = useState(false);
 
     return null;
   };
+  // function buildUserdataCard(user: any, index: any) {
+  //   return user ? (
+  //     <div
+  //       className={`${
+  //         index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
+  //       }`}
+  //       key={user.id}
+  //     >
+  //       <div className="userProfileTopSection" />
+  //       <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
+  //         <Avatar className="userProfileImage" src={user.avtar} />
+  //         <div className="userProfileVerifiedBadge">
+  //           <label className="userProfileVerifiedBadgeLabel">Verified</label>
+  //           <VerifiedIcon />
+  //         </div>
+  //       </div>
+  //       <div className="displayFlex flexDirectionColumn marginLeft16">
+  //         <label className="userNameLabel">{user.relation_with?.email}</label>
+  //         <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+  //           <div
+  //             className="displayFlex flexDirectionColumn flex1"
+  //             style={{ marginTop: "1rem" }}
+  //           >
+  //             <label className="userProfileInfoTitle">Name</label>
+  //             <label className="userProfileInfoValue">
+  //               {user.relation_with?.first_name} {user.relation_with?.last_name}{" "}
+  //             </label>
+  //           </div>
+  //           <div
+  //             className="displayFlex flexDirectionColumn flex1"
+  //             style={{ marginTop: "1rem" }}
+  //           >
+  //             <label className="userProfileInfoTitle">Relation</label>
+  //             <label className="userProfileInfoValue">{user.relation}</label>
+  //           </div>
+  //           <div
+  //             className="displayFlex flexDirectionColumn flex1"
+  //             style={{ marginTop: "1rem" }}
+  //           >
+  //             <label className="userProfileInfoTitle">DOB</label>
+  //             <label className="userProfileInfoValue">{user.dob}</label>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   ) : (
+  //     <div className="userProfilePlaceholderCard" />
+  //   );
+  // }
   function buildUserdataCard(user: any, index: any) {
     return user ? (
       <div
@@ -711,6 +866,12 @@ const [showAddButton, setShowAddButton] = useState(false);
           index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
         }`}
         key={user.id}
+        style={{
+          width: "100%", // Set width to 100%
+          marginBottom: "16px", // Add margin at the bottom of cards
+          marginTop: "2rem", // Add margin at the top of cards
+          textAlign: "center", // Center the card horizontally
+        }}
       >
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
@@ -720,24 +881,49 @@ const [showAddButton, setShowAddButton] = useState(false);
             <VerifiedIcon />
           </div>
         </div>
-        <div className="displayFlex flexDirectionColumn marginLeft16">
-          <label className="userNameLabel">{user.relation_with?.email}</label>
+        <div
+          className="displayFlex flexDirectionColumn"
+          style={{ textAlign: "center" }}
+        >
+          <label className="userNameLabel" style={{ marginRight: "12rem" }}>
+            {user?.relation_with?.first_name} {user?.relation_with?.last_name}
+          </label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
-              <label className="userProfileInfoTitle">Name</label>
-              <label className="userProfileInfoValue">
-                {user.relation_with?.first_name} {user.relation_with?.last_name}{" "}
-              </label>
+              <label className="userProfileInfoTitle">Khoji Id</label>
+              <label className="userProfileInfoValue">{user.khoji_id}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
-              <label className="userProfileInfoTitle">Relation</label>
-              <label className="userProfileInfoValue">{user.relation}</label>
+              <label className="userProfileInfoTitle"></label>
+              <label className="userProfileInfoValue"></label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem", marginLeft: "1rem" }}
+            >
+              <ScannerIcon />
+            </div>
+          </div>
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Tejsthan</label>
+              <label className="userProfileInfoValue">{user.location}</label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Shivir level</label>
+              <label className="userProfileInfoValue">{user.location}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
@@ -770,23 +956,48 @@ const [showAddButton, setShowAddButton] = useState(false);
             <VerifiedIcon />
           </div>
         </div>
-        <div className="displayFlex flexDirectionColumn marginLeft16">
-          <label className="userNameLabel">{user?.user?.email}</label>
+        <div
+          className="displayFlex flexDirectionColumn"
+          style={{ textAlign: "center" }}
+        >
+          <label className="userNameLabel" style={{ marginRight: "12rem" }}>
+            {user?.user?.first_name} {user?.user?.last_name}
+          </label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
-              <label className="userProfileInfoTitle">Name</label>
-              <label className="userProfileInfoValue">
-                {user?.user?.first_name} {user?.user?.last_name}{" "}
-              </label>
+              <label className="userProfileInfoTitle">Khoji Id</label>
+              <label className="userProfileInfoValue">{user.khoji_id}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
-              <label className="userProfileInfoTitle">Address</label>
+              <label className="userProfileInfoTitle"></label>
+              <label className="userProfileInfoValue"></label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem", marginLeft: "1rem" }}
+            >
+              <ScannerIcon />
+            </div>
+          </div>
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Tejsthan</label>
+              <label className="userProfileInfoValue">{user.location}</label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Shivir level</label>
               <label className="userProfileInfoValue">{user.location}</label>
             </div>
             <div
@@ -815,7 +1026,7 @@ const [showAddButton, setShowAddButton] = useState(false);
       );
     }
   }
-  
+
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
       <div style={{ marginLeft: "3rem" }}>
@@ -843,14 +1054,12 @@ const [showAddButton, setShowAddButton] = useState(false);
       >
         Add Personal details
       </div>
-      <div
+      {/* <div
         className="verifyKhojiSubtitle"
         style={{ whiteSpace: "pre-wrap", marginLeft: "3rem" }}
       >
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry.
-        <br /> {`Lorem Ipsum has been the industry's standard dummy text ever`}
-      </div>
+       
+      </div> */}
       <div style={{ marginLeft: "3rem" }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -866,7 +1075,6 @@ const [showAddButton, setShowAddButton] = useState(false);
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={firstName}
-                    
                   >
                     <Input
                       style={{
@@ -885,7 +1093,6 @@ const [showAddButton, setShowAddButton] = useState(false);
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={lastName}
-                   
                   >
                     <Input
                       style={{
@@ -906,7 +1113,6 @@ const [showAddButton, setShowAddButton] = useState(false);
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={email}
-                    
                   >
                     <Input
                       style={{
@@ -927,7 +1133,6 @@ const [showAddButton, setShowAddButton] = useState(false);
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
                     initialValue={mobile}
-                    
                   >
                     <Input
                       style={{
@@ -990,7 +1195,9 @@ const [showAddButton, setShowAddButton] = useState(false);
                         height: "2rem",
                         width: "100%",
                       }}
-                      disabledDate={(current) => disabledDate(current, null, enddate)}
+                      disabledDate={(current) =>
+                        disabledDate(current, null, enddate)
+                      }
                       onChange={(date, dateString) => {
                         if (typeof dateString === "string") {
                           setStartdate(dateString);
@@ -1018,7 +1225,9 @@ const [showAddButton, setShowAddButton] = useState(false);
                         height: "2rem",
                         width: "100%",
                       }}
-                      disabledDate={(current) => disabledDate(current, startdate, null)}
+                      disabledDate={(current) =>
+                        disabledDate(current, startdate, null)
+                      }
                       onChange={(date, dateString) => {
                         if (typeof dateString === "string") {
                           setEnddate(dateString);

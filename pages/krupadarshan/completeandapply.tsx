@@ -15,8 +15,32 @@ export default function CompleteAndApplyPage() {
   const [data, setData] = useState<any>([]);
   const [purposeOptions, setPurposeOptions] = useState<any[]>([]);
   const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]);
+  const [addnote, setaddnote] = useState("");
+  const [startdate, setStartDate] = useState("");
+  const [enddate, setEndDate] = useState("");
 
-  
+  function convertDate(dateStr:any) {
+    console.log("Input date string:", dateStr);
+    
+    if (!dateStr) {
+        console.log("Date string is undefined or null");
+        return ''; // Return empty string if dateStr is undefined or null
+    }
+
+    const [year, month, day] = dateStr.slice(0, 10).split('-');
+    console.log("Day:", day, "Month:", month, "Year:", year);
+
+    if (!day || !month || !year) {
+        console.log("Date parts are missing");
+        return ''; // Return empty string if any part of the date is missing
+    }
+
+    return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year.slice(-2)}`;
+}
+
+
+
+
 
   useEffect(() => {
     const loadMoreData = async () => {
@@ -34,9 +58,16 @@ export default function CompleteAndApplyPage() {
 
       const applicationData = await fetchApplicationData(sessionData?.session?.access_token);
       console.log("applicationData", applicationData);
-
+        setaddnote(applicationData[0]?.khoji_note);
+       
        const userid = applicationData[0]?.user?.id;
        console.log("userid", userid);
+       const Startdate = applicationData[0]?.preferred_start_date;
+       const Enddate = applicationData[0]?.preferred_end_date;
+       console.log("startdate",convertDate(Startdate));
+       setStartDate(convertDate(Startdate));
+       setEndDate(convertDate(Enddate));
+
 
       const options = await fetchPurposeOptions(userid, sessionData?.session?.access_token);
       setPurposeOptions(options);
@@ -179,7 +210,7 @@ function buildUserdataCard(user: any, index: any) {
               Preferred Date
             </div>
             <div style={{ marginTop: "1rem", marginLeft: "1rem" }}>
-              4th Jan, 2024 <br />@ Manan Ashram
+            {startdate} to {enddate} <br />@ Manan Ashram
             </div>
           </Col>
           <Col span={12}>
@@ -207,8 +238,7 @@ function buildUserdataCard(user: any, index: any) {
       <div style={{ marginLeft: "1rem" }}>
         <div style={{ fontSize: "0.9rem", marginTop: "2rem" }}>Note added</div>
         <div className="verifyKhojiSubtitle" style={{ whiteSpace: "pre-wrap" }}>
-          {`Lorem Ipsum is simply dummy text of the printing and typesetting
-                            `}
+         {addnote}
         </div>
       </div>
       <div style={{ marginTop: "2rem" }}>
