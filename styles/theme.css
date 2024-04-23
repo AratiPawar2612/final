@@ -123,3 +123,9 @@ body {
       max-width: 1440px; /* Limit maximum width to 1440px */
   }
 }
+@media screen and (min-width: 1600px) {
+  html,
+  body {
+    font-size: 1.5rem !important;
+  }
+}
