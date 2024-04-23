@@ -1,4 +1,4 @@
-html,
+ html,
 body {
   font-display: swap !important;
   font-weight: 400 !important;
@@ -13,9 +13,9 @@ body {
   flex-direction: column !important;
   align-items: center !important;
   background-color: #fff !important;
-}
+} */
 
-/* Media Queries for Ant Design breakpoints */
+/* Media Queries for Ant Design breakpoints
 @media screen and (max-width: 574px) {
   html,
   body {
@@ -85,5 +85,41 @@ body {
   .mainContentWrapperBody {
     min-width: calc(100% - 2rem);
     max-width: calc(100% - 2rem);
+  }
+} */
+/* Set the base font size */
+/* html {
+  font-size: 16px;
+}
+
+Set the default font size */
+body {
+  font-size: 1rem; /* Equivalent to 16px */
+}
+
+/* For smaller screens */
+@media screen and (max-width: 768px) {
+  body {
+      margin: 0 auto; /* Center the content */
+      padding: 0 20px; /* Add some padding to the sides */
+      max-width: 100%; /* Allow the content to take full width */
+  }
+}
+
+/* For medium-sized screens */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  body {
+      margin: 0 auto; /* Center the content */
+      padding: 0 20px; /* Add some padding to the sides */
+      max-width: 90%; /* Limit maximum width to 90% */
+  }
+}
+
+/* For larger screens */
+@media screen and (min-width: 1025px) {
+  body {
+      margin: 0 auto; /* Center the content */
+      padding: 0 20px; /* Add some padding to the sides */
+      max-width: 1440px; /* Limit maximum width to 1440px */
   }
 }

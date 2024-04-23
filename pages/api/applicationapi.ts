@@ -105,7 +105,7 @@ export const submitApplication = async (
       throw new Error('Network response was not ok');
     } else {
       // Application submitted successfully
-      alert('Application Submitted successfully');
+    //  alert('Application Submitted successfully');
       return true;
     }
 

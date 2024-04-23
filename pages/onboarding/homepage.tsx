@@ -741,8 +741,8 @@ export default function HomePage() {
           {username}
         </div>
 
-        <Row gutter={[16, 16]} style={{ marginTop: "0.8rem" }} justify="space-between">
-  <Col xs={12} sm={24} md={12} lg={12} xl={12}>
+ <Row gutter={[16, 16]} style={{ marginTop: "0.8rem" }} justify="space-between">
+ <Col xs={24} sm={24} md={12} lg={12} xl={12}>
     <Card
       style={{
         width: "90%",
@@ -843,7 +843,7 @@ export default function HomePage() {
           }}
         >
         <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-{applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
+{/* {applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
   <Card style={{ width: "15rem" }} onClick={handleHistoryCardClick}>
     <Meta
       style={{
@@ -858,7 +858,24 @@ export default function HomePage() {
     />
     click here to view your status
   </Card>
-)} 
+)}  */}
+{applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
+  <Card style={{ width: "15rem", border: "1px solid blue", borderRadius: "5px" }} onClick={handleHistoryCardClick}>
+    <Meta
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        textWrap: "wrap",
+        width: "auto",
+      }}
+      title="Your Application ID"
+      description={applicationid}
+    />
+    Click here to view your status
+  </Card>
+)}
+
 {applicationdata.length === 0 || applicationdata[0].status === "ACCEPTED_BY_KHOJI" && (
   <Card style={{ width: "15rem" }}>
     <Meta

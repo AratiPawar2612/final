@@ -206,7 +206,7 @@ export default function AddPersonalDeatilsPage() {
       .then((values) => {
         // Proceed with the desired action if validation passes
         // For example, navigate to the next step
-        onclickNextBtn();
+       onclickNextBtn();
       })
       .catch((errorInfo) => {
         // Handle validation errors if any
@@ -345,9 +345,11 @@ export default function AddPersonalDeatilsPage() {
           requestBody,
           token
         );
-        console.log("applicationSubmitted", applicationSubmitted);
+       console.log("applicationSubmitted", applicationSubmitted);
+       //const applicationStatus= await applicationSubmitted.json();
         if (applicationSubmitted) {
           alert("Application Submitted successfully");
+
           router.push("/krupadarshan/completeandapply");
         } else {
           // Handle submission error
@@ -422,7 +424,7 @@ export default function AddPersonalDeatilsPage() {
             </Col>
           </Row> */}
           <Row gutter={16}>
-            <Col span={24}>
+          <Col span={24}>
               <Form.Item
                 label="Enter Khoji ID"
                 labelCol={{ span: 24 }}
@@ -446,7 +448,7 @@ export default function AddPersonalDeatilsPage() {
           </Row>
           <Divider>Or enter</Divider>
           <Row gutter={16}>
-            <Col span={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
                 label="First Name"
                 name={["user", "first_name"]}
@@ -465,7 +467,7 @@ export default function AddPersonalDeatilsPage() {
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
                 label="Last Name"
                 name={["user", "last_name"]}
@@ -644,7 +646,7 @@ export default function AddPersonalDeatilsPage() {
       return (
         <Form>
           <Row gutter={16}>
-            <Col span={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
                 label="First Name"
                 // name={['user', 'first_name']}
@@ -655,14 +657,14 @@ export default function AddPersonalDeatilsPage() {
                   style={{
                     borderRadius: "2rem",
                     height: "2rem",
-                    width: "auto",
+                    width: "100%",
                   }}
                   // value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
                 label="Last Name"
                 // name={['user', 'last_name']}
@@ -673,7 +675,7 @@ export default function AddPersonalDeatilsPage() {
                   style={{
                     borderRadius: "2rem",
                     height: "2rem",
-                    width: "auto",
+                    width: "100%",
                   }}
                   // value={lastName}
                   onChange={(e) => setLastName(e.target.value)}

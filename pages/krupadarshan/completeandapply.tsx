@@ -24,7 +24,7 @@ export default function CompleteAndApplyPage() {
     
     if (!dateStr) {
         console.log("Date string is undefined or null");
-        return ''; // Return empty string if dateStr is undefined or null
+        return ''; 
     }
 
     const [year, month, day] = dateStr.slice(0, 10).split('-');

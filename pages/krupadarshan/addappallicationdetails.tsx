@@ -59,10 +59,10 @@ export default function AddApplicationDetailsPage() {
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
         Select Your Type
       </div>
-      <div className="verifyKhojiSubtitle" style={{ whiteSpace: 'pre-wrap', marginLeft: '3rem' }}>
+      {/* <div className="verifyKhojiSubtitle" style={{ whiteSpace: 'pre-wrap', marginLeft: '3rem' }}>
         {`Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever`}
-      </div>
+      </div> */}
 
       <Row gutter={[16, 16]} style={{ marginLeft: '3rem' }}>
         <Col xs={24} sm={12} md={12} lg={6} xl={6}>
@@ -124,7 +124,7 @@ export default function AddApplicationDetailsPage() {
             backgroundColor: buttonColor,
           }}
           size={buttonSize}
-          disabled={isContinueDisabled} // Disable continue button when no card is selected
+          disabled={isContinueDisabled} 
         >
           {continueButtonText}
         </Button>

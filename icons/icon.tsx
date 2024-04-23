@@ -66,9 +66,7 @@ export const SettingsIcon = (props: any) => (
 
 export const HelpIcon = (props: any) => <Icon component={HelpSvg} {...props} />;
 
-// export const LogoutIcon = (props: any) => (
-//   <Icon component={LogoutSvg} {...props} />
-// );
+
 
 export const VerifyKhojiBg = (props: any) => (
   <Icon component={VerifyKhojiSvg} {...props} />
