@@ -169,41 +169,43 @@ function buildUserdataCard(user: any, index: any) {
         {`Lorem Ipsum is simply dummy text of the printing and typesetting
        `}
       </div>
-<div style={{ fontWeight: "bold", fontSize: "0.9rem", marginLeft: "2rem" }}>  Added Member</div>
-      <Row gutter={16}>
-      
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          {data.results && data.results.length > 0 ? (
-            <Row gutter={[16, 16]} style={{ flex: "1", flexWrap: "wrap" }}>
-              {data.results.map((user: any, index: any) => (
-                <Col
-                  key={index}
-                  xs={12}
-                  sm={24}
-                  md={12}
-                  lg={12}
-                  xl={12}
-                  style={{
-                    marginBottom: "16px",
-                    marginLeft: "1rem",
-                    flex: "0 0 auto",
-                  }}
-                >
-                  {buildUserdataCard(user, index)}
-                </Col>
-              ))}
-            </Row>
-          ) : (
-            <div  style={{marginLeft: "1rem"}} >No Added Member</div>
-          )}
-        </div>
-      </Row>
+      {data.results && data.results.length > 0 && (
+  <div>
+    <div style={{ fontWeight: "bold", fontSize: "0.9rem", marginLeft: "2rem" }}>
+      Added Member
+    </div>
+    <Row gutter={16}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Row gutter={[16, 16]} style={{ flex: "1", flexWrap: "wrap" }}>
+          {data.results.map((user: any, index: any) => (
+            <Col
+              key={index}
+              xs={12}
+              sm={24}
+              md={12}
+              lg={12}
+              xl={12}
+              style={{
+                marginBottom: "16px",
+                marginLeft: "1rem",
+                flex: "0 0 auto",
+              }}
+            >
+              {buildUserdataCard(user, index)}
+            </Col>
+          ))}
+        </Row>
+      </div>
+    </Row>
+  </div>
+)}
+
       <div>
         <Row gutter={[16, 16]}>
           <Col span={4}>
@@ -242,31 +244,34 @@ function buildUserdataCard(user: any, index: any) {
          {addnote}
         </div>
       </div>
-      <div style={{ marginTop: "2rem" }}>
-        <Button
-          style={{
-            borderRadius: "2rem",
-            marginLeft: "1rem",
-            width: "10rem",
-            height: "2rem",
-          }}
-        >
-          Edit
-        </Button>
-        <Button
-          type="primary"
-          style={{
-            borderRadius: "2rem",
-            marginLeft: "1rem",
-            width: "12rem",
-            height: "2rem",
-            backgroundColor: "black",
-          }}
-          onClick={onclicksaveandapplybtn}
-        >
-          Save and apply
-        </Button>
-      </div>
+      <Row gutter={[16, 16]}>
+  <Col xs={24} sm={12} md={8} lg={6}>
+    <Button
+      style={{
+        borderRadius: "2rem",
+        width: "100%",
+        height: "2rem",
+      }}
+    >
+      Edit
+    </Button>
+  </Col>
+  <Col xs={24} sm={12} md={8} lg={6}>
+    <Button
+      type="primary"
+      style={{
+        borderRadius: "2rem",
+        width: "100%",
+        height: "2rem",
+        backgroundColor: "black",
+      }}
+      onClick={onclicksaveandapplybtn}
+    >
+      Save and apply
+    </Button>
+  </Col>
+</Row>
+
     </MainLayout>
   );
 }

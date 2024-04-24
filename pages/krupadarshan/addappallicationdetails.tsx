@@ -44,18 +44,18 @@ export default function AddApplicationDetailsPage() {
   <div style={{ marginLeft: '4.5rem' }}>
     <label className="Descriptionlabel">Add Application details</label>
   </div>
-  <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', overflowX: 'auto' }}>
-    {/* Add overflowX: 'auto' to allow horizontal scrolling */}
-    <Steps
-      style={{ width: '50%' }}
-      current={0}
-      className="my-custom-steps"
-      labelPlacement="vertical">
-      <Step title="Add Application details" />
-      <Step title="Complete & Apply" />
-      <Step title="view status" />
-    </Steps>
-  </div>
+  <div className="center-steps">
+          <Steps
+            current={0}
+            style={{ width: "50%" }}
+            className="my-custom-steps"
+            labelPlacement="vertical"
+          >
+            <Step title="Add Application details" />
+            <Step title="Complete & Apply" />
+            <Step title="view status" />
+          </Steps>
+        </div>
 </div>
 <Divider style={{ marginTop: '3rem' }} />
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
