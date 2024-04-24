@@ -6,13 +6,14 @@ body {
   width: 100% !important;
   margin: 0rem !important;
   padding: 0rem !important;
+  background-Color: "#F4F4F4"!important;
 }
 
 .mainContentWrapper {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  background-color: #fff !important;
+  background-Color: "#F4F4F4"!important;
 }
 
 /* Media Queries for Ant Design breakpoints */
@@ -82,6 +83,55 @@ body {
     font-size: 1.5rem !important;
   }
 
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+/* For smaller screens */
+@media screen and (max-width: 768px) {
+  body {
+      margin: 0 auto; /* Center the content */
+      padding: 0 20px; /* Add some padding to the sides */
+      max-width: 100%; /* Allow the content to take full width */
+  }
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+/* For medium-sized screens */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  body {
+      margin: 0 auto; /* Center the content */
+      padding: 0 20px; /* Add some padding to the sides */
+      max-width: 90%; /* Limit maximum width to 90% */
+  }
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+
+/* For larger screens */
+@media screen and (min-width: 1025px) {
+  body {
+      margin: 0 auto; /* Center the content */
+      padding: 0 20px; /* Add some padding to the sides */
+      max-width: 1440px; /* Limit maximum width to 1440px */
+  }
+  .mainContentWrapperBody {
+    min-width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+  }
+}
+@media screen and (min-width: 1600px) {
+  html,
+  body {
+    font-size: 1.5rem !important;
+  }
   .mainContentWrapperBody {
     min-width: calc(100% - 2rem);
     max-width: calc(100% - 2rem);
