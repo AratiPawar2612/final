@@ -5,6 +5,7 @@ import MainLayout from '@/components/mainlayout';
 import CustomMenu from '@/components/custommenu';
 import { ArrowLeftIcon } from '@/icons/icon';
 import { TeamOutlined, UserOutlined, CheckOutlined } from '@ant-design/icons';
+import CustomFooter from '@/components/customrightpanel';
 
 export default function AddApplicationDetailsPage() {
   const { Step } = Steps;
@@ -36,33 +37,30 @@ export default function AddApplicationDetailsPage() {
   
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
-      <div>
-        <div style={{ fontWeight: 'bold', fontSize: '1rem', marginLeft: '3rem' }}>
-          <ArrowLeftIcon onClick={() => router.back()} /> Apply for Krupa Darshan
-        </div>
-        <div style={{ marginLeft: '4.5rem' }}>
-          <label className="verifyKhojiSubtitle">Add Application details</label>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
-          <Steps
-            style={{ width: '50%' }}
-            current={0}
-            className="my-custom-steps"
-            labelPlacement="vertical">
-            <Step title="Add Application details" />
-            <Step title="Complete & Apply" />
-            <Step title="view status" />
-          </Steps>
-        </div>
-      </div>
-      <Divider style={{ marginTop: '3rem' }} />
+     <div>
+  <div style={{ fontWeight: 'bold', fontSize: '1rem', marginLeft: '3rem' }}>
+    <ArrowLeftIcon onClick={() => router.back()} /> Apply for Krupa Darshan
+  </div>
+  <div style={{ marginLeft: '4.5rem' }}>
+    <label className="Descriptionlabel">Add Application details</label>
+  </div>
+  <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', overflowX: 'auto' }}>
+    {/* Add overflowX: 'auto' to allow horizontal scrolling */}
+    <Steps
+      style={{ width: '50%' }}
+      current={0}
+      className="my-custom-steps"
+      labelPlacement="vertical">
+      <Step title="Add Application details" />
+      <Step title="Complete & Apply" />
+      <Step title="view status" />
+    </Steps>
+  </div>
+</div>
+<Divider style={{ marginTop: '3rem' }} />
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
         Select Your Type
       </div>
-      {/* <div className="verifyKhojiSubtitle" style={{ whiteSpace: 'pre-wrap', marginLeft: '3rem' }}>
-        {`Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever`}
-      </div> */}
 
       <Row gutter={[16, 16]} style={{ marginLeft: '3rem' }}>
         <Col xs={24} sm={12} md={12} lg={6} xl={6}>

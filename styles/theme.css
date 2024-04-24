@@ -4,88 +4,59 @@ body {
   font-weight: 400 !important;
   font-size: 1rem !important;
   width: 100% !important;
-  margin: 0rem !important;
-  padding: 0rem !important;
-  background-Color: "#F4F4F4"!important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #F4F4F4 !important;
 }
 
 .mainContentWrapper {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  background-Color: "#F4F4F4"!important;
+  background-color: #F4F4F4 !important;
 }
 
-/* Media Queries for Ant Design breakpoints */
-@media screen and (max-width: 574px) {
-  html,
+@media screen and (max-width: 768px) {
   body {
-    font-size: 0.875rem !important;
-  }
-
-  .mainContentWrapperBody {
-    min-width: calc(100% - 2rem);
-    max-width: calc(100% - 2rem);
+    margin: 0 auto; /* Center the content */
+    padding: 0 20px; /* Add some padding to the sides */
+    max-width: 100%; 
+    .center-steps {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+  
+    .my-custom-steps {
+      width: 100%;
+    }
   }
 }
 
-@media screen and (min-width: 576px) {
-  html,
+/* For medium-sized screens */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
   body {
-    font-size: 1rem !important;
-  }
-
-  .mainContentWrapperBody {
-    min-width: calc(100% - 2rem);
-    max-width: calc(100% - 2rem);
+    margin: 0 auto; /* Center the content */
+    padding: 0 20px; /* Add some padding to the sides */
+    max-width: 90%; /* Limit maximum width to 90% */
   }
 }
 
-@media screen and (min-width: 768px) {
-  html,
+/* For larger screens */
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
   body {
-    font-size: 1.125rem !important;
-  }
-
-  .mainContentWrapperBody {
-    min-width: calc(100% - 2rem);
-    max-width: calc(100% - 2rem);
+    margin: 0 auto; /* Center the content */
+    padding: 0 20px; /* Add some padding to the sides */  
+    max-width: 1440px; /* Limit maximum width to 1440px */
   }
 }
 
-@media screen and (min-width: 992px) {
-  html,
-  body {
-    font-size: 1.25rem !important;
-  }
-
-  .mainContentWrapperBody {
-    min-width: calc(100% - 2rem);
-    max-width: calc(100% - 2rem);
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  html,
-  body {
-    font-size: 1.375rem !important;
-  }
-
-  .mainContentWrapperBody {
-    min-width: calc(100% - 2rem);
-    max-width: calc(100% - 2rem);
-  }
-}
-
-@media screen and (min-width: 1600px) {
+/* For extra-large screens */
+@media screen and (min-width: 1441px) {
   html,
   body {
     font-size: 1.5rem !important;
-  }
-
-  .mainContentWrapperBody {
-    min-width: calc(100% - 2rem);
-    max-width: calc(100% - 2rem);
+    background-color: #F4F4F4 !important;
   }
 }
-

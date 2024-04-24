@@ -27,7 +27,7 @@ export default function MainLayout(props: any) {
   }, [status, session, safeReplace]);
 
   return isSessionLoading ? <div>Loading...</div> : (
-    <Layout className="leftpanel">
+    <Layout>
        {siderChildren && siderClassName && (
         <Sider
           trigger={null}

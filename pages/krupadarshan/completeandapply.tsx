@@ -7,6 +7,7 @@ import axios, { AxiosResponse, AxiosError } from "axios";
 import { VerifiedIcon } from "@/icons/icon";
 import { ArrowLeftIcon } from "@/icons/icon";
 import { fetchParticipantData ,fetchPurposeOptions,fetchApplicationData} from "../api/applicationapi";
+import CustomFooter from "@/components/customrightpanel";
 const { Option } = Select;
 
 export default function CompleteAndApplyPage() {

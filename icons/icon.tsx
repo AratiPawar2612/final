@@ -29,7 +29,8 @@ import {
   NavigationNotificationBarSvg,
   NavigationSavedBarSvg,
   LoginTitleSvg,
-  ScannerSvg
+  ScannerSvg,
+  ChatSvg
 } from './svgs';
 
 export const LogoIcon = (props: any) => <Icon component={LogoSvg} {...props} />;
@@ -39,6 +40,8 @@ export const ScannerIcon = (props: any) => <Icon component={ScannerSvg} {...prop
 export const GoogleIcon = (props: any) => (
   <Icon component={GoogleSvg} {...props} />
 );
+export const ChatIcon=(props:any)=> <Icon component={ChatSvg} {...props} />;
+
 
 export const AppleIcon = (props: any) => (
   <Icon component={AppleSvg} {...props} />

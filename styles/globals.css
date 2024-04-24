@@ -6,39 +6,25 @@
 }
 
 .left-panel {
-  background-color:"#F4F4F4"!important;
-  padding: 1.25rem!important;
-  height: 100vh!important;
-  width: 40vw!important;
-  display: flex!important;
-  flex-direction: column!important;
-  align-items: center!important;
-  justify-content: center!important;
-  text-align: center!important;
+  background-color: #F4F4F4 !important;
+  padding: 1.25rem !important;
+  height: 100% !important;
+  width: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
 
 
-
-.loginRightPanelTitle {
-  margin-bottom: 0.625rem!important;
-}
-
-.loginRightPanelSubtitle {
-  margin-bottom: 1.25rem!important;
-}
 
 .continueWithGoogleButton,
 .continueWithAppleButton {
   margin-bottom: 0.625rem!important;
 }
 
-@media (max-width: 48rem) {
-  .left-panel,
-  .right-panel {
-    width: auto!important;
-    height: auto!important;
-  }
-}
+
 
 .logologin,
 .logo > svg {
@@ -62,12 +48,13 @@
   color: #0f172a !important;
 }
 
-.loginDescription {
-  font-size: 0.875rem !important;
-  font-weight: 400 !important;
+.Descriptionlabel {
+  font-size: 16px !important;
   line-height: 1.25rem !important;
   letter-spacing: 0.0088rem !important;
+  font-family: manrope!important;
   color: #475569 !important;
+  font-weight: bold!important;
 }
 
 .loginRightPanel {
@@ -474,13 +461,13 @@
   margin-right: 0.75rem !important;
 }
 
-.middlePanel {
+/* .middlePanel {
   display: flex !important;
   flex-direction: column !important;
   margin: 1.75rem !important;
   background-color: white;
-}
-.fullHeight {
+} */
+/* .fullHeight {
   height: 100% !important;
 }
 .title {
@@ -495,28 +482,26 @@
   font-size: medium !important;
   text-align: center !important;
   margin-top: 0.4rem !important;
-}
-.top-label .ant-form-item-label {
+} */
+/* .top-label .ant-form-item-label {
   align-self: flex-start; 
-}
-.submitbutton {
+} */
+/* .submitbutton {
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
-}
-.dateofbirth {
-  width: 12.5rem !important;
-}
+} */
 
-.ant.ant-form-item-label-text {
+
+/* .ant.ant-form-item-label-text {
   font-weight: bold !important;
   border-radius: 1.5625rem!important;
-}
-.paymentbutton {
+} */
+/* .paymentbutton {
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
-}
+} */
 
 
 .container {
@@ -524,7 +509,7 @@
   gap: 1rem!important; 
 }
 
-.listContainer,
+/* .listContainer,
 .cardContainer {
   width: 100%!important;
 }
@@ -539,26 +524,26 @@
 
 .listItem:hover {
   background-color: #e0e0e0!important;
-}
+} */
 
-.cardItem {
+/* .cardItem {
   width: 100%;
   border-radius: 0.5rem!important;
   box-shadow: 0rem 0.4rem 0.6rem rgba(0, 0, 0, 0.1)!important; 
   transition: transform 0.3s ease-in-out!important; 
-}
+} */
 
-.cardItem:hover {
+/* .cardItem:hover {
   transform: translateY(-0.5rem)!important; 
-}
+} */
 .container {
   padding: 1rem!important; 
 }
 
-.happyThoughtsLabel {
+/* .happyThoughtsLabel {
   font-size: 1.5rem!important; 
   margin-bottom: 1rem!important; 
-}
+} */
 
 .verifyKhojiContainer {
   position: relative!important;
@@ -602,68 +587,25 @@
   width: 33.75rem !important;
   height: 13.5625rem !important;
 }
-.khoji-id-input {
-  margin-top: 2rem!important;
-  border-radius: 2rem!important;
-  height: 2rem!important;
-}
 
-.khoji-id-button {
-  margin-top: 2rem!important;
-  background-color: blue!important;
-  border-radius: 2rem!important;
-  width: 18rem!important;
-  height: 2rem!important;
-}
-
-.dont-have-id {
-  margin-top: 1rem!important;
-}
-
-.verify-khoji-form {
-  margin-top: 2rem!important;
-}
-
-.verify-khoji-otp-input {
-  border-radius: 2rem!important;
-  height: 2rem!important;
-}
-
-.verify-khoji-buttons {
-  margin-bottom: 1rem!important;
-}
-
-.verify-khoji-not-you-button {
-  border-radius: 2rem!important;
-  font-weight: bold!important;
-  margin-right: 1rem!important;
-  height: 2rem!important;
-}
-
-.verify-khoji-verify-button {
-  background-color: blue!important;
-  border-radius: 2rem!important;
-  width: 10rem!important;
-  height: 2rem!important;
-}
-.userProfileContainer {
+/* .userProfileContainer {
   display: flex!important;
   flex-direction: row!important; 
-}
+} */
 
-.userProfileCard {
+/* .userProfileCard {
   margin-right: 1rem!important; 
  
-}
-.userProfileCard:first-child {
+} */
+/* .userProfileCard:first-child {
   margin-left: 1rem!important;
-}
-.centerButton {
+} */
+/* .centerButton {
   display: flex!important;
   justify-content: center!important;
   align-items: center!important;
   margin-top: 2rem!important;
-}
+} */
 .container {
   display: flex!important;
   flex-direction: column!important;

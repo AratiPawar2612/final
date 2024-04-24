@@ -24,6 +24,7 @@ import {
 import axios from "axios";
 import { FileExclamationTwoTone, CheckOutlined } from "@ant-design/icons";
 import { fetchApplicationData,fetchUserData } from "../api/applicationapi";
+import CustomFooter from "@/components/customrightpanel";
 
 
 
@@ -700,32 +701,11 @@ export default function HomePage() {
   const handleGetStarted = () => {
     router.push("/krupadarshan/addappallicationdetails");
   };
-  function UserProfileCard() {
-    return (
-      <div className="user-profile-card">
-        <Image className="profile-picture" src="profile-picture.jpg" alt="Profile Picture" />
-        <div className="user-details">
-          <h2 className="name">John Doe</h2>
-          <p className="username">@johndoe</p>
-          <p className="bio">Frontend Developer | Coffee Lover | Music Enthusiast</p>
-          <p className="location">New York, USA</p>
-          <a className="website" href="https://www.example.com">www.example.com</a>
-          <div className="social-links">
-            <a href="https://twitter.com/johndoe">Twitter</a>
-            <a href="https://www.linkedin.com/in/johndoe">LinkedIn</a>
-          </div>
-          <div className="stats">
-            <p>Followers: 1000</p>
-            <p>Posts: 500</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
   
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
-      <div style={{ padding: "1rem" }}>
+    <div style={{ padding: "1rem" }}>
         <div
           style={{
             marginTop: "0.8rem",
@@ -817,7 +797,7 @@ export default function HomePage() {
               }}
             >
               {buildProfiles()}
-              {/* {UserProfileCard()} */}
+           
               
             </div>
           </Col>
@@ -897,6 +877,7 @@ export default function HomePage() {
 
         </Row>
       </div>
+      
     </MainLayout>
   );
 }

@@ -28,6 +28,7 @@ import {
   submitApplication,
 } from "../api/applicationapi";
 import dayjs from "dayjs";
+import CustomFooter from "@/components/customrightpanel";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -1020,12 +1021,15 @@ export default function AddPersonalDeatilsPage() {
 
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
+
       <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
           Apply for Krupa Darshan
         </div>
-        <label className="verifyKhojiSubtitle">Add Application details</label>
+        <div style={{ marginLeft: '1.2rem' }}>
+        <label className="Descriptionlabel">Add Application details</label>
+        </div>
         <div className="center-steps">
           <Steps
             current={0}
@@ -1045,12 +1049,6 @@ export default function AddPersonalDeatilsPage() {
       >
         Add Personal details
       </div>
-      {/* <div
-        className="verifyKhojiSubtitle"
-        style={{ whiteSpace: "pre-wrap", marginLeft: "3rem" }}
-      >
-       
-      </div> */}
       <div style={{ marginLeft: "3rem" }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -1153,10 +1151,9 @@ export default function AddPersonalDeatilsPage() {
                       mode="tags"
                       style={{ width: "100%", height: "auto" }}
                       placeholder="Select Purpose"
-                      value={selectedPurpose} // Set the value of the selected option
+                      value={selectedPurpose} 
                       onChange={(value) => setSelectedPurpose(value)}
-                      // Update selectedPurpose state when an option is selected
-                    >
+                      >
                       {purposeOptions.map((option) => (
                         <Option key={option.key} value={option.value}>
                           {option.label}
@@ -1326,7 +1323,6 @@ export default function AddPersonalDeatilsPage() {
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "flex-end",
                         marginTop: "8px",
                       }}
                     >

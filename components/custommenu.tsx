@@ -30,12 +30,7 @@ const CustomMenu = () => {
     <Layout>
       <Sider
         theme="light"
-        style={{
-          height: "100vh",
-          position: "fixed",
-          width: "200px",
-          backgroundColor: "#F4F4F4",
-        }}
+        className="left-panel" // Add the class name here
       >
         <div
           style={{
@@ -48,11 +43,9 @@ const CustomMenu = () => {
           <div
             style={{
               marginLeft: "40px",
-              marginTop: "1rem",
-              marginBottom: "1rem",
-              display: "flex",
+               marginBottom: "1rem",
+               display: "flex",
               alignItems: "center",
-              paddingTop: "1rem",
               height: "4rem",
               backgroundColor: "#F4F4F4",
               background: "transparent", // or set to the same background color as your menu
@@ -76,11 +69,8 @@ const CustomMenu = () => {
               onClick={handleHome}
               style={{
                 marginLeft: "40px",
-                marginTop: "1rem",
-                marginBottom: "1rem",
                 display: "flex",
                 alignItems: "center",
-                paddingTop: "1rem",
                 height: "4rem",
                 background: "transparent", // or set to the same background color as your menu
               }}
@@ -91,11 +81,8 @@ const CustomMenu = () => {
               key="saved"
               style={{
                 marginLeft: "40px",
-                marginTop: "1rem",
-                marginBottom: "1rem",
                 display: "flex",
                 alignItems: "center",
-                paddingTop: "1rem",
                 height: "4rem",
                 background: "transparent", // or set to the same background color as your menu
               }}
@@ -107,11 +94,8 @@ const CustomMenu = () => {
             
               style={{
                 marginLeft: "25px",
-                marginTop: "1rem",
-                marginBottom: "1rem",
                 display: "flex",
                 alignItems: "center",
-                paddingTop: "1rem",
                 height: "4rem",
                 background: "transparent", // or set to the same background color as your menu
               }}
@@ -123,11 +107,8 @@ const CustomMenu = () => {
               onClick={handleSignOut}
               style={{
                 marginLeft: "40px",
-                marginTop: "1rem",
-                marginBottom: "1rem",
                 display: "flex",
                 alignItems: "center",
-                paddingTop: "1rem",
                 height: "4rem",
                 background: "transparent", // or set to the same background color as your menu
               }}
@@ -140,11 +121,11 @@ const CustomMenu = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: "20rem",
+              marginTop: "80vh",
               backgroundColor: "#F4F4F4",
             }}
           >
-            {/* <ElipseIcon />{" "} */}
+          <Avatar/>
           </div>
         </div>
       </Sider>
