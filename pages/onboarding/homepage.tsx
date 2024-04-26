@@ -506,7 +506,7 @@ export default function HomePage() {
               style={{ marginTop: "1rem" }}
             >
               <label className="userProfileInfoTitle">Shivir level</label>
-              <label className="userProfileInfoValue">{user.location}</label>
+              <label className="userProfileInfoValue">{user.shivir_name}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
@@ -706,16 +706,7 @@ export default function HomePage() {
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
     <div style={{ padding: "1rem" }}>
-        <div
-          style={{
-            marginTop: "0.8rem",
-            fontSize: " 28px",
-            fontWeight: "700",
-            lineHeight: "39.2px",
-            letterSpacing: "-0.7111111283302307px",
-            textAlign: "left",
-          }}
-        >
+        <div className="WelcomeLabel" >
           Welcome,
           <br />
           {username}

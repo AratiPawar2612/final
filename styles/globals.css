@@ -17,8 +17,6 @@
   text-align: center !important;
 }
 
-
-
 .continueWithGoogleButton,
 .continueWithAppleButton {
   margin-bottom: 0.625rem!important;
@@ -461,89 +459,16 @@
   margin-right: 0.75rem !important;
 }
 
-/* .middlePanel {
-  display: flex !important;
-  flex-direction: column !important;
-  margin: 1.75rem !important;
-  background-color: white;
-} */
-/* .fullHeight {
-  height: 100% !important;
-}
-.title {
-  text-align: center !important;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif !important;
-  font-size: x-large !important;
-  margin-top: 4rem !important;
-  font-weight: bolder !important;
-}
-.description {
-  font-weight: lighter !important;
-  font-size: medium !important;
-  text-align: center !important;
-  margin-top: 0.4rem !important;
-} */
-/* .top-label .ant-form-item-label {
-  align-self: flex-start; 
-} */
-/* .submitbutton {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-} */
 
-
-/* .ant.ant-form-item-label-text {
-  font-weight: bold !important;
-  border-radius: 1.5625rem!important;
-} */
-/* .paymentbutton {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: center !important;
-} */
-
-
-.container {
+/* .container {
   display: grid!important;
   gap: 1rem!important; 
-}
-
-/* .listContainer,
-.cardContainer {
-  width: 100%!important;
-}
-
-.listItem {
-  padding: 1rem!important;
-  background-color: #f0f0f0!important;
-  border-radius: 0.5rem!important;
-  cursor: pointer!important;
-  transition: background-color 0.3s ease!important;
-}
-
-.listItem:hover {
-  background-color: #e0e0e0!important;
 } */
 
-/* .cardItem {
-  width: 100%;
-  border-radius: 0.5rem!important;
-  box-shadow: 0rem 0.4rem 0.6rem rgba(0, 0, 0, 0.1)!important; 
-  transition: transform 0.3s ease-in-out!important; 
-} */
-
-/* .cardItem:hover {
-  transform: translateY(-0.5rem)!important; 
-} */
 .container {
   padding: 1rem!important; 
 }
 
-/* .happyThoughtsLabel {
-  font-size: 1.5rem!important; 
-  margin-bottom: 1rem!important; 
-} */
 
 .verifyKhojiContainer {
   position: relative!important;
@@ -588,24 +513,6 @@
   height: 13.5625rem !important;
 }
 
-/* .userProfileContainer {
-  display: flex!important;
-  flex-direction: row!important; 
-} */
-
-/* .userProfileCard {
-  margin-right: 1rem!important; 
- 
-} */
-/* .userProfileCard:first-child {
-  margin-left: 1rem!important;
-} */
-/* .centerButton {
-  display: flex!important;
-  justify-content: center!important;
-  align-items: center!important;
-  margin-top: 2rem!important;
-} */
 .container {
   display: flex!important;
   flex-direction: column!important;
@@ -684,7 +591,7 @@
 .center-steps {
   display: flex!important;
   justify-content: center!important;
-  margin-top: 1.25rem!important; 
+  margin-top: 1.25rem!important;
 }
 
 .center-content {
@@ -807,4 +714,28 @@
   margin-bottom: 0.75rem !important;
   width: 17.3125rem !important;
   
+}
+
+.WelcomeLabel{
+ 
+    margin-Top: 0.8rem!important;
+    font-Size: 1.55rem!important;
+    font-Weight: 700!important;
+    line-Height: 2.45rem!important;
+    letter-Spacing: -0.0444rem!important;
+    text-Align: left!important;
+ 
+}
+.viewstatusLabel{
+  margin-Top: '1rem'!important;
+  margin-Left: '33.5rem'!important; 
+
+}
+.StatusMessageLabel{
+ display: 'flex'!important;
+ flex-Direction: 'row',!important;
+ justify-Content: 'center'!important;
+ font-Weight: 'bold'!important;
+ font-Size: '1.2rem'!important;
+ 
 }

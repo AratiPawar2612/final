@@ -37,26 +37,21 @@ export default function AddApplicationDetailsPage() {
   
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
-     <div>
-  <div style={{ fontWeight: 'bold', fontSize: '1rem', marginLeft: '3rem' }}>
-    <ArrowLeftIcon onClick={() => router.back()} /> Apply for Krupa Darshan
-  </div>
-  <div style={{ marginLeft: '4.5rem' }}>
-    <label className="Descriptionlabel">Add Application details</label>
-  </div>
-  <div className="center-steps">
-          <Steps
-            current={0}
-            style={{ width: "50%" }}
-            className="my-custom-steps"
-            labelPlacement="vertical"
-          >
+     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
+          <ArrowLeftIcon onClick={() => router.back()} style={{ marginRight: '10px' }} /> Apply for Krupa Darshan
+        </div>
+        <div style={{ marginLeft: '2rem' }}>
+          <label className="Descriptionlabel">Add Application details</label>
+        </div>
+        <div className="center-steps">
+          <Steps current={0} style={{ width: "50%" }} className="my-custom-steps" labelPlacement="vertical">
             <Step title="Add Application details" />
             <Step title="Complete & Apply" />
-            <Step title="view status" />
+            <Step title="View status" />
           </Steps>
         </div>
-</div>
+        </div>
 <Divider style={{ marginTop: '3rem' }} />
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
         Select Your Type

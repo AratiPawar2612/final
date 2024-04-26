@@ -1030,7 +1030,7 @@ export default function AddPersonalDeatilsPage() {
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">Add Application details</label>
         </div>
-        <div className="center-steps">
+        <div className="center-steps" >
           <Steps
             current={0}
             style={{ width: "50%" }}

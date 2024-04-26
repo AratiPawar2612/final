@@ -169,12 +169,12 @@ export default function ViewStatusPage() {
         </div>
       </div>
       <Divider style={{ marginTop: '3rem' }} />
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
+      <div  className="StatusMessageLabel" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
         {status1 === 'SUBMITTED' && 'Congratulations! Your application has been submitted successfully'}
         {status1 === 'APPROVED_BY_DKD' && 'Congratulations! Your application has been event assigned'}
         {status1 === 'ACCEPTED_BY_KHOJI' && 'Congratulations! Your application has been accepted'}
       </div>
-      <div style={{ marginTop: '1rem', marginLeft: '33.5rem' }}>
+      <div className="viewstatusLabel" style={{ marginTop: '1rem', marginLeft: '33.5rem' }}>
         <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>Hi {username},</div>
         <label style={{ textWrap: 'nowrap' }}>{`Here's the status of your Krupa Darshan application`}</label>
       </div>
@@ -206,7 +206,7 @@ export default function ViewStatusPage() {
                     {participant.relation_with.first_name} {participant.relation_with.last_name}
                   </div>
                 </Card>
-              ))
+              ))  
             ) : (
               <div>No participant data available</div>
             )}

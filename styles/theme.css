@@ -21,24 +21,56 @@ body {
     margin: 0 auto; /* Center the content */
     padding: 0 20px; /* Add some padding to the sides */
     max-width: 100%; 
-    .center-steps {
-      width: 100%;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-    }
-  
-    .my-custom-steps {
-      width: 100%;
-    }
-    .loginTitle{
-      font-size: 1.9rem!important;
-      font-weight: 400!important;
-      line-height: 1.5rem!important;
-      letter-spacing: 1!important;
-    }
   }
+
+  .center-steps {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .my-custom-steps {
+    width: 100%;
+  }
+
+  .loginTitle {
+    font-size: 1.9rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5rem !important;
+    letter-spacing: 1px !important;
+  }
+
+ /* External CSS */
+@media screen and (max-width: 768px) {
+  body {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 100%; 
+  }
+
+  .center-steps {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .my-custom-steps {
+    width: 100%;
+  }
+  .my-custom-steps{
+margin-left: 2rem!important;
+margin-bottom: 2rem!important;
+margin-Top: 2rem!important;
+  }
+  .viewstatusLabel{
+    text-align: left;
+  }
+ 
 }
+}
+
 
 /* For medium-sized screens */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
