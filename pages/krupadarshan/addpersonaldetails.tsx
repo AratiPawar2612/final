@@ -895,12 +895,12 @@ export default function AddPersonalDeatilsPage() {
               <label className="userProfileInfoTitle"></label>
               <label className="userProfileInfoValue"></label>
             </div>
-            <div
+            {/* <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
               <ScannerIcon />
-            </div>
+            </div> */}
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
@@ -949,55 +949,43 @@ export default function AddPersonalDeatilsPage() {
           </div>
         </div>
         <div
-          className="displayFlex flexDirectionColumn"
-          style={{ textAlign: "center" }}
+  
+         
         >
-          <label className="userNameLabel" style={{ marginRight: "12rem" }}>
+          <label>
             {user?.user?.first_name} {user?.user?.last_name}
           </label>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+          <div>
             <div
-              className="displayFlex flexDirectionColumn flex1"
+              className="displayFlex flexDirectionColumn "
               style={{ marginTop: "1rem" }}
             >
-              <label className="userProfileInfoTitle">Khoji Id</label>
-              <label className="userProfileInfoValue">{user.khoji_id}</label>
+              <label >Khoji Id</label>
+              <label>{user.khoji_id}</label>
             </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle"></label>
-              <label className="userProfileInfoValue"></label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem", marginLeft: "1rem" }}
-            >
-              <ScannerIcon />
-            </div>
+            
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: "2rem" }}
             >
-              <label className="userProfileInfoTitle">Tejsthan</label>
-              <label className="userProfileInfoValue">{user.location}</label>
+              <label >Tejsthan</label>
+              <label>{user.location}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: "2rem" }}
             >
-              <label className="userProfileInfoTitle">Shivir level</label>
-              <label className="userProfileInfoValue">{user.location}</label>
+              <label>Shivir level</label>
+              <label>{user.location}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: "2rem" }}
             >
-              <label className="userProfileInfoTitle">DOB</label>
-              <label className="userProfileInfoValue">{user.dob}</label>
+              <label>DOB</label>
+              <label>{user.dob}</label>
             </div>
           </div>
         </div>

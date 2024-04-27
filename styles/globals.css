@@ -391,13 +391,13 @@
   height: 4.75rem !important;
 }
 .my-custom-steps {
-  width: 29.2875rem!important;
-  height: 4.25rem!important;
+  width: 334.6px!important;
+  height: 53px!important;
   top: 15.875rem!important;
   left: 30.375rem!important;
   gap: 0.5rem!important;
   font-family: Manrope!important;
-  font-size: 0.5331rem!important;
+  font-size: 8.53px!important;
   font-weight: 400!important;
   line-height: 0.9069rem!important;
   letter-spacing: 0.0089rem!important;
@@ -459,11 +459,6 @@
   margin-right: 0.75rem !important;
 }
 
-
-/* .container {
-  display: grid!important;
-  gap: 1rem!important; 
-} */
 
 .container {
   padding: 1rem!important; 
@@ -717,15 +712,13 @@
 }
 
 .WelcomeLabel{
- 
     margin-Top: 0.8rem!important;
     font-Size: 1.55rem!important;
     font-Weight: 700!important;
     line-Height: 2.45rem!important;
     letter-Spacing: -0.0444rem!important;
     text-Align: left!important;
- 
-}
+  }
 .viewstatusLabel{
   margin-Top: '1rem'!important;
   margin-Left: '33.5rem'!important; 
@@ -739,3 +732,30 @@
  font-Size: '1.2rem'!important;
  
 }
+.ArrowLeftIcon{
+font-Weight: 'bold'!important;
+font-Size: '1rem'!important;
+margin-Left: '3rem'!important;
+margin-Top: '2rem' !important;
+}
+.EligibleLabel {
+  margin-right: 1rem !important;
+  font-weight: bolder !important;
+  border: 1px solid black !important;
+  padding: 0.5rem; /* Optional: Add padding to create space around the content */
+  border-radius: 0.5rem; /* Adjust the value to control the border radius */
+}
+.menu-container {
+  position: relative;
+  /* Adjust other styles as needed */
+}
+
+.notification-modal {
+  position: fixed;
+  top: 50px; /* Adjust this value based on your menu height */
+  right: 20px; /* Adjust this value for desired horizontal position */
+  width: 300px; /* Adjust width as needed */
+  overflow-y: auto;
+}
+
+

@@ -154,7 +154,7 @@ export default function ViewStatusPage() {
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
       <div>
-        <div style={{ fontWeight: 'bold', fontSize: '1rem', marginLeft: '3rem', marginTop: '2rem' }}>
+        <div className="ArrowLeftIcon">
           <ArrowLeftOutlined onClick={() => router.back()} /> Apply for Krupa Darshan
         </div>
         <div style={{ marginLeft: '4rem' }}>

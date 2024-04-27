@@ -37,49 +37,34 @@ export default function AddApplicationDetailsPage() {
   
   return (
     <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
-     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
-          <ArrowLeftIcon onClick={() => router.back()} style={{ marginRight: '10px' }} /> Apply for Krupa Darshan
+     <div style={{ marginLeft: "3rem" }}>
+        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+          <ArrowLeftIcon onClick={() => router.back()} />
+          Apply for Krupa Darshan
         </div>
-        <div style={{ marginLeft: '2rem' }}>
-          <label className="Descriptionlabel">Add Application details</label>
+        <div style={{ marginLeft: '1.2rem' }}>
+        <label className="Descriptionlabel">Add Application details</label>
         </div>
-        <div className="center-steps">
-          <Steps current={0} style={{ width: "50%" }} className="my-custom-steps" labelPlacement="vertical">
-            <Step title="Add Application details" />
-            <Step title="Complete & Apply" />
-            <Step title="View status" />
+        <div className="center-steps" >
+          <Steps
+            current={-1}
+            style={{ width: "50%" }}
+            className="my-custom-steps"
+            labelPlacement="vertical"
+          >
+            <Step title="Add application details" />
+            <Step title="Complete & apply" />
+            <Step title="view status" />
           </Steps>
         </div>
-        </div>
+      </div>
 <Divider style={{ marginTop: '3rem' }} />
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
         Select Your Type
       </div>
 
       <Row gutter={[16, 16]} style={{ marginLeft: '3rem' }}>
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-          <Card
-            title={<TeamOutlined style={{ fontSize: '1.5rem' }} />}
-            style={{
-              marginTop: '2rem',
-              backgroundColor: selectedCard === 'Family Krupa Darshan' ? 'lightblue' : 'white',
-              minHeight: '300px',
-            }}
-            onClick={() => handleCardClick('Family Krupa Darshan')}>
-            <div style={{ marginTop: '2rem', fontWeight: 'bold', fontSize: '1.3rem' }}>
-              Family Krupa Darshan
-            </div>
-            <div style={{ marginTop: '2rem' }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            </div>
-            {selectedCard === 'Family Krupa Darshan' && (
-              <div style={{ position: 'absolute', top: '0.625rem', right: '0.625rem' }}>
-                <CheckOutlined style={{ color: 'green', fontSize: '1.25rem' }} />
-              </div>
-            )}
-          </Card>
-        </Col>
+       
         <Col xs={24} sm={12} md={12} lg={6} xl={6}>
           <Card
             title={<UserOutlined style={{ fontSize: '1.5rem' }} />}
@@ -99,6 +84,28 @@ export default function AddApplicationDetailsPage() {
             {selectedCard === 'Darshan For Yourself' && (
               <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
                 <CheckOutlined style={{ color: 'green', fontSize: '20px' }} />
+              </div>
+            )}
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+          <Card
+            title={<TeamOutlined style={{ fontSize: '1.5rem' }} />}
+            style={{
+              marginTop: '2rem',
+              backgroundColor: selectedCard === 'Family Krupa Darshan' ? 'lightblue' : 'white',
+              minHeight: '300px',
+            }}
+            onClick={() => handleCardClick('Family Krupa Darshan')}>
+            <div style={{ marginTop: '2rem', fontWeight: 'bold', fontSize: '1.3rem' }}>
+              Family Krupa Darshan
+            </div>
+            <div style={{ marginTop: '2rem' }}>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            </div>
+            {selectedCard === 'Family Krupa Darshan' && (
+              <div style={{ position: 'absolute', top: '0.625rem', right: '0.625rem' }}>
+                <CheckOutlined style={{ color: 'green', fontSize: '1.25rem' }} />
               </div>
             )}
           </Card>

@@ -720,7 +720,7 @@ export default function HomePage() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        height: "100%", // Set the height to 100%
+        height: "100%", 
       }}
     >
               
@@ -733,9 +733,9 @@ export default function HomePage() {
                   marginTop: "0.8rem",
                 }}
               >
-                <Button style={{ marginRight: "1rem", fontWeight: "bolder" }}>
+                <span className="EligibleLabel">
                   {`You're eligible`}
-                </Button>
+                </span>
                 <InfoIcon />
               </div>
               <div style={{ marginBottom: "1rem" }}>
