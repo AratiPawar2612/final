@@ -12,6 +12,11 @@ const CustomMenu = () => {
   const router = useRouter();
   const [notificationsData, setNotificationsData] = useState<any>(null);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
 
   const handleTopMenuClick = (e: any) => {
     console.log('Top Menu Clicked:', e.key);
@@ -71,7 +76,7 @@ const CustomMenu = () => {
 
   return (
     <Layout>
-      <Sider theme="light" className="left-panel">
+      <Sider theme="light" className="left-panel" collapsible collapsed={collapsed} onCollapse={toggleCollapsed}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", backgroundColor: "#F4F4F4" }}>
           <div style={{ marginLeft: "40px", marginBottom: "1rem", display: "flex", alignItems: "center", height: "4rem", backgroundColor: "#F4F4F4", background: "transparent" }}>
             <LogoIcon className="logologin" />
@@ -91,7 +96,7 @@ const CustomMenu = () => {
             </Item>
           </Menu>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "80vh", backgroundColor: "#F4F4F4" }}>
-            <Avatar />
+            <ElipseIcon />
           </div>
         </div>
       </Sider>
@@ -109,9 +114,8 @@ const CustomMenu = () => {
           notificationsData.map((notification:any) => (
             <li key={notification.id} style={{ marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
-                {/* Render an icon (ElipseIcon) or Avatar here */}
                 <ElipseIcon />
-                {/* Add a spacer */}
+                
                 <div style={{ marginLeft: '10px' }}>
                   {/* Render the description with HTML formatting */}
                   <span

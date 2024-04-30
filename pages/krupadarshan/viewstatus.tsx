@@ -9,7 +9,7 @@ import useSafeReplace from "@/components/useSafeReplace";
 import { useSession } from 'next-auth/react';
 import { fetchParticipantData } from '../api/applicationapi';
 import { Modal, Form, DatePicker } from 'antd';
-import moment from 'moment';
+import CustomMobileMenu from '@/components/custommobilemenu';
 import dayjs from "dayjs";
 
 export default function ViewStatusPage() {
@@ -28,6 +28,66 @@ export default function ViewStatusPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [startdate, setStartdate] = useState("");
   const [enddate, setEnddate] = useState("");
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+    };
+
+    handleResize(); // Call once on component mount
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadMoreData = async() => {
+      const sessionresponse = await fetch('/api/getsession');
+      const sessionData = await sessionresponse.json();
+      serUsername(sessionData?.session?.user.name);
+      settoken(sessionData?.session?.access_token);
+      if (sessionData?.session) {
+        const ApiUrl = 'https://hterp.tejgyan.org/django-app/event/applications/';
+        const getapplicationid = await fetch(ApiUrl, {
+          headers: {
+            Authorization: `Bearer ${sessionData?.session?.access_token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const appliidres = await getapplicationid.json();
+        const userDataResults1 = appliidres.results ?? [];
+        setappliid(userDataResults1[0]?.id);
+        setReferenceCode(userDataResults1[0]?.reference_code);
+
+        const participantUserResponseData = await fetchParticipantData(
+          sessionData?.session?.access_token
+        );
+        const participantresp = participantUserResponseData.results ?? [];
+        if (participantresp.length > 0) {
+          setParticpantdata(participantresp);
+        }
+
+        const userApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/`;
+        const userResponse = await fetch(userApiUrl, {
+          headers: {
+            Authorization: `Bearer ${sessionData?.session?.access_token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const userDataResponse = await userResponse.json();
+        const userDataResults = userDataResponse.results[0] ?? [];
+        setData(userDataResponse);
+        setStatus(userDataResults?.status);
+      } else {
+        router.push("/");
+      }
+    };
+    loadMoreData();
+  }, [router]);
+
 
   const handleOpenModal = () => {
     setIsModalVisible(true);
@@ -100,51 +160,6 @@ export default function ViewStatusPage() {
     }
   };
 
-  useEffect(() => {
-    const loadMoreData = async() => {
-      const sessionresponse = await fetch('/api/getsession');
-      const sessionData = await sessionresponse.json();
-      serUsername(sessionData?.session?.user.name);
-      settoken(sessionData?.session?.access_token);
-      if (sessionData?.session) {
-        const ApiUrl = 'https://hterp.tejgyan.org/django-app/event/applications/';
-        const getapplicationid = await fetch(ApiUrl, {
-          headers: {
-            Authorization: `Bearer ${sessionData?.session?.access_token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const appliidres = await getapplicationid.json();
-        const userDataResults1 = appliidres.results ?? [];
-        setappliid(userDataResults1[0]?.id);
-        setReferenceCode(userDataResults1[0]?.reference_code);
-
-        const participantUserResponseData = await fetchParticipantData(
-          sessionData?.session?.access_token
-        );
-        const participantresp = participantUserResponseData.results ?? [];
-        if (participantresp.length > 0) {
-          setParticpantdata(participantresp);
-        }
-
-        const userApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/`;
-        const userResponse = await fetch(userApiUrl, {
-          headers: {
-            Authorization: `Bearer ${sessionData?.session?.access_token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const userDataResponse = await userResponse.json();
-        const userDataResults = userDataResponse.results[0] ?? [];
-        setData(userDataResponse);
-        setStatus(userDataResults?.status);
-      } else {
-        router.push("/");
-      }
-    };
-    loadMoreData();
-  }, [router]);
-
   const cardData = [
     { title: 'Application received', content: 'Content for card 1' },
     { title: 'Event assigned', content: 'Content for card 2' },
@@ -152,13 +167,17 @@ export default function ViewStatusPage() {
   ];
   
   return (
-    <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
-      <div>
+    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
+<    div >
+    {!isMobileView && <CustomMobileMenu />}
+    </div>
+    
+   
         <div className="ArrowLeftIcon">
-          <ArrowLeftOutlined onClick={() => router.back()} /> Apply for Krupa Darshan
+          <ArrowLeftOutlined onClick={() => router.back()} />  <label className="verifyKhojiSubtitle">Apply for Krupa Darshan</label>
         </div>
         <div style={{ marginLeft: '4rem' }}>
-          <label className="verifyKhojiSubtitle">View status</label>
+          <label>View status</label>
         </div>
         <div className="center-steps">
           <Steps current={2} className="my-custom-steps" labelPlacement="vertical" style={{ width: '50%' }}>
@@ -167,7 +186,7 @@ export default function ViewStatusPage() {
             <Step title="View status" />
           </Steps>
         </div>
-      </div>
+      
       <Divider style={{ marginTop: '3rem' }} />
       <div  className="StatusMessageLabel" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
         {status1 === 'SUBMITTED' && 'Congratulations! Your application has been submitted successfully'}
@@ -190,7 +209,7 @@ export default function ViewStatusPage() {
           </Card>
           <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
             <div style={{ fontWeight: 'bold' }}>Total Applicants</div>
-            <label>2 Adults 1 Child</label>
+            <label>--------</label>
           </Card>
           <Divider />
           <div>

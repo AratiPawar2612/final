@@ -28,7 +28,7 @@ import {
   submitApplication,
 } from "../api/applicationapi";
 import dayjs from "dayjs";
-import CustomFooter from "@/components/customrightpanel";
+import CustomMobileMenu from "@/components/custommobilemenu";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -75,6 +75,21 @@ export default function AddPersonalDeatilsPage() {
   const [khojiuserid, setkhojiuserid] = useState("");
   const [userdata, setUserData] = useState<any>([]);
   console.log("isFamilyKrupaDarshan", isFamilyKrupaDarshan);
+  const [isMobileView, setIsMobileView] = useState(false); // Define isMobileView state
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+    };
+
+    handleResize(); // Call once on component mount
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+    };
+  }, []);
+
 
   useEffect(() => {
     const loadMoreData = async () => {
@@ -895,12 +910,12 @@ export default function AddPersonalDeatilsPage() {
               <label className="userProfileInfoTitle"></label>
               <label className="userProfileInfoValue"></label>
             </div>
-            {/* <div
+            <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
               <ScannerIcon />
-            </div> */}
+            </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
@@ -948,44 +963,56 @@ export default function AddPersonalDeatilsPage() {
             <VerifiedIcon />
           </div>
         </div>
-        <div
-  
-         
-        >
-          <label>
-            {user?.user?.first_name} {user?.user?.last_name}
-          </label>
-          <div>
+        <div className="displayFlex flexDirectionColumn" style={{textAlign:"center"}}>
+          <label className="userNameLabel" style={{marginRight:"12rem"}}>   
+          {user?.user?.first_name} {user?.user?.last_name}</label>
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
-              className="displayFlex flexDirectionColumn "
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem"}}
+            >
+              <label className="userProfileInfoTitle">Khoji Id</label>
+              <label className="userProfileInfoValue">
+                {user.khoji_id}
+              </label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
-              <label >Khoji Id</label>
-              <label>{user.khoji_id}</label>
+              <label className="userProfileInfoTitle"></label>
+              <label className="userProfileInfoValue"></label>
             </div>
-            
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem",marginLeft:"1rem" }}
+            >
+              <ScannerIcon/>
+            </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "2rem" }}
+              style={{ marginTop: "1rem"}}
             >
-              <label >Tejsthan</label>
-              <label>{user.location}</label>
+              <label className="userProfileInfoTitle">Tejsthan</label>
+              <label className="userProfileInfoValue">
+              {user?.current_tejsthan?.name}
+              </label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "2rem" }}
+              style={{ marginTop: "1rem" }}
             >
-              <label>Shivir level</label>
-              <label>{user.location}</label>
+              <label className="userProfileInfoTitle">Shivir level</label>
+              <label className="userProfileInfoValue">{user.shivir_name}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "2rem" }}
+              style={{ marginTop: "1rem" }}
             >
-              <label>DOB</label>
-              <label>{user.dob}</label>
+              <label className="userProfileInfoTitle">DOB</label>
+              <label className="userProfileInfoValue">{user.dob}</label>
             </div>
           </div>
         </div>
@@ -1008,8 +1035,10 @@ export default function AddPersonalDeatilsPage() {
   }
 
   return (
-    <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
-
+    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
+    <div >
+        {isMobileView && <CustomMobileMenu />}
+        </div>
       <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />

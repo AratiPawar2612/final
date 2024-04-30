@@ -20,11 +20,13 @@ import {
   NotVerifiedIcon,
   UserAvatarIcon,
   ScannerIcon,
+  ElipseIcon
 } from "@/icons/icon";
 import axios from "axios";
 import { FileExclamationTwoTone, CheckOutlined } from "@ant-design/icons";
 import { fetchApplicationData,fetchUserData } from "../api/applicationapi";
-import CustomFooter from "@/components/customrightpanel";
+import CustomMobileMenu from "@/components/custommobilemenu";
+
 
 
 
@@ -51,6 +53,7 @@ export default function HomePage() {
   const [selectedType, setSelectedType] = useState("khojiID");
   const [status, setStatus] = useState("");
   const [applicationid, setApplicationid] = useState("");
+  const [isMobileView, setIsMobileView] = useState(false); // Define isMobileView state
 
 
 
@@ -90,6 +93,19 @@ export default function HomePage() {
     };
     fetchData();
   }, [router]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+    };
+
+    handleResize(); // Call once on component mount
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+    };
+  }, []);
 
   const showModal = () => {
     setVisible(true);
@@ -458,7 +474,8 @@ export default function HomePage() {
       >
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-          <Avatar className="userProfileImage" src={user.avtar} />
+          {/* <Avatar className="userProfileImage" src={user.avtar} /> */}
+          <Avatar className="userProfileImage" src="/home/ubuntu/Documents/page-router/tgf-portal/icons/avatar.png" />
           <div className="userProfileVerifiedBadge">
             <label className="userProfileVerifiedBadgeLabel">Verified</label>
             <VerifiedIcon />
@@ -498,7 +515,7 @@ export default function HomePage() {
             >
               <label className="userProfileInfoTitle">Tejsthan</label>
               <label className="userProfileInfoValue">
-              {user.location}
+              {user?.current_tejsthan?.name}
               </label>
             </div>
             <div
@@ -534,7 +551,8 @@ export default function HomePage() {
       >
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter justifyContentSpaceBetween">
-          <Avatar className="userProfileImage" />
+          {/* <Avatar className="userProfileImage" /> */}
+          <ElipseIcon />
           <div className="userProfileVerifiedBadge">
             <label
               className="userProfileVerifiedBadgeLabel"
@@ -704,7 +722,11 @@ export default function HomePage() {
 
   
   return (
-    <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
+    
+    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
+<div >
+    {isMobileView && <CustomMobileMenu />}
+    </div>
     <div style={{ padding: "1rem" }}>
         <div className="WelcomeLabel" >
           Welcome,

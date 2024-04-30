@@ -757,5 +757,14 @@ margin-Top: '2rem' !important;
   width: 300px; /* Adjust width as needed */
   overflow-y: auto;
 }
+.userProfileAvatar {
+  width: 64px; /* Set an appropriate width for the Avatar */
+  height: 64px; /* Set an appropriate height for the Avatar */
+}
 
+.avatarIcon {
+  width: 100%; /* Ensure the SVG icon fills the Avatar */
+  height: 100%; /* Ensure the SVG icon fills the Avatar */
+  fill: #fff; /* Set the fill color of the SVG icon */
+}
 

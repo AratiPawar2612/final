@@ -7,7 +7,7 @@ import axios, { AxiosResponse, AxiosError } from "axios";
 import { VerifiedIcon } from "@/icons/icon";
 import { ArrowLeftIcon } from "@/icons/icon";
 import { fetchParticipantData ,fetchPurposeOptions,fetchApplicationData} from "../api/applicationapi";
-import CustomFooter from "@/components/customrightpanel";
+import CustomMobileMenu from "@/components/custommobilemenu";
 const { Option } = Select;
 
 export default function CompleteAndApplyPage() {
@@ -19,6 +19,20 @@ export default function CompleteAndApplyPage() {
   const [addnote, setaddnote] = useState("");
   const [startdate, setStartDate] = useState("");
   const [enddate, setEndDate] = useState("");
+  const [isMobileView, setIsMobileView] = useState(false); // Define isMobileView state
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+    };
+
+    handleResize(); // Call once on component mount
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+    };
+  }, []);
 
   function convertDate(dateStr:any) {
     console.log("Input date string:", dateStr);
@@ -136,7 +150,10 @@ function buildUserdataCard(user: any, index: any) {
     );
   }
   return (
-    <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
+    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
+<div >
+    {isMobileView && <CustomMobileMenu />}
+    </div>
       <div style={{ marginLeft: "1rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} /> Apply for Krupa

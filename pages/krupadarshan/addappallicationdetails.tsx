@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Divider, Steps, Row, Col, Card } from 'antd';
 import MainLayout from '@/components/mainlayout';
 import CustomMenu from '@/components/custommenu';
 import { ArrowLeftIcon } from '@/icons/icon';
 import { TeamOutlined, UserOutlined, CheckOutlined } from '@ant-design/icons';
-import CustomFooter from '@/components/customrightpanel';
+import CustomMobileMenu from '@/components/custommobilemenu';
+
 
 export default function AddApplicationDetailsPage() {
   const { Step } = Steps;
@@ -15,6 +16,21 @@ export default function AddApplicationDetailsPage() {
   const [continueButtonText, setContinueButtonText] = useState('Continue');
   const [buttonSize, setButtonSize] = useState<'large' | 'middle' | 'small'>('large');
   const [isContinueDisabled, setIsContinueDisabled] = useState(true); // State to manage continue button disable/enable
+  const [isMobileView, setIsMobileView] = useState(false); // Define isMobileView state
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+    };
+
+    handleResize(); // Call once on component mount
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+    };
+  }, []);
+
   
   const handleCardClick = (cardName: string) => {
     setButtonColor('black');
@@ -36,7 +52,10 @@ export default function AddApplicationDetailsPage() {
   };
   
   return (
-    <MainLayout siderClassName="leftMenuPanel" siderChildren={<CustomMenu />}>
+    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
+<div >
+    {isMobileView && <CustomMobileMenu />}
+    </div>
      <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
@@ -45,7 +64,7 @@ export default function AddApplicationDetailsPage() {
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">Add Application details</label>
         </div>
-        <div className="center-steps" >
+        <div className="center-steps">
           <Steps
             current={-1}
             style={{ width: "50%" }}
@@ -62,7 +81,7 @@ export default function AddApplicationDetailsPage() {
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
         Select Your Type
       </div>
-
+      <div style={{  fontSize: '0.8rem', marginLeft: '3rem' }}> Please choose one option to proceed.</div>
       <Row gutter={[16, 16]} style={{ marginLeft: '3rem' }}>
        
         <Col xs={24} sm={12} md={12} lg={6} xl={6}>
@@ -79,7 +98,7 @@ export default function AddApplicationDetailsPage() {
               <br /> Yourself
             </div>
             <div style={{ marginTop: '2rem' }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            Select this option for krupadarshan with yourself
             </div>
             {selectedCard === 'Darshan For Yourself' && (
               <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
@@ -101,7 +120,7 @@ export default function AddApplicationDetailsPage() {
               Family Krupa Darshan
             </div>
             <div style={{ marginTop: '2rem' }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+             Select this option for Family Krupa Darshan
             </div>
             {selectedCard === 'Family Krupa Darshan' && (
               <div style={{ position: 'absolute', top: '0.625rem', right: '0.625rem' }}>
@@ -122,6 +141,7 @@ export default function AddApplicationDetailsPage() {
             maxWidth: '15rem',
             height: '2rem',
             backgroundColor: buttonColor,
+            marginBottom:"1rem"
           }}
           size={buttonSize}
           disabled={isContinueDisabled} 
