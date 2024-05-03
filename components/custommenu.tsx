@@ -78,7 +78,7 @@ const CustomMenu = () => {
     <Layout>
       <Sider theme="light" className="left-panel" collapsible collapsed={collapsed} onCollapse={toggleCollapsed}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", backgroundColor: "#F4F4F4" }}>
-          <div style={{ marginLeft: "40px", marginBottom: "1rem", display: "flex", alignItems: "center", height: "4rem", backgroundColor: "#F4F4F4", background: "transparent" }}>
+          <div style={{ marginLeft: "40px", display: "flex", alignItems: "center", height: "1.5rem", backgroundColor: "#F4F4F4", background: "transparent" }}>
             <LogoIcon className="logologin" />
           </div>
           <Menu mode="inline" onClick={handleTopMenuClick} className="custom-menu" defaultSelectedKeys={["home"]} style={{ backgroundColor: "#F4F4F4", boxShadow: "none", border: "none" }}>
@@ -102,11 +102,11 @@ const CustomMenu = () => {
       </Sider>
       <Modal
       title="Notifications"
-      visible={showNotificationModal}
+      open={showNotificationModal}
       onCancel={handleNotificationModalClose}
       footer={null}
       className="notification-modal"
-      style={{ width: '360px', height: '1023px', marginLeft: '7rem', padding: '1.25rem', overflowY: 'auto' }}
+      style={{ width: '360px', height: '1023px', marginLeft: '7rem', padding: '1.25rem', overflowY: 'auto',overflowX: 'auto' }}
     >
       <ul style={{ listStyleType: 'none', padding: 0, maxHeight: '800px', overflowY: 'auto' }}>
 

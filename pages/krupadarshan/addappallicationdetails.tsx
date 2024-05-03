@@ -21,6 +21,7 @@ export default function AddApplicationDetailsPage() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+      console.log("size",window.innerWidth < 768);
     };
 
     handleResize(); // Call once on component mount

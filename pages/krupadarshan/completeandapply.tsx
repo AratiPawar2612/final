@@ -24,6 +24,7 @@ export default function CompleteAndApplyPage() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+      console.log("size",window.innerWidth < 768);
     };
 
     handleResize(); // Call once on component mount
@@ -96,7 +97,8 @@ export default function CompleteAndApplyPage() {
   }, [router]);
  
   const onclicksaveandapplybtn = () => {
-    router.push("/krupadarshan/viewstatus");
+    // router.push("/krupadarshan/viewstatus");
+    router.push("/krupadarshan/viewstatuspage");
   };
 
   

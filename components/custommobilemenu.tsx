@@ -90,6 +90,7 @@ const CustomMobileMenu = () => {
     return null;
   };
 
+  console.log('CustomMobileMenu rendered');
   return (
     <Layout>
         {windowWidth && windowWidth <= 768 && (
@@ -101,12 +102,12 @@ const CustomMobileMenu = () => {
     
       {windowWidth && windowWidth <= 768 && (
         <Drawer
-          title="Menu"
-          placement="left"
-          onClose={toggleDrawer}
-          visible={showDrawer}
-          width="80%"
-        >
+        title="Menu"
+        placement="left"
+        onClose={toggleDrawer}
+        open={showDrawer}
+        width="80%"
+      >
            <Menu mode="inline" onClick={handleTopMenuClick} className="custom-menu" defaultSelectedKeys={["home"]} style={{ backgroundColor: "#F4F4F4", boxShadow: "none", border: "none" }}>
             <Item key="home" onClick={handleHome} style={{ marginLeft: "40px", display: "flex", alignItems: "center", height: "4rem", background: "transparent" }}>
               <HomeIcon />

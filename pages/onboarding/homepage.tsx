@@ -53,7 +53,7 @@ export default function HomePage() {
   const [selectedType, setSelectedType] = useState("khojiID");
   const [status, setStatus] = useState("");
   const [applicationid, setApplicationid] = useState("");
-  const [isMobileView, setIsMobileView] = useState(false); // Define isMobileView state
+  const [isMobileView, setIsMobileView] = useState(false); 
 
 
 
@@ -63,7 +63,7 @@ export default function HomePage() {
         
         const response = await fetch("/api/getsession");
         const sessionData = await response.json();
-        console.log("Session Data:", sessionData);
+        console.log("Session Data:", sessionData?.session);
    
 
         setUserName(sessionData?.session?.user?.name);
@@ -96,7 +96,8 @@ export default function HomePage() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+      setIsMobileView(window.innerWidth < 768);
+console.log("size",isMobileView);
     };
 
     handleResize(); // Call once on component mount
@@ -105,7 +106,7 @@ export default function HomePage() {
     return () => {
       window.removeEventListener("resize", handleResize); // Cleanup on component unmount
     };
-  }, []);
+  }, [isMobileView]);
 
   const showModal = () => {
     setVisible(true);
@@ -474,8 +475,8 @@ export default function HomePage() {
       >
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-          {/* <Avatar className="userProfileImage" src={user.avtar} /> */}
-          <Avatar className="userProfileImage" src="/home/ubuntu/Documents/page-router/tgf-portal/icons/avatar.png" />
+          <Avatar className="userProfileImage" src={user.avtar} />
+          
           <div className="userProfileVerifiedBadge">
             <label className="userProfileVerifiedBadgeLabel">Verified</label>
             <VerifiedIcon />
@@ -710,7 +711,7 @@ export default function HomePage() {
    
     if (applicationdata.length > 0) {
 
-      router.push("/krupadarshan/viewstatus");
+      router.push("/krupadarshan/viewstatuspage");
     } else {
       
     }
