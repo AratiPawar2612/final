@@ -197,24 +197,19 @@ export default function ViewStatusPage() {
     <div >
         {isMobileView && <CustomMobileMenu />}
         </div>
-      <div style={{ marginLeft: "3rem" }}>
+        <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
           Apply for Gyan Darshan
         </div>
         <div style={{ marginLeft: '1.2rem' }}>
-        <label className="Descriptionlabel">View status</label>
+        <label className="Descriptionlabel">View Status</label>
         </div>
-        <div className="center-steps" >
-          <Steps
-            current={2}
-            style={{ width: "50%" }}
-            className="my-custom-steps"
-            labelPlacement="vertical"
-          >
-            <Step title="Add Application details" />
-            <Step title="Complete & Apply" />
-            <Step title="view status" />
+        <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
+          <Steps current={2} style={{ width: "50%" }} labelPlacement="vertical">
+            <Step title="Add application details" />
+            <Step title="Complete & apply" />
+            <Step title="View status" />
           </Steps>
         </div>
       </div>

@@ -710,10 +710,7 @@ export default function HomePage() {
   };
 
   return (
-    <MainLayout
-  siderClassName={isMobileView ? "" : "leftMenuPanel"}
-  siderChildren={!isMobileView && <CustomMenu />}
->
+    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
   <div style={{ padding: "1rem" }}>
     <div style={{ display: "flex", alignItems: "center" }}>
     {isMobileView && (

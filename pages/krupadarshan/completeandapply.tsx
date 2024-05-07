@@ -156,24 +156,19 @@ function buildUserdataCard(user: any, index: any) {
 <div >
     {isMobileView && <CustomMobileMenu />}
     </div>
-      <div style={{ marginLeft: "1rem" }}>
-        <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-          <ArrowLeftIcon onClick={() => router.back()} /> Apply for Gyan
-          Darshan
+    <div style={{ marginLeft: "3rem" }}>
+        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+          <ArrowLeftIcon onClick={() => router.back()} />
+          Apply for Gyan Darshan
         </div>
-        <div style={{ marginLeft: "1.8rem" }}>
-          <label className="verifyKhojiSubtitle">Complete and apply</label>
+        <div style={{ marginLeft: '1.2rem' }}>
+        <label className="Descriptionlabel">complete and apply</label>
         </div>
-        <div className="center-steps">
-          <Steps
-            style={{ width: "50%" }}
-            current={1}
-            className="my-custom-steps"
-            labelPlacement="vertical"
-          >
-            <Step title="Add Application details" />
-            <Step title="Complete & Apply" />
-            <Step title="view status" />
+        <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
+          <Steps current={1} style={{ width: "50%" }} labelPlacement="vertical">
+            <Step title="Add application details" />
+            <Step title="Complete & apply" />
+            <Step title="View status" />
           </Steps>
         </div>
       </div>
