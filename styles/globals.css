@@ -8,7 +8,7 @@
 .left-panel {
   background-color: #F4F4F4 !important;
   padding: 1.25rem !important;
-  height: 100% !important;
+  height: 100vh !important;
   width: auto !important;
   display: flex !important;
   flex-direction: column !important;
@@ -17,6 +17,10 @@
   text-align: center !important;
 }
 
+.ant-layout-sider {
+  height: 100vh !important; /* Ensure full viewport height */
+  background-color:#F4F4F4 !important; /* Set background color to white */
+}
 .continueWithGoogleButton,
 .continueWithAppleButton {
   margin-bottom: 0.625rem!important;
@@ -29,14 +33,11 @@
   width: 3.6875rem!important;
   height: 2.7525rem!important;
   border: 0.0119rem 0rem 0rem 0rem!important;
-  align-items: center!important;
-  justify-self: center!important;
-  /* margin-left: 2rem!important; */
 }
 
 .loginTitle {
   width:auto!important;
-  height: 7rem!important;
+  height: 6rem!important;
   font-family: Manrope!important;
   font-size: 2rem!important;
   font-weight: 700!important;
@@ -74,6 +75,15 @@
 }
 
 .loginRightPanelSubtitle {
+  margin-top: 0.125rem !important;
+  font-size: 0.625rem !important;
+  font-weight: 400 !important;
+  line-height: 1.125rem !important;
+  letter-spacing: 0.0131rem !important;
+  color: #64748b !important;
+  margin-bottom: 6.25rem !important;
+}
+.loginRightPanelSubtitle1 {
   margin-top: 0.125rem !important;
   font-size: 0.625rem !important;
   font-weight: 400 !important;
@@ -300,7 +310,7 @@
 .userProfileLeftCard {
   display: flex !important;
   flex-direction: column !important;
-  height: 10.375rem !important;
+  height:  10.375rem !important;
   border-radius: 0.4375rem !important;
   position: relative !important;
   background: #f9f9f9 !important;
@@ -311,7 +321,7 @@
 .userProfileRightCard {
   display: flex !important;
   flex-direction: column !important;
-  height: 10.375rem !important;
+  height:10.375rem !important;
   border-radius: 0.4375rem !important;
   position: relative !important;
   background: #f9f9f9 !important;
@@ -391,18 +401,21 @@
   height: 4.75rem !important;
 }
 .my-custom-steps {
-  width: 334.6px!important;
-  height: 53px!important;
-  top: 15.875rem!important;
-  left: 30.375rem!important;
-  gap: 0.5rem!important;
   font-family: Manrope!important;
-  font-size: 8.53px!important;
-  font-weight: 400!important;
-  line-height: 0.9069rem!important;
-  letter-spacing: 0.0089rem!important;
   color: #475569!important;
 }
+
+
+/* Styling for individual steps (optional) */
+.my-custom-steps .step {
+  width: calc((100% / 3) - 10px); /* Adjust width for each step */
+  height: 100%; /* Ensure steps fill the height of the container */
+  background-color: #f0f0f0; /* Example background color */
+  border: 1px solid #ccc; /* Example border */
+  box-sizing: border-box; /* Include border in width calculation */
+}
+
+
 .menuLogo,
 .menuLogo > svg {
   width: 4.125rem !important;
@@ -528,7 +541,7 @@
 }
 
 .bottomPart {
-  flex: 2;
+  flex: 1;
   background-color: #ffffff!important;
   display: flex!important;
   flex-direction: column!important;
@@ -758,13 +771,15 @@ margin-Top: '2rem' !important;
   overflow-y: auto;
 }
 .userProfileAvatar {
-  width: 64px; /* Set an appropriate width for the Avatar */
-  height: 64px; /* Set an appropriate height for the Avatar */
+  width: 64px; 
+  height: 64px; 
 }
 
 .avatarIcon {
-  width: 100%; /* Ensure the SVG icon fills the Avatar */
-  height: 100%; /* Ensure the SVG icon fills the Avatar */
-  fill: #fff; /* Set the fill color of the SVG icon */
+  width: 100%; 
+  height: 100%; 
+  fill: #fff; 
 }
-
+.divider{
+margin-top: "3rem"!important;
+}

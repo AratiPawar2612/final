@@ -20,15 +20,12 @@ import {
   NotVerifiedIcon,
   UserAvatarIcon,
   ScannerIcon,
-  ElipseIcon
+  ElipseIcon,
 } from "@/icons/icon";
 import axios from "axios";
 import { FileExclamationTwoTone, CheckOutlined } from "@ant-design/icons";
-import { fetchApplicationData,fetchUserData } from "../api/applicationapi";
+import { fetchApplicationData, fetchUserData } from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
-
-
-
 
 const { Meta } = Card;
 
@@ -53,18 +50,14 @@ export default function HomePage() {
   const [selectedType, setSelectedType] = useState("khojiID");
   const [status, setStatus] = useState("");
   const [applicationid, setApplicationid] = useState("");
-  const [isMobileView, setIsMobileView] = useState(false); 
-
-
+  const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
         const response = await fetch("/api/getsession");
         const sessionData = await response.json();
         console.log("Session Data:", sessionData?.session);
-   
 
         setUserName(sessionData?.session?.user?.name);
 
@@ -75,14 +68,14 @@ export default function HomePage() {
 
           const applicationData = await fetchApplicationData(accessToken);
           setApplicationdata(applicationData);
-          setApplicationid(applicationData[0]?.reference_code)
-          setStatus(applicationData[0]?.status)
+          setApplicationid(applicationData[0]?.reference_code);
+          setStatus(applicationData[0]?.status);
           console.log("status", applicationData[0]?.status);
           console.log("userDataResultsimverified", userDataResponse);
           console.log("Fetched application data:", applicationData);
         } else {
-          console.log('User is not authenticated. Redirecting to Login page.');
-          router.push('/');
+          console.log("User is not authenticated. Redirecting to Login page.");
+          router.push("/");
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -97,7 +90,7 @@ export default function HomePage() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
-console.log("size",isMobileView);
+      console.log("size", isMobileView);
     };
 
     handleResize(); // Call once on component mount
@@ -476,24 +469,26 @@ console.log("size",isMobileView);
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
           <Avatar className="userProfileImage" src={user.avtar} />
-          
+
           <div className="userProfileVerifiedBadge">
             <label className="userProfileVerifiedBadgeLabel">Verified</label>
             <VerifiedIcon />
           </div>
         </div>
-        <div className="displayFlex flexDirectionColumn" style={{textAlign:"center"}}>
-          <label className="userNameLabel" style={{marginRight:"12rem"}}>   
-          {user?.user?.first_name} {user?.user?.last_name}</label>
+        <div
+          className="displayFlex flexDirectionColumn"
+          style={{ textAlign: "center" }}
+        >
+          <label className="userNameLabel" style={{ marginRight: "12rem" }}>
+            {user?.user?.first_name} {user?.user?.last_name}
+          </label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem"}}
+              style={{ marginTop: "1rem" }}
             >
               <label className="userProfileInfoTitle">Khoji Id</label>
-              <label className="userProfileInfoValue">
-                {user.khoji_id}
-              </label>
+              <label className="userProfileInfoValue">{user.khoji_id}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
@@ -504,19 +499,19 @@ console.log("size",isMobileView);
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem",marginLeft:"1rem" }}
+              style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
-              <ScannerIcon/>
+              <ScannerIcon />
             </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem"}}
+              style={{ marginTop: "1rem" }}
             >
               <label className="userProfileInfoTitle">Tejsthan</label>
               <label className="userProfileInfoValue">
-              {user?.current_tejsthan?.name}
+                {user?.current_tejsthan?.name}
               </label>
             </div>
             <div
@@ -542,7 +537,6 @@ console.log("size",isMobileView);
   }
 
   function buildNonVerifiedUserCard(user: any, index: any) {
-    console.log("hi");
     return user ? (
       <div
         className={`${
@@ -552,7 +546,6 @@ console.log("size",isMobileView);
       >
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter justifyContentSpaceBetween">
-          {/* <Avatar className="userProfileImage" /> */}
           <ElipseIcon />
           <div className="userProfileVerifiedBadge">
             <label
@@ -684,8 +677,6 @@ console.log("size",isMobileView);
   }
 
   function buildProfiles() {
- 
-
     if (true) {
       // Render verified user card
       return (
@@ -708,12 +699,9 @@ console.log("size",isMobileView);
   }
 
   const handleHistoryCardClick = () => {
-   
     if (applicationdata.length > 0) {
-
       router.push("/krupadarshan/viewstatuspage");
     } else {
-      
     }
   };
 
@@ -721,32 +709,39 @@ console.log("size",isMobileView);
     router.push("/krupadarshan/addappallicationdetails");
   };
 
-  
   return (
-    
-    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-<div >
-    {isMobileView && <CustomMobileMenu />}
-    </div>
-    <div style={{ padding: "1rem" }}>
-        <div className="WelcomeLabel" >
-          Welcome,
+    <MainLayout
+  siderClassName={isMobileView ? "" : "leftMenuPanel"}
+  siderChildren={!isMobileView && <CustomMenu />}
+>
+  <div style={{ padding: "1rem" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
+    {isMobileView && (
+  <div style={{ marginRight: "0.3rem" }}>
+    <CustomMobileMenu />
+  </div>
+)}
+      <div className="WelcomeLabel">
+         Welcome,
           <br />
           {username}
         </div>
-
- <Row gutter={[16, 16]} style={{ marginTop: "0.8rem" }} justify="space-between">
- <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-    <Card
-      style={{
-        width: "90%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: "100%", 
-      }}
-    >
-              
+</div>
+        <Row
+          gutter={[16, 16]}
+          style={{ marginTop: "0.8rem" }}
+          justify="space-between"
+        >
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <Card
+              style={{
+                width: "90%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                height: "100%",
+              }}
+            >
               <div
                 style={{
                   marginBottom: "1rem",
@@ -756,9 +751,7 @@ console.log("size",isMobileView);
                   marginTop: "0.8rem",
                 }}
               >
-                <span className="EligibleLabel">
-                  {`You're eligible`}
-                </span>
+                <span className="EligibleLabel">{`You're eligible`}</span>
                 <InfoIcon />
               </div>
               <div style={{ marginBottom: "1rem" }}>
@@ -769,30 +762,32 @@ console.log("size",isMobileView);
                     marginBottom: "0.5rem",
                   }}
                 >
-                  Apply for Krupa
+                  Apply for Gyan
                   <br />
                   Darshan
                 </div>
                 <div style={{ marginTop: "0.8rem" }}>
-                  If you are using an OAuth provider either through one of our
-                  built-in providers or through a custom provider.
+                This option is available for indviduals who have completed Maha Asamani Paramgyan shivir from Tejgyan Foundation. 
                 </div>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Button
-  type="primary"
-  style={{
-    backgroundColor: "black",
-    marginTop: "0.8rem",
-    borderRadius: "1rem",
-    width: "159.31px",
-    height: "39.82px",
-  }}
-  onClick={handleGetStarted}
-  disabled={applicationdata.length >0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" } // Disable the button if applicationdata is empty
->
-  Get Started
-</Button>
+                <Button
+                  type="primary"
+                  style={{
+                    backgroundColor: "black",
+                    marginTop: "0.8rem",
+                    borderRadius: "1rem",
+                    width: "159.31px",
+                    height: "39.82px",
+                  }}
+                  onClick={handleGetStarted}
+                  disabled={
+                    applicationdata.length > 0 &&
+                    applicationdata[0].status !== "ACCEPTED_BY_KHOJI"
+                  } // Disable the button if applicationdata is empty
+                >
+                  Get Started
+                </Button>
                 <div style={{ marginTop: "0.8rem" }}>
                   {" "}
                   <label>
@@ -804,15 +799,17 @@ console.log("size",isMobileView);
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+        
             <div
               style={{
+                width: "90%",
                 display: "flex",
                 flexDirection: "column",
+                justifyContent: "space-between",
+                height: "100%",
               }}
             >
               {buildProfiles()}
-           
-              
             </div>
           </Col>
         </Row>
@@ -836,8 +833,8 @@ console.log("size",isMobileView);
             justifyContent: "space-between",
           }}
         >
-        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-{/* {applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
+          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+            {/* {applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
   <Card style={{ width: "15rem" }} onClick={handleHistoryCardClick}>
     <Meta
       style={{
@@ -853,45 +850,51 @@ console.log("size",isMobileView);
     click here to view your status
   </Card>
 )}  */}
-{applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
-  <Card style={{ width: "15rem", border: "1px solid blue", borderRadius: "5px" }} onClick={handleHistoryCardClick}>
-    <Meta
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        textWrap: "wrap",
-        width: "auto",
-      }}
-      title="Your Application ID"
-      description={applicationid}
-    />
-    Click here to view your status
-  </Card>
-)}
+            {applicationdata.length > 0 &&
+              applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
+                <Card
+                  style={{
+                    width: "15rem",
+                    border: "1px solid blue",
+                    borderRadius: "5px",
+                  }}
+                  onClick={handleHistoryCardClick}
+                >
+                  <Meta
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      textWrap: "wrap",
+                      width: "auto",
+                    }}
+                    title="Your Application ID"
+                    description={applicationid}
+                  />
+                  Click here to view your status
+                </Card>
+              )}
 
-{applicationdata.length === 0 || applicationdata[0].status === "ACCEPTED_BY_KHOJI" && (
-  <Card style={{ width: "15rem" }}>
-    <Meta
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        textWrap: "wrap",
-        width: "auto",
-      }}
-      avatar={<Avatar icon={<FileExclamationTwoTone />} />}
-      title="No application yet"
-      description="Your past Darshan appointments will reflect here"
-    />
-  </Card>
-)}
-
-</Col>
-
+            {applicationdata.length === 0 ||
+              (applicationdata[0].status === "ACCEPTED_BY_KHOJI" && (
+                <Card style={{ width: "15rem" }}>
+                  <Meta
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      textWrap: "wrap",
+                      width: "auto",
+                    }}
+                    avatar={<Avatar icon={<FileExclamationTwoTone />} />}
+                    title="No application yet"
+                    description="Your past Darshan appointments will reflect here"
+                  />
+                </Card>
+              ))}
+          </Col>
         </Row>
       </div>
-      
     </MainLayout>
   );
 }

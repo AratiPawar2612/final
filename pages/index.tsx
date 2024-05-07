@@ -71,7 +71,7 @@ export default function Index() {
               Please Sign in using
             </label>
           </Col>
-          <Col span={24} style={{ textAlign: "center", marginTop: gapRem }}>
+          <Col span={24} style={{justifyContent:"center",marginLeft:"2rem" ,marginTop: gapRem }}>
             <div className="buttonsContainer">
               <Button
                 icon={<GoogleIcon />}
@@ -87,30 +87,12 @@ export default function Index() {
               >
                 Continue With Apple
               </Button>
+              {/* <label className="loginRightPanelSubtitle"> <InfoIcon /> When you click continue you agree to follow our Privacy Policy and our Terms an Conditions.</label> */}
             </div>
+            
           </Col>
         </Row>
-        <Row justify="center">
-          <Col span={24}>
-            <div
-              style={{
-                width: "19.0625rem",
-                height: "3.75rem",
-                top: "7.9825rem",
-                left: "2.5rem",
-                gap: " 0rem",
-                marginRight: "2rem",
-              }}
-            >
-              {/* <InfoIcon />
-              <label className="infolabel">
-                {" "}
-                Lorem ipsum Lorem ipsum doplet lorem ipsum doplet sit. Lorem
-                ipsum Lorem ipsum doplet lorem ipsum doplet sit
-              </label>{" "} */}
-            </div>
-          </Col>
-        </Row>
+        
       </div>
     </div>
   ) : (

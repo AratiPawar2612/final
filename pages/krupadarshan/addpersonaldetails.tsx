@@ -76,6 +76,7 @@ export default function AddPersonalDeatilsPage() {
   const [userdata, setUserData] = useState<any>([]);
   console.log("isFamilyKrupaDarshan", isFamilyKrupaDarshan);
   const [isMobileView, setIsMobileView] = useState(false); // Define isMobileView state
+  const dayjs = require('dayjs'); // Import dayjs library or ensure it's available
 
   useEffect(() => {
     const handleResize = () => {
@@ -146,15 +147,47 @@ export default function AddPersonalDeatilsPage() {
   }, []);
 
   const [selectedRelationship, setSelectedRelationship] = useState("");
-  const disabledDate = (current: any, startDate: any, endDate: any) => {
-    // Disable dates before today, and dates before the selected start date or after the selected end date
-    return (
-      current &&
-      (current < dayjs().startOf("day") ||
-        (startDate && current < dayjs(startDate).startOf("day")) ||
-        (endDate && current > dayjs(endDate).endOf("day")))
-    );
+  const disabledDate = (current:any, startDate:any, endDate:any) => {
+  // Disable dates before today
+  if (current && current < dayjs().startOf('day')) {
+    return true;
+  }
+
+  // Disable dates before the selected start date or after the selected end date
+  if (
+    startDate &&
+    current &&
+    current < dayjs(startDate).startOf('day')
+  ) {
+    return true;
+  }
+
+  if (
+    endDate &&
+    current &&
+    current > dayjs(endDate).endOf('day')
+  ) {
+    return true;
+  }
+
+  // Check if both startDate and endDate are specified
+  if (startDate && endDate) {
+    const start = dayjs(startDate).startOf('day');
+    const end = dayjs(endDate).endOf('day');
+
+    // Calculate the difference in days between start date and end date
+    const differenceDays = end.diff(start, 'day');
+
+    // Disable the current date if the difference is not exactly 5 days
+    if (differenceDays !== 5) {
+      return true;
+    }
+  }
+
+  // Enable the current date by default if no disabling conditions are met
+  return false;
   };
+  
 
   const handleSelectChange = (event: any) => {
     setSelectedRelationship(event.target.value);
@@ -342,7 +375,7 @@ export default function AddPersonalDeatilsPage() {
   };
 
   const onclickNextBtn = async () => {
-    if (!selectedPurpose || !startdate || !enddate || !addnote) {
+    if (!selectedPurpose || !startdate || !enddate  ) {
       alert("Please Enter All required field");
     } else {
       const requestBody = {
@@ -1042,25 +1075,20 @@ export default function AddPersonalDeatilsPage() {
       <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
-          Apply for Krupa Darshan
+          Apply for Gyan Darshan
         </div>
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">Add Application details</label>
         </div>
-        <div className="center-steps" >
-          <Steps
-            current={0}
-            style={{ width: "50%" }}
-            className="my-custom-steps"
-            labelPlacement="vertical"
-          >
-            <Step title="Add Application details" />
-            <Step title="Complete & Apply" />
-            <Step title="view status" />
+        <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
+          <Steps current={-1} style={{ width: "50%" }} labelPlacement="vertical">
+            <Step title="Add application details" />
+            <Step title="Complete & apply" />
+            <Step title="View status" />
           </Steps>
         </div>
       </div>
-      <Divider style={{ marginTop: "3rem" }} />
+      <Divider className="divider" />
       <div
         style={{ fontWeight: "bold", fontSize: "0.8rem", marginLeft: "3rem" }}
       >
@@ -1249,12 +1277,7 @@ export default function AddPersonalDeatilsPage() {
                     name="addnote"
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your Add note!",
-                      },
-                    ]}
+                   
                   >
                     <TextArea
                       style={{

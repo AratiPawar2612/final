@@ -4,12 +4,10 @@ import {
   Button,
   Divider,
   Steps,
-  Typography,
   Card,
   Form,
   Row,
   Col,
-  Input,
   Avatar,
   Modal,
   DatePicker,
@@ -187,9 +185,9 @@ export default function ViewStatusPage() {
       };
     
       const cardData = [
-        { title: 'Application received', content: 'Content for card 1' },
+        { title: 'Application received', content: 'Your application has been successfully submitted to the admin. You will be notified of further updates. Kindly check your status within 24 hours.' },
         { title: 'Event assigned', content: 'Content for card 2' },
-        { title: 'Event Confirmed', content: 'Content for card 3' },
+        { title: 'Event Confirmed', content: 'Congratulations! Your application has been confirmed by the admin.' },
       ];
 
  
@@ -202,7 +200,7 @@ export default function ViewStatusPage() {
       <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
-          Apply for Krupa Darshan
+          Apply for Gyan Darshan
         </div>
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">View status</label>
@@ -220,7 +218,7 @@ export default function ViewStatusPage() {
           </Steps>
         </div>
       </div>
-      <Divider style={{ marginTop: "3rem" }} />
+      <Divider className="divider"/>
       <div className="StatusMessageLabel" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
         {status1 === 'SUBMITTED' && 'Congratulations! Your application has been submitted successfully'}
         {status1 === 'APPROVED_BY_DKD' && 'Congratulations! Your application has been event assigned'}
@@ -228,7 +226,7 @@ export default function ViewStatusPage() {
       </div>
       <div className="viewstatusLabel" style={{ marginTop: '1rem'}}>
         <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>Hi {username},</div>
-        <label style={{ textWrap: 'nowrap' }}>{`Here's the status of your Krupa Darshan application`}</label>
+        <label style={{ textWrap: 'nowrap' }}>{`Here's the status of your Gyan Darshan application`}</label>
       </div>
        <Row gutter={[16, 16]} style={{ marginTop: '2rem', display: 'flex', marginLeft: '3rem' }}>
         <Col xs={24} sm={24} md={12} lg={12} xl={6}>
@@ -238,7 +236,7 @@ export default function ViewStatusPage() {
           </Card>
           <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
             <div style={{ fontWeight: 'bold' }}>Application Type</div>
-            <label>Krupadarshan</label>
+            <label>Gyandarshan</label>
           </Card>
           <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
             <div style={{ fontWeight: 'bold' }}>Total Applicants</div>

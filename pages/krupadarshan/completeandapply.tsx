@@ -158,7 +158,7 @@ function buildUserdataCard(user: any, index: any) {
     </div>
       <div style={{ marginLeft: "1rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-          <ArrowLeftIcon onClick={() => router.back()} /> Apply for Krupa
+          <ArrowLeftIcon onClick={() => router.back()} /> Apply for Gyan
           Darshan
         </div>
         <div style={{ marginLeft: "1.8rem" }}>
@@ -177,20 +177,18 @@ function buildUserdataCard(user: any, index: any) {
           </Steps>
         </div>
       </div>
-      <Divider style={{ marginTop: "3rem" }} />
+      <Divider className="divider" />
       <div style={{ fontWeight:"bolder", fontSize: "1rem", marginLeft: "2rem" }}>
         Summary
       </div>
       <div
-        className="verifyKhojiSubtitle"
-        style={{ whiteSpace: "pre-wrap", marginLeft: "2rem" }}
+        style={{marginLeft: "2rem", fontSize: "0.9rem",marginTop:"0.5rem" }}
       >
-        {`Lorem Ipsum is simply dummy text of the printing and typesetting
-       `}
+        Summary of Gyan Darshan based on the information you have gathered
       </div>
       {data.results && data.results.length > 0 && (
   <div>
-    <div style={{ fontWeight: "bold", fontSize: "0.9rem", marginLeft: "2rem" }}>
+    <div style={{ fontWeight: "bold", fontSize: "0.9rem",marginTop:"1rem", marginLeft: "2rem" }}>
       Added Member
     </div>
     <Row gutter={16}>
@@ -232,7 +230,7 @@ function buildUserdataCard(user: any, index: any) {
               Preferred Date
             </div>
             <div style={{ marginTop: "1rem", marginLeft: "1rem" }}>
-            {startdate} to {enddate} <br />@ Manan Ashram
+            {startdate} to {enddate} 
             </div>
           </Col>
           <Col span={12}>
@@ -249,7 +247,7 @@ function buildUserdataCard(user: any, index: any) {
 >
   {purposeOptions.map((option) => (
     <Select.Option key={option.key} value={option.value}>
-      {option.label} {/* Change 'title' to 'label' */}
+      {option.label} 
     </Select.Option>
   ))}
 </Select>

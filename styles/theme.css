@@ -33,18 +33,11 @@ body {
   .my-custom-steps {
     width: 100%;
   }
-
-  .loginTitle {
-    font-size: 1.9rem !important;
-    font-weight: 400 !important;
-    line-height: 1.5rem !important;
-    letter-spacing: 1px !important;
+  .divider{
+    margin-top: "12rem"!important;
   }
 
-  /* External CSS */
  
-
-  
   @media screen and (max-width: 768px) {
     body {
       margin: 0 auto;
@@ -52,43 +45,61 @@ body {
       max-width: 100%;
     }
 
-    .center-steps {
-      width: 100%;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-    }
 
     .my-custom-steps {
-      width: 100%;
+      display: flex; 
+      justify-content: space-between; 
+      width: 16.5rem;
+      height: 2.58rem;
+      top: 11.4375rem;
+      left: 3rem;
     }
-    .my-custom-steps {
-      margin-left: 2rem !important;
-      margin-bottom: 2rem !important;
-      margin-top: 2rem !important;
+    
+    /* Styling for individual steps (optional) */
+    .my-custom-steps .step {
+      width: calc((100% / 3) - 10px); 
+      height: 100%; 
+      background-color: #f0f0f0; 
+      border: 1px solid #ccc;
+      box-sizing: border-box; 
     }
+    
     .viewstatusLabel {
       text-align: left;
     }
-    
+    .loginTitle {
+      font-size: 1.8rem !important;
+      font-weight: 400 !important;
+      line-height: 1.5rem !important;
+      letter-spacing: 1px !important;
+    }
+    .logologin,
+    .logo > svg {
+      width: 4.6875rem!important;
+      height: 4.7525rem!important;
+      border: 0.0119rem 0rem 0rem 0rem!important;
+    }
+    .divider{
+      margin-top: "12rem"!important;
+    }
   }
 }
 
 /* For medium-sized screens */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   body {
-    margin: 0 auto; /* Center the content */
-    padding: 0 20px; /* Add some padding to the sides */
-    max-width: 90%; /* Limit maximum width to 90% */
+    margin: 0 auto; 
+    padding: 0 20px; 
+    max-width: 90%; 
   }
 }
 
 /* For larger screens */
 @media screen and (min-width: 1025px) and (max-width: 1440px) {
   body {
-    margin: 0 auto; /* Center the content */
-    padding: 0 20px; /* Add some padding to the sides */
-    max-width: 1440px; /* Limit maximum width to 1440px */
+    margin: 0 auto; 
+    padding: 0 20px; 
+    max-width: 1440px; 
   }
 }
 

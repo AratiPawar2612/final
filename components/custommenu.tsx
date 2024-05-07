@@ -76,7 +76,8 @@ const CustomMenu = () => {
 
   return (
     <Layout>
-      <Sider theme="light" className="left-panel" collapsible collapsed={collapsed} onCollapse={toggleCollapsed}>
+      <Sider theme="light" className="left-panel"  style={{ height: "100vh", backgroundColor: "#FFFFFF" }}
+>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", backgroundColor: "#F4F4F4" }}>
           <div style={{ marginLeft: "40px", display: "flex", alignItems: "center", height: "1.5rem", backgroundColor: "#F4F4F4", background: "transparent" }}>
             <LogoIcon className="logologin" />
@@ -95,7 +96,7 @@ const CustomMenu = () => {
               <LogoutIcon />
             </Item>
           </Menu>
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "80vh", backgroundColor: "#F4F4F4" }}>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center",marginTop:"10rem" ,backgroundColor: "#F4F4F4" }}>
             <ElipseIcon />
           </div>
         </div>

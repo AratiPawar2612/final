@@ -37,7 +37,7 @@ export default function AddApplicationDetailsPage() {
     setButtonColor('black');
     setSelectedCard(cardName);
     setIsContinueDisabled(false); // Enable continue button when a card is selected
-    if (cardName === 'Family Krupa Darshan') {
+    if (cardName === 'Family Gyan Darshan') {
       setContinueButtonText('Continue with Family Darshan');
       setButtonSize('large');
     } else if (cardName === 'Darshan For Yourself') {
@@ -48,8 +48,8 @@ export default function AddApplicationDetailsPage() {
   
 
   const handleContinueClick = () => {
-    const isFamilyKrupaDarshan = selectedCard === 'Family Krupa Darshan';
-    router.push(`/krupadarshan/addpersonaldetails?isFamilyKrupaDarshan=${isFamilyKrupaDarshan}`);
+    const isFamilyGyanDarshan = selectedCard === 'Family Gyan Darshan';
+    router.push(`/krupadarshan/addpersonaldetails?isFamilyKrupaDarshan=${isFamilyGyanDarshan}`);
   };
   
   return (
@@ -60,7 +60,7 @@ export default function AddApplicationDetailsPage() {
      <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
-          Apply for Krupa Darshan
+          Apply for Gyan Darshan
         </div>
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">Add Application details</label>
@@ -78,7 +78,7 @@ export default function AddApplicationDetailsPage() {
           </Steps>
         </div>
       </div>
-<Divider style={{ marginTop: '3rem' }} />
+<Divider className="divider" />
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
         Select Your Type
       </div>
@@ -99,7 +99,7 @@ export default function AddApplicationDetailsPage() {
               <br /> Yourself
             </div>
             <div style={{ marginTop: '2rem' }}>
-            Select this option for krupadarshan with yourself
+            Select this option for Gyandarshan with yourself
             </div>
             {selectedCard === 'Darshan For Yourself' && (
               <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
@@ -113,17 +113,17 @@ export default function AddApplicationDetailsPage() {
             title={<TeamOutlined style={{ fontSize: '1.5rem' }} />}
             style={{
               marginTop: '2rem',
-              backgroundColor: selectedCard === 'Family Krupa Darshan' ? 'lightblue' : 'white',
+              backgroundColor: selectedCard === 'Family Gyan Darshan' ? 'lightblue' : 'white',
               minHeight: '300px',
             }}
-            onClick={() => handleCardClick('Family Krupa Darshan')}>
+            onClick={() => handleCardClick('Family Gyan Darshan')}>
             <div style={{ marginTop: '2rem', fontWeight: 'bold', fontSize: '1.3rem' }}>
-              Family Krupa Darshan
+              Family Gyan Darshan
             </div>
             <div style={{ marginTop: '2rem' }}>
-             Select this option for Family Krupa Darshan
+             Select this option for Family Gyan Darshan
             </div>
-            {selectedCard === 'Family Krupa Darshan' && (
+            {selectedCard === 'Family Gyan Darshan' && (
               <div style={{ position: 'absolute', top: '0.625rem', right: '0.625rem' }}>
                 <CheckOutlined style={{ color: 'green', fontSize: '1.25rem' }} />
               </div>

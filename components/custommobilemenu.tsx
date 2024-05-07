@@ -81,20 +81,19 @@ const CustomMobileMenu = () => {
   };
     const calculateHoursElapsed = (timestamp: any): number | null => {
     if (timestamp) {
-      const now: Date = new Date(); // Current time
-      const updatedTime: Date = new Date(timestamp); // Convert timestamp to Date object
-      const timeDifference: number = now.getTime() - updatedTime.getTime(); // Difference in milliseconds
-      const hours: number = Math.floor(timeDifference / (1000 * 60 * 60)); // Convert milliseconds to hours
+      const now: Date = new Date(); 
+      const updatedTime: Date = new Date(timestamp); 
+      const timeDifference: number = now.getTime() - updatedTime.getTime(); 
+      const hours: number = Math.floor(timeDifference / (1000 * 60 * 60)); 
       return hours;
     }
     return null;
   };
 
-  console.log('CustomMobileMenu rendered');
   return (
     <Layout>
         {windowWidth && windowWidth <= 768 && (
-        <div style={{ backgroundColor: "#F4F4F4", marginLeft: "1rem", fontSize: "2rem" }}>
+        <div style={{ backgroundColor: "#F4F4F4", fontSize: "1.5rem" }}>
           <MenuOutlined onClick={toggleDrawer} />
         </div>
       )}
@@ -124,7 +123,7 @@ const CustomMobileMenu = () => {
           </Menu>
         </Drawer>
       )}
-      {/* Notifications Modal */}
+ 
       <Modal
         title="Notifications"
         visible={showNotificationModal}
