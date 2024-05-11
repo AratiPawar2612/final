@@ -243,7 +243,7 @@ export default function ViewStatusPage() {
           </Card>
           <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
             <div style={{ fontWeight: 'bold' }}>Total Applicants</div>
-            <label>Adults:{data.age_counts.adults}</label>
+            <label>------</label>
           </Card>
           <Divider />
           <div>
