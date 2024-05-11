@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Button, Divider, Steps, Row, Col, Card } from 'antd';
 import MainLayout from '@/components/mainlayout';
 import CustomMenu from '@/components/custommenu';
-import { ArrowLeftIcon } from '@/icons/icon';
+import { ArrowLeftIcon,LogoIcon } from '@/icons/icon';
 import { TeamOutlined, UserOutlined, CheckOutlined } from '@ant-design/icons';
 import CustomMobileMenu from '@/components/custommobilemenu';
 
@@ -54,78 +54,102 @@ export default function AddApplicationDetailsPage() {
   
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-<div >
-    {isMobileView && <CustomMobileMenu />}
-    </div>
-    <div style={{ marginLeft: "3rem" }}>
-        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+<div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingTop: "5px",
+        paddingBottom: "5px", // Add padding only at the bottom to create space for the border
+        borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
+      }}
+    > {isMobileView && (
+    <>
+      <LogoIcon className="logomenu" />
+      <div> <CustomMobileMenu /></div>
+     
+    </>
+  )}
+</div>
+
+        <div style={{ fontWeight: "bold", fontSize: "1rem",marginLeft:"3rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
           Apply for Gyan Darshan
         </div>
-        <div style={{ marginLeft: '1.2rem' }}>
+        <div style={{ marginLeft: '4.2rem' }}>
         <label className="Descriptionlabel">Add Application details</label>
         </div>
-        <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
-          <Steps current={-1} style={{ width: "50%" }} labelPlacement="vertical">
+        <Row justify="center">
+      <Col xs={24} xl={24}>
+        <div className="center-steps">
+          <Steps current={-1} style={{ width: "50%" }} direction="horizontal" labelPlacement='vertical'>
             <Step title="Add application details" />
             <Step title="Complete & apply" />
             <Step title="View status" />
           </Steps>
         </div>
-      </div>
+      </Col>
+    </Row>
+    
 <Divider className="divider" />
       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', marginLeft: '3rem' }}>
         Select Your Type
       </div>
       <div style={{  fontSize: '0.8rem', marginLeft: '3rem' }}> Please choose one option to proceed.</div>
       <Row gutter={[16, 16]} style={{ marginLeft: '3rem' }}>
-       
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-          <Card
-            title={<UserOutlined style={{ fontSize: '1.5rem' }} />}
-            style={{
-              marginTop: '2rem',
-              backgroundColor: selectedCard === 'Darshan For Yourself' ? 'lightblue' : 'white',
-              minHeight: '300px',
-            }}
-            onClick={() => handleCardClick('Darshan For Yourself')}>
-            <div style={{ marginTop: '2rem', fontWeight: 'bold', fontSize: '1.3rem' }}>
-              Darshan For
-              <br /> Yourself
-            </div>
-            <div style={{ marginTop: '2rem' }}>
-            Select this option for Gyandarshan with yourself
-            </div>
-            {selectedCard === 'Darshan For Yourself' && (
-              <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-                <CheckOutlined style={{ color: 'green', fontSize: '20px' }} />
-              </div>
-            )}
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-          <Card
-            title={<TeamOutlined style={{ fontSize: '1.5rem' }} />}
-            style={{
-              marginTop: '2rem',
-              backgroundColor: selectedCard === 'Family Gyan Darshan' ? 'lightblue' : 'white',
-              minHeight: '300px',
-            }}
-            onClick={() => handleCardClick('Family Gyan Darshan')}>
-            <div style={{ marginTop: '2rem', fontWeight: 'bold', fontSize: '1.3rem' }}>
-              Family Gyan Darshan
-            </div>
-            <div style={{ marginTop: '2rem' }}>
-             Select this option for Family Gyan Darshan
-            </div>
-            {selectedCard === 'Family Gyan Darshan' && (
-              <div style={{ position: 'absolute', top: '0.625rem', right: '0.625rem' }}>
-                <CheckOutlined style={{ color: 'green', fontSize: '1.25rem' }} />
-              </div>
-            )}
-          </Card>
-        </Col>
-      </Row>
+  <Col xs={12} sm={24} md={12} lg={12} xl={6}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Card
+        title={<UserOutlined style={{ fontSize: '1.5rem' }} />}
+        style={{
+          flex: 1,
+          marginTop: '2rem',
+          backgroundColor: selectedCard === 'Darshan For Yourself' ? 'lightblue' : 'white',
+        }}
+        onClick={() => handleCardClick('Darshan For Yourself')}>
+        <div style={{ marginTop: '2rem', fontWeight: 'bold', fontSize: '1.3rem' }}>
+          Darshan For
+          <br /> Yourself
+        </div>
+        <div style={{ marginTop: '2rem' }}>
+          Select this option for Gyandarshan with yourself
+        </div>
+        {selectedCard === 'Darshan For Yourself' && (
+          <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+            <CheckOutlined style={{ color: 'green', fontSize: '20px' }} />
+          </div>
+        )}
+      </Card>
+    </div>
+  </Col>
+  <Col xs={12} sm={24} md={12} lg={12} xl={6}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Card
+        title={<TeamOutlined style={{ fontSize: '1.5rem' }} />}
+        style={{
+          flex: 1,
+          marginTop: '2rem',
+          backgroundColor: selectedCard === 'Family Gyan Darshan' ? 'lightblue' : 'white',
+        }}
+        onClick={() => handleCardClick('Family Gyan Darshan')}>
+        <div style={{ marginTop: '2rem', fontWeight: 'bold', fontSize: '1.3rem' }}>
+          Family Gyan Darshan
+        </div>
+        <div style={{ marginTop: '2rem' }}>
+          Select this option for Family Gyan Darshan
+        </div>
+        {selectedCard === 'Family Gyan Darshan' && (
+          <div style={{ position: 'absolute', top: '0.625rem', right: '0.625rem' }}>
+            <CheckOutlined style={{ color: 'green', fontSize: '1.25rem' }} />
+          </div>
+        )}
+      </Card>
+    </div>
+  </Col>
+</Row>
+
+
+
       <div style={{ marginTop: '2rem', marginLeft: '3rem' }}>
         <Button
           type="primary"

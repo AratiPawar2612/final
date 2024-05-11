@@ -12,7 +12,7 @@ import {
   Modal,
   DatePicker,
 } from "antd";
-import { ElipseIcon } from "@/icons/icon";
+import { ElipseIcon,LogoIcon } from "@/icons/icon";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
 import {ArrowLeftIcon} from "@/icons/icon";
@@ -75,7 +75,8 @@ export default function ViewStatusPage() {
               const userDataResults1 = appliidres.results ?? [];
               setAppliid(userDataResults1[0]?.id);
               setReferenceCode(userDataResults1[0]?.reference_code);
-    
+              setData(userDataResults1);
+              console.log("applicationdata",userDataResults1);  
               const participantUserResponseData = await fetchParticipantData(
                 sessionData?.session?.access_token
               );
@@ -194,9 +195,16 @@ export default function ViewStatusPage() {
  
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-    <div >
-        {isMobileView && <CustomMobileMenu />}
-        </div>
+   <div style={{ display: "flex",flexDirection:"row", justifyContent: "space-between" }}>
+  {isMobileView && (
+    <>
+      <LogoIcon className="logomenu" />
+      <div> <CustomMobileMenu /></div>
+     
+    </>
+  )}
+</div>
+
         <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
@@ -235,7 +243,7 @@ export default function ViewStatusPage() {
           </Card>
           <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
             <div style={{ fontWeight: 'bold' }}>Total Applicants</div>
-            <label>--------</label>
+            <label>Adults:{data.age_counts.adults}</label>
           </Card>
           <Divider />
           <div>

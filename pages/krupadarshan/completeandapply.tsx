@@ -3,12 +3,10 @@ import { useRouter } from "next/router";
 import { Button, Divider, Steps, Select, Row, Avatar, Col } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
-import axios, { AxiosResponse, AxiosError } from "axios";
-import { VerifiedIcon } from "@/icons/icon";
+import { VerifiedIcon ,LogoIcon} from "@/icons/icon";
 import { ArrowLeftIcon } from "@/icons/icon";
 import { fetchParticipantData ,fetchPurposeOptions,fetchApplicationData} from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
-const { Option } = Select;
 
 export default function CompleteAndApplyPage() {
   const { Step } = Steps;
@@ -153,9 +151,16 @@ function buildUserdataCard(user: any, index: any) {
   }
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-<div >
-    {isMobileView && <CustomMobileMenu />}
-    </div>
+<div style={{ display: "flex",flexDirection:"row", justifyContent: "space-between" }}>
+  {isMobileView && (
+    <>
+      <LogoIcon className="logomenu" />
+      <div> <CustomMobileMenu /></div>
+     
+    </>
+  )}
+</div>
+
     <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />

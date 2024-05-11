@@ -21,6 +21,7 @@ import {
   UserAvatarIcon,
   ScannerIcon,
   ElipseIcon,
+  LogoIcon,
 } from "@/icons/icon";
 import axios from "axios";
 import { FileExclamationTwoTone, CheckOutlined } from "@ant-design/icons";
@@ -711,19 +712,39 @@ export default function HomePage() {
 
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-  <div style={{ padding: "1rem" }}>
-    <div style={{ display: "flex", alignItems: "center" }}>
-    {isMobileView && (
-  <div style={{ marginRight: "0.3rem" }}>
-    <CustomMobileMenu />
-  </div>
-)}
+           <div
+        style={{
+          justifyContent: "center",
+          padding: "0 20px", // Adjust padding for space on left and right
+          boxSizing: "border-box", // Ensure padding is included in width calculation
+        }}
+      >
+  <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingTop: "5px",
+        paddingBottom: "5px", // Add padding only at the bottom to create space for the border
+        borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
+      }}
+    > {isMobileView && (
+    <>
+      <LogoIcon className="logomenu" />
+      <div> <CustomMobileMenu /></div>
+     
+    </>
+  )}
+</div>
+
+
+
       <div className="WelcomeLabel">
          Welcome,
           <br />
           {username}
         </div>
-</div>
+
         <Row
           gutter={[16, 16]}
           style={{ marginTop: "0.8rem" }}
@@ -831,22 +852,6 @@ export default function HomePage() {
           }}
         >
           <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            {/* {applicationdata.length > 0 && applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
-  <Card style={{ width: "15rem" }} onClick={handleHistoryCardClick}>
-    <Meta
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        textWrap: "wrap",
-        width: "auto",
-      }}
-      title="Your Application ID"
-      description={applicationid}
-    />
-    click here to view your status
-  </Card>
-)}  */}
             {applicationdata.length > 0 &&
               applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
                 <Card
@@ -891,7 +896,8 @@ export default function HomePage() {
               ))}
           </Col>
         </Row>
-      </div>
+        </div>
+     
     </MainLayout>
   );
 }

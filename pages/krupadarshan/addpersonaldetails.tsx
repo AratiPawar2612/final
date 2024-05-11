@@ -19,7 +19,7 @@ import {
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { VerifiedIcon, ArrowLeftIcon, ScannerIcon } from "@/icons/icon";
+import { VerifiedIcon, ArrowLeftIcon, ScannerIcon,LogoIcon } from "@/icons/icon";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   fetchParticipantData,
@@ -1069,9 +1069,24 @@ export default function AddPersonalDeatilsPage() {
 
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-    <div >
-        {isMobileView && <CustomMobileMenu />}
-        </div>
+  <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingTop: "5px",
+        paddingBottom: "5px", // Add padding only at the bottom to create space for the border
+        borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
+      }}
+    > {isMobileView && (
+    <>
+      <LogoIcon className="logomenu" />
+      <div> <CustomMobileMenu /></div>
+     
+    </>
+  )}
+</div>
+
       <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
@@ -1313,11 +1328,11 @@ export default function AddPersonalDeatilsPage() {
               </Row>
             </Form>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={12} sm={24} md={12} lg={12} xl={12}>
             <Row gutter={[16, 16]} style={{ justifyContent: "space-between" }}>
               <Col
-                xs={24}
-                sm={24}
+                xs={12}
+                sm={12}
                 md={12}
                 lg={12}
                 xl={12}
@@ -1327,8 +1342,8 @@ export default function AddPersonalDeatilsPage() {
               </Col>
 
               <Col
-                xs={24}
-                sm={24}
+                xs={12}
+                sm={12}
                 md={12}
                 lg={12}
                 xl={12}
@@ -1343,8 +1358,7 @@ export default function AddPersonalDeatilsPage() {
                       marginLeft: "2rem",
                     }}
                   >
-                    <Card onClick={showModal} style={{width: "80%",
-                      height: "15.375rem",justifyContent:"center"}}>
+                    <Card onClick={showModal} className="addfamilymembercard">
                       <div
                         style={{
                           textAlign: "center",

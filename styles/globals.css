@@ -30,9 +30,18 @@
 
 .logologin,
 .logo > svg {
-  width: 3.6875rem!important;
-  height: 2.7525rem!important;
-  border: 0.0119rem 0rem 0rem 0rem!important;
+  width: 1.6875rem!important;
+  height: 1.7525rem!important;
+}
+.logomenu,
+.logo > svg {
+  width: 2.25rem;
+height: 1.6875rem;
+top: 0.625rem;
+left: 1.0625rem;
+gap: 0rem;
+border: 0.0069rem 0rem 0rem 0rem;
+
 }
 
 .loginTitle {
@@ -600,19 +609,27 @@
   display: flex!important;
   justify-content: center!important;
   margin-top: 1.25rem!important;
+ 
 }
 
-.center-content {
-  display: flex!important;
-  justify-content: center!important;
-  align-items: center!important;
-  margin-top: 1.25rem!important; 
-  margin-bottom: 1.25rem!important; 
+/* Apply different styles for smaller screens (e.g., mobile) */
+@media (max-width: 768px) {
+  .center-steps {
+    display: flex!important;
+    flex-direction: row!important;
+  }
+  .addfamilymembercard {
+    width: "60%"!important;
+       height: "15.375rem"!important;
+       justify-content:"center"!important;
+   }
+
 }
 
-
-.center-content > div {
-  max-width: 75rem!important; 
+.addfamilymembercard {
+ width: "90%"!important;
+    height: "15.375rem"!important;
+    justify-content:"center"!important;
 }
 .buttonsContainer {
   display: flex!important;

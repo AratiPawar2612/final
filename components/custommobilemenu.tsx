@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Menu, Layout, Modal, Drawer,message } from "antd";
 import { MenuOutlined, HomeOutlined } from '@ant-design/icons';
-import { ElipseIcon,LogoIcon, HomeIcon, SavedIcon, NotificationIcon, LogoutIcon } from '@/icons/icon';
+import { ElipseIcon, HomeIcon, SavedIcon, NotificationIcon, LogoutIcon } from '@/icons/icon';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -54,7 +54,6 @@ const CustomMobileMenu = () => {
       setShowNotificationModal(true);
     } catch (error) {
       console.error('Error fetching notifications:', error);
-      // Show error message using Ant Design message component
       message.error('Failed to fetch notifications. Please try again.');
     }
   };
@@ -93,7 +92,7 @@ const CustomMobileMenu = () => {
   return (
     <Layout>
         {windowWidth && windowWidth <= 768 && (
-        <div style={{ backgroundColor: "#F4F4F4", fontSize: "1.5rem" }}>
+        <div style={{ backgroundColor: "#F4F4F4", fontSize: "2rem",fontWeight:"bolder"}}>
           <MenuOutlined onClick={toggleDrawer} />
         </div>
       )}
@@ -101,12 +100,11 @@ const CustomMobileMenu = () => {
     
       {windowWidth && windowWidth <= 768 && (
         <Drawer
-        title="Menu"
-        placement="left"
+        placement="right"
         onClose={toggleDrawer}
         open={showDrawer}
-        width="80%"
-      >
+        width="20vh"
+        style={{backgroundColor:"white"}}      >
            <Menu mode="inline" onClick={handleTopMenuClick} className="custom-menu" defaultSelectedKeys={["home"]} style={{ backgroundColor: "#F4F4F4", boxShadow: "none", border: "none" }}>
             <Item key="home" onClick={handleHome} style={{ marginLeft: "40px", display: "flex", alignItems: "center", height: "4rem", background: "transparent" }}>
               <HomeIcon />
@@ -121,6 +119,9 @@ const CustomMobileMenu = () => {
               <LogoutIcon />
             </Item>
           </Menu>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center",marginTop:"10rem" ,backgroundColor: "#F4F4F4" }}>
+            <ElipseIcon />
+          </div>
         </Drawer>
       )}
  
