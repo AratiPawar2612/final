@@ -1069,7 +1069,7 @@ export default function AddPersonalDeatilsPage() {
 
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-  <div
+ <div
       style={{
         display: "flex",
         flexDirection: "row",
@@ -1086,7 +1086,6 @@ export default function AddPersonalDeatilsPage() {
     </>
   )}
 </div>
-
       <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
@@ -1095,13 +1094,17 @@ export default function AddPersonalDeatilsPage() {
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">Add Application details</label>
         </div>
-        <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
-          <Steps current={-1} style={{ width: "50%" }} labelPlacement="vertical">
+        <Row justify="center">
+      <Col xs={24} xl={24}>
+        <div className="center-steps">
+          <Steps current={-1} style={{ width: "50%" }} direction="horizontal" labelPlacement='vertical'>
             <Step title="Add application details" />
             <Step title="Complete & apply" />
             <Step title="View status" />
           </Steps>
         </div>
+      </Col>
+    </Row>
       </div>
       <Divider className="divider" />
       <div
@@ -1328,10 +1331,10 @@ export default function AddPersonalDeatilsPage() {
               </Row>
             </Form>
           </Col>
-          <Col xs={12} sm={24} md={12} lg={12} xl={12}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Row gutter={[16, 16]} style={{ justifyContent: "space-between" }}>
               <Col
-                xs={12}
+                xs={24}
                 sm={12}
                 md={12}
                 lg={12}
@@ -1342,7 +1345,7 @@ export default function AddPersonalDeatilsPage() {
               </Col>
 
               <Col
-                xs={12}
+                xs={24}
                 sm={12}
                 md={12}
                 lg={12}
@@ -1387,6 +1390,7 @@ export default function AddPersonalDeatilsPage() {
                           borderRadius: "1rem",
                           backgroundColor: "#1E1E1E",
                           color: "white",
+                         width:"auto"
                         }}
                         onClick={() => handleInputTypeChange("View all")}
                       >

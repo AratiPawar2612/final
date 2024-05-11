@@ -151,8 +151,16 @@ function buildUserdataCard(user: any, index: any) {
   }
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-<div style={{ display: "flex",flexDirection:"row", justifyContent: "space-between" }}>
-  {isMobileView && (
+<div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingTop: "5px",
+        paddingBottom: "5px", // Add padding only at the bottom to create space for the border
+        borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
+      }}
+    > {isMobileView && (
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
@@ -210,7 +218,7 @@ function buildUserdataCard(user: any, index: any) {
               xl={12}
               style={{
                 marginBottom: "16px",
-                marginLeft: "1rem",
+                marginLeft: "2rem",
                 flex: "0 0 auto",
               }}
             >
@@ -225,11 +233,11 @@ function buildUserdataCard(user: any, index: any) {
 
       <div>
         <Row gutter={[16, 16]}>
-          <Col span={4}>
+          <Col span={8}>
             <div style={{ fontSize: "0.9rem", marginLeft: "1rem" }}>
               Preferred Date
             </div>
-            <div style={{ marginTop: "1rem", marginLeft: "1rem" }}>
+            <div style={{ marginTop: "1rem", marginLeft: "1rem",textWrap:"nowrap" }}>
             {startdate} to {enddate} 
             </div>
           </Col>
@@ -262,18 +270,20 @@ function buildUserdataCard(user: any, index: any) {
         </div>
       </div>
       <Row gutter={[16, 16]}>
-  <Col xs={24} sm={12} md={8} lg={6}>
+  <Col xs={12} sm={12} md={8} lg={6}>
     <Button
       style={{
         borderRadius: "2rem",
         width: "100%",
         height: "2rem",
+        marginBottom:"2rem",
+        marginTop:"1rem"
       }}
     >
       Edit
     </Button>
   </Col>
-  <Col xs={24} sm={12} md={8} lg={6}>
+  <Col xs={12} sm={12} md={8} lg={6}>
     <Button
       type="primary"
       style={{
@@ -281,6 +291,7 @@ function buildUserdataCard(user: any, index: any) {
         width: "100%",
         height: "2rem",
         backgroundColor: "black",
+        marginTop:"1rem"
       }}
       onClick={onclicksaveandapplybtn}
     >

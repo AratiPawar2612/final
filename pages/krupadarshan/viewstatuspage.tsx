@@ -195,8 +195,16 @@ export default function ViewStatusPage() {
  
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-   <div style={{ display: "flex",flexDirection:"row", justifyContent: "space-between" }}>
-  {isMobileView && (
+  <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingTop: "5px",
+        paddingBottom: "5px", // Add padding only at the bottom to create space for the border
+        borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
+      }}
+    > {isMobileView && (
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
@@ -204,6 +212,7 @@ export default function ViewStatusPage() {
     </>
   )}
 </div>
+
 
         <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
