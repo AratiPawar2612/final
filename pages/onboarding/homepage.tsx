@@ -719,6 +719,7 @@ export default function HomePage() {
           boxSizing: "border-box", // Ensure padding is included in width calculation
         }}
       >
+         {isMobileView && (
   <div
       style={{
         display: "flex",
@@ -728,14 +729,16 @@ export default function HomePage() {
         paddingBottom: "5px", // Add padding only at the bottom to create space for the border
         borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
       }}
-    > {isMobileView && (
+    > 
+   
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
      
     </>
-  )}
+  
 </div>
+)}
 
 
 

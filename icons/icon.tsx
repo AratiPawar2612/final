@@ -31,13 +31,29 @@ import {
   LoginTitleSvg,
   ScannerSvg,
   ChatSvg,
-  ElipseSvg
+  ElipseSvg,
+  ViewStatusSvg,
+  ViewStatusFirstSvg,
+  ViewStatusSecondSvg,
+  YourSelfSvg,
+  WithFamilySvg,
+  CheckSvg
 } from './svgs';
 
 export const LogoIcon = (props: any) => <Icon component={LogoSvg} {...props} />;
 export const LoginTitleIcon = (props: any) => <Icon component={LoginTitleSvg} {...props} />
 export const ScannerIcon = (props: any) => <Icon component={ScannerSvg} {...props} />
 export const ElipseIcon = (props: any) => <Icon component={ElipseSvg} {...props} />
+export const ViewStatusIcon = (props: any) => <Icon component={ViewStatusSvg} {...props} />
+export const iewStatusFirstIcon = (props: any) => <Icon component={ViewStatusFirstSvg} {...props} />
+export const ViewStatusSecondIcon = (props: any) => <Icon component={ViewStatusSecondSvg} {...props} />
+export const YourSelfIcon = (props: any) => <Icon component={YourSelfSvg} {...props} />
+export const WithFamilyIcon = (props: any) => <Icon component={WithFamilySvg} {...props} />
+export const CheckICon = (props: any) => <Icon component={CheckSvg} {...props} />
+
+
+
+
 
 
 export const GoogleIcon = (props: any) => (

@@ -12,7 +12,7 @@ import {
   Modal,
   DatePicker,
 } from "antd";
-import { ElipseIcon,LogoIcon } from "@/icons/icon";
+import { ElipseIcon,LogoIcon ,ViewStatusIcon} from "@/icons/icon";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
 import {ArrowLeftIcon} from "@/icons/icon";
@@ -20,6 +20,7 @@ import {
   fetchParticipantData} from "../api/applicationapi";
 import dayjs from "dayjs";
 import CustomMobileMenu from "@/components/custommobilemenu";
+import { ViewStatusFirstSvg } from "@/icons/svgs";
 
 
 
@@ -195,6 +196,14 @@ export default function ViewStatusPage() {
  
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
+        <div
+        style={{
+          justifyContent: "center",
+          padding: "0 20px", // Adjust padding for space on left and right
+          boxSizing: "border-box", // Ensure padding is included in width calculation
+        }}
+      >
+    {isMobileView && (
   <div
       style={{
         display: "flex",
@@ -204,15 +213,16 @@ export default function ViewStatusPage() {
         paddingBottom: "5px", // Add padding only at the bottom to create space for the border
         borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
       }}
-    > {isMobileView && (
+    > 
+   
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
      
     </>
-  )}
+  
 </div>
-
+)}
 
         <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
@@ -222,13 +232,26 @@ export default function ViewStatusPage() {
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">View Status</label>
         </div>
-        <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
+        {/* <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
           <Steps current={2} style={{ width: "50%" }} labelPlacement="vertical">
             <Step title="Add application details" />
             <Step title="Complete & apply" />
             <Step title="View status" />
           </Steps>
-        </div>
+          
+        </div> */}
+       <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
+      {isMobileView ? (
+        <ViewStatusIcon /> // Use uppercase for component name
+      ) : (
+        <Steps current={2} style={{ width: "50%" }} labelPlacement="vertical">
+          <Steps.Step title="Add application details" />
+          <Steps.Step title="Complete & apply" />
+          <Steps.Step title="View status" />
+        </Steps>
+      )}
+    </div>
+       
       </div>
       <Divider className="divider"/>
       <div className="StatusMessageLabel" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
@@ -236,52 +259,51 @@ export default function ViewStatusPage() {
         {status1 === 'APPROVED_BY_DKD' && 'Congratulations! Your application has been event assigned'}
         {status1 === 'ACCEPTED_BY_KHOJI' && 'Congratulations! Your application has been accepted'}
       </div>
-      <div className="viewstatusLabel" style={{ marginTop: '1rem'}}>
+      <div className="viewstatusLabel" style={{ marginTop: '1rem',textAlignLast:"center"}}>
         <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>Hi {username},</div>
-        <label style={{ textWrap: 'nowrap' }}>{`Here's the status of your Gyan Darshan application`}</label>
+        <label style={{ textWrap: 'nowrap',marginLeft:"3rem" }}>{`Here's the status of your Krupa Darshan application`}</label>
       </div>
-       <Row gutter={[16, 16]} style={{ marginTop: '2rem', display: 'flex', marginLeft: '3rem' }}>
-        <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-          <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
-            <div style={{ fontWeight: 'bold' }}>Application History</div>
+       <Row gutter={[16, 16]} style={{ marginTop: '2rem', display: 'flex'}}>
+        <Col xs={12} sm={24} md={12} lg={12} xl={6}>
+          {/* <Card style={{ marginBottom: '1rem', textAlign: 'center' }}> */}
+            <div style={{ fontWeight: 'bold',marginTop: '2rem' }}>Application History</div>
             <label>{referenceCode}</label>
-          </Card>
-          <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
-            <div style={{ fontWeight: 'bold' }}>Application Type</div>
+          {/* </Card> */}
+          {/* <Card style={{ marginBottom: '1rem', textAlign: 'center' }} > */}
+            <div style={{ fontWeight: 'bold',marginTop: '2rem' }}>Application Type</div>
             <label>Gyandarshan</label>
-          </Card>
-          <Card style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
-            <div style={{ fontWeight: 'bold' }}>Total Applicants</div>
+          {/* </Card> */}
+          {/* <Card style={{ marginBottom: '1rem', textAlign: 'center' }} > */}
+            <div style={{ fontWeight: 'bold',marginTop: '2rem' }}>Total Applicants</div>
             <label>------</label>
-          </Card>
+          {/* </Card> */}
           <Divider />
           <div>
-            {particpantdata ? (
-              particpantdata.map((participant: any) => (
-                <Card key={participant.id} style={{ marginBottom: '1rem', textAlign: 'center' }} bordered>
-                  <div style={{ fontWeight: 'bold', marginTop: '0.5rem' }}>
-                    <Avatar size={64} icon={<ElipseIcon/>} />
-                    {participant.relation_with.first_name} {participant.relation_with.last_name}
-                  </div>
-                </Card>
-              ))
-            ) : (
-              <div>No participant data available</div>
-            )}
+      {particpantdata ? (
+        particpantdata.map((participant: any) => (
+          <div key={participant.id} style={{ marginBottom: '1rem', fontWeight: 'bold', marginTop: '0.5rem' }}>
+            <Avatar size={64} icon={<ElipseIcon />} />
+            
+            {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
           </div>
+        ))
+      ) : (
+        <div>No participant data available</div>
+      )}
+    </div>  
         </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={18}>
-          <Row gutter={[16, 16]} style={{ marginBottom: '1rem', marginLeft: '8rem' }}>
+        <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+          <Row gutter={[16, 16]} >
             {cardData.map((card, index) => (
               <React.Fragment key={index}>
-                <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+                <Col xs={3} sm={24} md={12} lg={8} xl={10}>
                   <div className="customs-step">
                     <div className={`step-item ${status1 === 'ACCEPTED_BY_KHOJI' && index <= 2 ? 'completed' : ''}`}>
                       <div className="step-circle">{index + 1}</div>
                     </div>
                   </div>
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={16} xl={16}>
+                <Col xs={24} sm={24} md={12} lg={8} xl={14}>
                   <Card
                     title={card.title}
                     className={
@@ -343,6 +365,7 @@ export default function ViewStatusPage() {
           </Row>
         </Col>
       </Row>
+      </div>
        </MainLayout>
   );
 }

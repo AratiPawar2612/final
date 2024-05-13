@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Button, Divider, Steps, Select, Row, Avatar, Col } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
-import { VerifiedIcon ,LogoIcon} from "@/icons/icon";
+import { VerifiedIcon ,LogoIcon,ViewStatusIcon, ViewStatusSecondIcon} from "@/icons/icon";
 import { ArrowLeftIcon } from "@/icons/icon";
 import { fetchParticipantData ,fetchPurposeOptions,fetchApplicationData} from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
@@ -149,9 +149,33 @@ function buildUserdataCard(user: any, index: any) {
       <div className="userProfilePlaceholderCard" />
     );
   }
+
+ 
+const items = [
+  {
+    title: 'Add application details',
+   
+  },
+  {
+    title: 'Complete & apply',
+   
+  },
+  {
+    title: 'View status',
+   
+  },
+];
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-<div
+        <div
+        style={{
+          justifyContent: "center",
+          padding: "0 20px", // Adjust padding for space on left and right
+          boxSizing: "border-box", // Ensure padding is included in width calculation
+        }}
+      >
+  {isMobileView && (
+  <div
       style={{
         display: "flex",
         flexDirection: "row",
@@ -160,14 +184,16 @@ function buildUserdataCard(user: any, index: any) {
         paddingBottom: "5px", // Add padding only at the bottom to create space for the border
         borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
       }}
-    > {isMobileView && (
+    > 
+   
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
      
     </>
-  )}
+  
 </div>
+)}
 
     <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
@@ -177,13 +203,20 @@ function buildUserdataCard(user: any, index: any) {
         <div style={{ marginLeft: '1.2rem' }}>
         <label className="Descriptionlabel">complete and apply</label>
         </div>
-        <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
+        {/* <div className={isMobileView ? "horizontal-steps" : "center-steps"}>
           <Steps current={1} style={{ width: "50%" }} labelPlacement="vertical">
             <Step title="Add application details" />
             <Step title="Complete & apply" />
             <Step title="View status" />
           </Steps>
-        </div>
+        </div> */}
+         <div className="center-steps">
+      {isMobileView ? (
+        <ViewStatusSecondIcon /> // Use uppercase for component name
+      ) : (
+        <Steps current={1}  style={{ width: "50%" }} labelPlacement="vertical" items={items} />
+      )}
+    </div>
       </div>
       <Divider className="divider" />
       <div style={{ fontWeight:"bolder", fontSize: "1rem", marginLeft: "2rem" }}>
@@ -299,7 +332,7 @@ function buildUserdataCard(user: any, index: any) {
     </Button>
   </Col>
 </Row>
-
+</div>
     </MainLayout>
   );
 }

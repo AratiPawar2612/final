@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 import { Button, Divider, Steps, Row, Col, Card } from 'antd';
 import MainLayout from '@/components/mainlayout';
 import CustomMenu from '@/components/custommenu';
-import { ArrowLeftIcon,LogoIcon } from '@/icons/icon';
-import { TeamOutlined, UserOutlined, CheckOutlined } from '@ant-design/icons';
+import { ArrowLeftIcon,LogoIcon, CheckICon, WithFamilyIcon, YourSelfIcon } from '@/icons/icon';
+
 import CustomMobileMenu from '@/components/custommobilemenu';
+import { ViewStatusFirstSvg } from '@/icons/svgs';
 
 
 export default function AddApplicationDetailsPage() {
@@ -54,7 +55,8 @@ export default function AddApplicationDetailsPage() {
   
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-<div
+  {isMobileView && (
+  <div
       style={{
         display: "flex",
         flexDirection: "row",
@@ -63,14 +65,16 @@ export default function AddApplicationDetailsPage() {
         paddingBottom: "5px", // Add padding only at the bottom to create space for the border
         borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
       }}
-    > {isMobileView && (
+    > 
+   
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
      
     </>
-  )}
+  
 </div>
+)}
 
         <div style={{ fontWeight: "bold", fontSize: "1rem",marginLeft:"3rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
@@ -81,13 +85,24 @@ export default function AddApplicationDetailsPage() {
         </div>
         <Row justify="center">
       <Col xs={24} xl={24}>
-        <div className="center-steps">
+        {/* <div className="center-steps">
           <Steps current={-1} style={{ width: "50%" }} direction="horizontal" labelPlacement='vertical'>
             <Step title="Add application details" />
             <Step title="Complete & apply" />
             <Step title="View status" />
           </Steps>
-        </div>
+        </div> */}
+         <div className="center-steps">
+      {isMobileView ? (
+        <ViewStatusFirstSvg /> // Use uppercase for component name
+      ) : (
+        <Steps current={-1} style={{ width: "50%" }} labelPlacement="vertical">
+          <Steps.Step title="Add application details" />
+          <Steps.Step title="Complete & apply" />
+          <Steps.Step title="View status" />
+        </Steps>
+      )}
+    </div>
       </Col>
     </Row>
     
@@ -100,7 +115,7 @@ export default function AddApplicationDetailsPage() {
   <Col xs={12} sm={24} md={12} lg={12} xl={6}>
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Card
-        title={<UserOutlined style={{ fontSize: '1.5rem' }} />}
+        title={<YourSelfIcon style={{ fontSize: '1.5rem' }} />}
         style={{
           flex: 1,
           marginTop: '2rem',
@@ -116,7 +131,7 @@ export default function AddApplicationDetailsPage() {
         </div>
         {selectedCard === 'Darshan For Yourself' && (
           <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-            <CheckOutlined style={{ color: 'green', fontSize: '20px' }} />
+            <CheckICon style={{ color: 'green', fontSize: '20px' }} />
           </div>
         )}
       </Card>
@@ -125,7 +140,7 @@ export default function AddApplicationDetailsPage() {
   <Col xs={12} sm={24} md={12} lg={12} xl={6}>
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Card
-        title={<TeamOutlined style={{ fontSize: '1.5rem' }} />}
+        title={<WithFamilyIcon style={{ fontSize: '1.5rem' }} />}
         style={{
           flex: 1,
           marginTop: '2rem',
@@ -140,7 +155,7 @@ export default function AddApplicationDetailsPage() {
         </div>
         {selectedCard === 'Family Gyan Darshan' && (
           <div style={{ position: 'absolute', top: '0.625rem', right: '0.625rem' }}>
-            <CheckOutlined style={{ color: 'green', fontSize: '1.25rem' }} />
+            <CheckICon style={{ color: 'green', fontSize: '1.25rem' }} />
           </div>
         )}
       </Card>

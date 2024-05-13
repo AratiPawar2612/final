@@ -19,7 +19,7 @@ import {
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { VerifiedIcon, ArrowLeftIcon, ScannerIcon,LogoIcon } from "@/icons/icon";
+import { VerifiedIcon, ArrowLeftIcon, ScannerIcon,LogoIcon ,ViewStatusIcon} from "@/icons/icon";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   fetchParticipantData,
@@ -29,6 +29,7 @@ import {
 } from "../api/applicationapi";
 import dayjs from "dayjs";
 import CustomMobileMenu from "@/components/custommobilemenu";
+import { ViewStatusFirstSvg } from "@/icons/svgs";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -1069,23 +1070,37 @@ export default function AddPersonalDeatilsPage() {
 
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
- <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingTop: "5px",
-        paddingBottom: "5px", // Add padding only at the bottom to create space for the border
-        borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
-      }}
-    > {isMobileView && (
+      <div
+        style={{
+          justifyContent: "center",
+          padding: "0 20px", // Adjust padding for space on left and right
+          boxSizing: "border-box", // Ensure padding is included in width calculation
+          backgroundColor:"white"
+        }}
+      >
+   {isMobileView && (
+  <div
+  style={{
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: "5px",
+    paddingBottom: "15px",
+    backgroundColor: "white",
+    boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
+    width: "100%", // Take full width of the container
+    boxSizing: "border-box", // Include padding in width calculation
+  }}
+>
+   
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
      
     </>
-  )}
+  
 </div>
+)}
       <div style={{ marginLeft: "3rem" }}>
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
           <ArrowLeftIcon onClick={() => router.back()} />
@@ -1096,13 +1111,24 @@ export default function AddPersonalDeatilsPage() {
         </div>
         <Row justify="center">
       <Col xs={24} xl={24}>
-        <div className="center-steps">
+        {/* <div className="center-steps">
           <Steps current={-1} style={{ width: "50%" }} direction="horizontal" labelPlacement='vertical'>
             <Step title="Add application details" />
             <Step title="Complete & apply" />
             <Step title="View status" />
           </Steps>
-        </div>
+        </div> */}
+         <div className="center-steps">
+      {isMobileView ? (
+        <ViewStatusFirstSvg /> // Use uppercase for component name
+      ) : (
+        <Steps current={-1} style={{ width: "50%" }} labelPlacement="vertical">
+          <Steps.Step title="Add application details" />
+          <Steps.Step title="Complete & apply" />
+          <Steps.Step title="View status" />
+        </Steps>
+      )}
+    </div>
       </Col>
     </Row>
       </div>
@@ -1460,6 +1486,7 @@ export default function AddPersonalDeatilsPage() {
             </Row>
           </Col>
         </Row>
+      </div>
       </div>
     </MainLayout>
   );
