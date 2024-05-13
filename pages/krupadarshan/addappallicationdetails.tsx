@@ -54,7 +54,16 @@ export default function AddApplicationDetailsPage() {
   };
   
   return (
-    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
+      
+    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}> 
+    <div
+    style={{
+      justifyContent: "center",
+      padding: "0 20px", // Adjust padding for space on left and right
+      boxSizing: "border-box", // Ensure padding is included in width calculation
+    }}
+  >
+
   {isMobileView && (
   <div
       style={{
@@ -183,6 +192,7 @@ export default function AddApplicationDetailsPage() {
         >
           {continueButtonText}
         </Button>
+      </div>
       </div>
     </MainLayout>
   );
