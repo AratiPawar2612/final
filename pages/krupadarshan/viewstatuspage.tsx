@@ -481,7 +481,6 @@ export default function ViewStatusPage() {
         </Row> */}
         <Row>
         <Col xs={24} sm={24} md={12} lg={12} xl={8}> {isMobileView ? (
-            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <div
                 style={{
                   display: "flex",
@@ -507,10 +506,6 @@ export default function ViewStatusPage() {
                 </div>
                 <div>
                   <div>
-                    <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                      Total Applicants
-                    </div>
-                    <label>------</label>
                     {particpantdata ? (
                       particpantdata.map((participant: any) => (
                         <div
@@ -532,9 +527,9 @@ export default function ViewStatusPage() {
                   </div>
                 </div>
               </div>
-            </Col>
           ) : (
-            <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+            <Col xs={24} sm={24} md={12} lg={16} xl={12}>
+           
               <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
                 Application History
               </div>
@@ -571,6 +566,7 @@ export default function ViewStatusPage() {
                   <div>No participant data available</div>
                 )}
               </div>
+            
             </Col>
           )}</Col>
      <Col xs={24} sm={24} md={12} lg={12} xl={12}>

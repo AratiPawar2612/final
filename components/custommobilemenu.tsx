@@ -103,7 +103,7 @@ const CustomMobileMenu = () => {
         placement="right"
         onClose={toggleDrawer}
         open={showDrawer}
-        width="20vh"
+        width="auto"
         style={{backgroundColor:"white"}}      >
            <Menu mode="inline" onClick={handleTopMenuClick} className="custom-menu" defaultSelectedKeys={["home"]} style={{ backgroundColor: "#F4F4F4", boxShadow: "none", border: "none" }}>
             <Item key="home" onClick={handleHome} style={{ marginLeft: "40px", display: "flex", alignItems: "center", height: "4rem", background: "transparent" }}>
