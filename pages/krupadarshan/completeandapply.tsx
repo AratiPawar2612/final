@@ -170,8 +170,8 @@ const items = [
         <div
         style={{
           justifyContent: "center",
-          padding: "0 20px", // Adjust padding for space on left and right
-          boxSizing: "border-box", // Ensure padding is included in width calculation
+          padding: "0 20px", 
+          boxSizing: "border-box", 
         }}
       >
   {isMobileView && (
@@ -181,8 +181,8 @@ const items = [
         flexDirection: "row",
         justifyContent: "space-between",
         paddingTop: "5px",
-        paddingBottom: "5px", // Add padding only at the bottom to create space for the border
-        borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
+        paddingBottom: "5px", 
+        borderBottom: "1px solid #ccc", 
       }}
     > 
    

@@ -12,15 +12,36 @@ export default function Index() {
   const { safeReplace } = useSafeReplace();
   const gapRem = "3.125rem";
 
+
+  const handleSessionExpired = () => {
+    // Implement how to handle an expired session
+    // Replace the following line with your actual handling logic
+    window.location.href = "/"; // Redirect to login page
+  };
+ 
   useEffect(() => {
+    const isSessionValid = (session:any) => {
+      return session && !isSessionExpired(session);
+    };
+  
+    const isSessionExpired = (session:any) => {
+      return session.expiryTime < Date.now();
+    };
+  
     setIsSessionLoading(status === "loading");
     if (status === "authenticated" && session && safeReplace) {
-       safeReplace("/onboarding/homepage");
-     // safeReplace("/home");
-      console.log("session",session);
+      if (isSessionValid(session)) {
+        safeReplace("/onboarding/homepage");
+        console.log("Redirected to homepage");
+      } else {
+        console.log("Session has expired");
+        handleSessionExpired();
+      }
     }
-   
-  }, [status, session, safeReplace]);
+  }, [status, session, safeReplace, setIsSessionLoading]); // Dependency array without isSessionValid
+  // Function to check if the session is valid
+ 
+
 
   const handleSignInGoogle = () => {
     signIn("keycloak", {}, { kc_idp_hint: "google" });

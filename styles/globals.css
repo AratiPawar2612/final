@@ -692,11 +692,11 @@ border: 0.0069rem 0rem 0rem 0rem;
 
 
 .step-item.active .step-circle {
-  background-color: black!important; 
+  background-color: F55C38!important; 
 }
 
 .step-item.completed .step-circle {
-  background-color: red!important;
+  background-color: F55C38!important;
 }
 
 .customs-step {
@@ -713,7 +713,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   width: 30px!important;
   height: 30px!important;
   border-radius: 50%!important;
-  background-color: #000!important;
+  background-color: #414141!important;
   color: #fff!important;
   display: flex!important;
   justify-content: center!important;

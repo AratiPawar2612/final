@@ -1075,7 +1075,7 @@ export default function AddPersonalDeatilsPage() {
           justifyContent: "center",
           padding: "0 20px", // Adjust padding for space on left and right
           boxSizing: "border-box", // Ensure padding is included in width calculation
-          backgroundColor:"white"
+         
         }}
       >
    {isMobileView && (
@@ -1255,7 +1255,7 @@ export default function AddPersonalDeatilsPage() {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
-                    label="Select preferred date"
+                    label="Select preferred date range"
                     name={["startdate"]}
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
@@ -1371,9 +1371,9 @@ export default function AddPersonalDeatilsPage() {
               </Col>
 
               <Col
-                xs={24}
+                xs={10}
                 sm={12}
-                md={12}
+                md={24}
                 lg={12}
                 xl={12}
                 style={{ marginBottom: "16px" }}
@@ -1412,10 +1412,11 @@ export default function AddPersonalDeatilsPage() {
                       <Button
                         style={{
                           marginTop: "1rem",
-                          marginRight: "16px",
+                          // marginRight: "16px",
                           borderRadius: "1rem",
                           backgroundColor: "#1E1E1E",
                           color: "white",
+                          alignItems:"end",
                          width:"auto"
                         }}
                         onClick={() => handleInputTypeChange("View all")}
@@ -1429,7 +1430,7 @@ export default function AddPersonalDeatilsPage() {
                           ? "Added Family Members"
                           : "Family Member 1"
                       }
-                      visible={isModalVisible}
+                      open={isModalVisible}
                       footer={null}
                       style={{ top: 20 }}
                       onCancel={handleCancel}
