@@ -31,15 +31,16 @@ export default function Index() {
     setIsSessionLoading(status === "loading");
     if (status === "authenticated" && session && safeReplace) {
       if (isSessionValid(session)) {
-        safeReplace("/onboarding/homepage");
         console.log("Redirected to homepage");
+        safeReplace("/onboarding/homepage");
+       
       } else {
         console.log("Session has expired");
         handleSessionExpired();
       }
     }
-  }, [status, session, safeReplace, setIsSessionLoading]); // Dependency array without isSessionValid
-  // Function to check if the session is valid
+  }, [status, session, safeReplace, setIsSessionLoading]); 
+  
  
 
 

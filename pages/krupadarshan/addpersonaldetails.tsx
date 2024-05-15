@@ -67,6 +67,7 @@ export default function AddPersonalDeatilsPage() {
   const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
   const [participantuserid, setParticipantUserid] = useState<any[]>([]); // Define state for selected purpose
   const [showSearchButton, setShowSearchButton] = useState(true);
+  const [showNextButton, setNextButton] = useState(true);
   const [showAddButton, setShowAddButton] = useState(false);
   const { isFamilyKrupaDarshan } = router.query;
   const [errorMessage, setErrorMessage] = useState("");
@@ -304,7 +305,6 @@ export default function AddPersonalDeatilsPage() {
             form.resetFields();
             setShowSearchButton(true);
             setShowAddButton(false);
-            // Reload the page
             window.location.reload();
           })
           .catch((error) => {
@@ -1339,6 +1339,7 @@ export default function AddPersonalDeatilsPage() {
 
               <Row gutter={16}>
                 <Col span={24}>
+                {showNextButton && isFamilyKrupaDarshan && (
                   <Button
                     type="primary"
                     style={{
@@ -1353,6 +1354,7 @@ export default function AddPersonalDeatilsPage() {
                   >
                     Next
                   </Button>
+                )}
                 </Col>
               </Row>
             </Form>

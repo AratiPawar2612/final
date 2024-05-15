@@ -18,7 +18,6 @@ import {
   InfoIcon,
   VerifiedIcon,
   NotVerifiedIcon,
-  UserAvatarIcon,
   ScannerIcon,
   ElipseIcon,
   LogoIcon,
@@ -68,12 +67,13 @@ export default function HomePage() {
           setData(userDataResponse);
 
           const applicationData = await fetchApplicationData(accessToken);
+          console.log("application history",applicationData)
           setApplicationdata(applicationData);
           setApplicationid(applicationData[0]?.reference_code);
           setStatus(applicationData[0]?.status);
-          console.log("status", applicationData[0]?.status);
-          console.log("userDataResultsimverified", userDataResponse);
-          console.log("Fetched application data:", applicationData);
+          // console.log("status", applicationData[0]?.status);
+          // console.log("userDataResultsimverified", userDataResponse);
+          // console.log("Fetched application data:", applicationData);
         } else {
           console.log("User is not authenticated. Redirecting to Login page.");
           router.push("/");
@@ -744,9 +744,6 @@ export default function HomePage() {
   
 </div>
 )}
-
-
-
       <div className="WelcomeLabel">
          Welcome,
           <br />
@@ -859,7 +856,7 @@ export default function HomePage() {
             justifyContent: "space-between",
           }}
         >
-          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+          {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
             {applicationdata.length > 0 &&
               applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
                 <Card
@@ -902,7 +899,76 @@ export default function HomePage() {
                   />
                 </Card>
               ))}
-          </Col>
+          </Col> */}
+         <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+  {applicationdata.length > 0 ? (
+    applicationdata.slice(0, 5).map((data: any, index: any) => {
+      const dateParts = (data?.created_at || '').split('T')[0];
+
+      const isClickable = index === 0;
+      const isLastRecord = index === 5;
+      const hasBorder = isClickable ? "1px solid blue" : "none";
+
+      return (
+        <Card
+          key={index}
+          style={{
+            width: "15rem",
+            border: hasBorder,
+            borderRadius: "5px",
+            marginBottom: "1rem",
+            marginLeft:"1rem"
+          }}
+          onClick={isClickable ? handleHistoryCardClick : undefined}
+        >
+          <Meta
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              textWrap: "wrap",
+              width: "auto",
+            }}
+            title={index === 0 ? "Your Application ID" : "Past Application ID"}
+            description={
+              index === 0
+                ? `${data?.reference_code} Created on ${dateParts}.`
+                : (
+                  <>
+                    {data?.reference_code} Created on {dateParts}.
+                    <br />
+                    Your past Darshan appointments will reflect here
+                  </>
+                )
+            }
+            // avatar={index === 0 ? null : <Avatar icon={<FileExclamationTwoTone />} />}
+          />
+          {isClickable && "Click here to view your status"}
+        </Card>
+      );
+    })
+  ) : (
+    <Card style={{ width: "15rem" }}>
+      <Meta
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          textWrap: "wrap",
+          width: "auto",
+        }}
+        title="No record available"
+        description="Your past Darshan appointments will reflect here"
+        avatar={<Avatar icon={<FileExclamationTwoTone />} />}
+      />
+    </Card>
+  )}
+</div>
+
+</Col>
+
+
         </Row>
         </div>
      

@@ -34,6 +34,8 @@ export default function ViewStatusPage() {
   const [token, setToken] = useState("");
   const [appliid, setAppliid] = useState("");
   const [referenceCode, setReferenceCode] = useState("");
+  const [adults, setadults] = useState("0");
+  const [childrens, Setchildrens] = useState("0");
   const [particpantdata, setParticpantdata] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -63,7 +65,9 @@ export default function ViewStatusPage() {
 
         if (sessionData?.session) {
           const apiUrl =
-            "https://hterp.tejgyan.org/django-app/event/applications/";
+          "https://hterp.tejgyan.org/django-app/event/applications/?ordering=-created_at";
+
+
           const getApplicationId = await fetch(apiUrl, {
             headers: {
               Authorization: `Bearer ${sessionData?.session?.access_token}`,
@@ -74,17 +78,20 @@ export default function ViewStatusPage() {
           const userDataResults1 = appliidres.results ?? [];
           setAppliid(userDataResults1[0]?.id);
           setReferenceCode(userDataResults1[0]?.reference_code);
-          setData(userDataResults1);
+          setadults(userDataResults1[0]?.age_counts?.adults);
+          Setchildrens(userDataResults1[0]?.age_counts?.childrens);
           console.log("applicationdata", userDataResults1);
           const participantUserResponseData = await fetchParticipantData(
             sessionData?.session?.access_token
           );
           const participantresp = participantUserResponseData.results ?? [];
           if (participantresp.length > 0) {
-            setParticpantdata(participantresp);
+            setParticpantdata(participantresp );
+            console.log("participantresp",participantresp)
           }
 
-          const userApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/`;
+          const userApiUrl =   "https://hterp.tejgyan.org/django-app/event/applications/?ordering=-created_at";
+
           const userResponse = await fetch(userApiUrl, {
             headers: {
               Authorization: `Bearer ${sessionData?.session?.access_token}`,
@@ -183,6 +190,16 @@ export default function ViewStatusPage() {
         (endDate && current > dayjs(endDate).endOf("day")))
     );
   };
+  const [showPopup, setShowPopup] = useState(false);
+  const [displayedRecords, setDisplayedRecords] = useState(2);
+
+  const handleViewMore = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
 
   const cardData = [
     { title: 'Application received', content: 'Your application has been successfully submitted to the admin. You will be notified of further updates. Kindly check your status within 24 hours.' },
@@ -199,8 +216,8 @@ export default function ViewStatusPage() {
       <div
         style={{
           justifyContent: "center",
-          padding: "0 20px", // Adjust padding for space on left and right
-          boxSizing: "border-box", // Ensure padding is included in width calculation
+          padding: "0 20px", 
+          boxSizing: "border-box", 
         }}
       >
         {isMobileView && (
@@ -255,9 +272,8 @@ export default function ViewStatusPage() {
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "center",
             fontWeight: "bold",
-            fontSize: "1.2rem",
+            fontSize: "22px",
           }}
         >
           {status1 === "SUBMITTED" &&
@@ -486,6 +502,7 @@ export default function ViewStatusPage() {
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
+                  marginTop:"2rem"
                 }}
               >
                 <div>
@@ -502,29 +519,55 @@ export default function ViewStatusPage() {
                   <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
                     Total Applicants
                   </div>
-                  <label>------</label>
+                  <label>Adults: {adults}</label>
+              <label>Children: {childrens}</label>
                 </div>
                 <div>
-                  <div>
-                    {particpantdata ? (
-                      particpantdata.map((participant: any) => (
-                        <div
-                          key={participant.id}
-                          style={{
-                            marginBottom: "1rem",
-                            fontWeight: "bold",
-                            marginTop: "0.5rem",
-                          }}
-                        >
-                          <Avatar size={64} icon={<ElipseIcon />} />
+                <div>
+      {particpantdata ? (
+        <>
+          {particpantdata.slice(0, displayedRecords).map((participant:any) => (
+            <div
+              key={participant.id}
+              style={{
+                marginBottom: "1rem",
+                fontWeight: "bold",
+                marginTop: "0.5rem",
+              }}
+            >
+              <Avatar size={64} icon={<ElipseIcon />} style={{marginRight:"2rem"}} />
+              {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
+            </div>
+          ))}
+          {particpantdata.length > 2 && (
+            <Button type="link" onClick={handleViewMore} style={{alignItems:"center"}}>View More</Button>
+          )}
+        </>
+      ) : (
+        <div>No participant data available</div>
+      )}
 
-                          {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
-                        </div>
-                      ))
-                    ) : (
-                      <div>No participant data available</div>
-                    )}
-                  </div>
+      <Modal
+        title="Additional Participants"
+        open={showPopup}
+        onCancel={handleClosePopup}
+        footer={null}
+      >
+        {particpantdata.slice(displayedRecords).map((participant:any) => (
+          <div
+            key={participant.id}
+            style={{
+              marginBottom: "1rem",
+              fontWeight: "bold",
+              marginTop: "0.5rem",
+            }}
+          >
+            <Avatar size={64} icon={<ElipseIcon />} />
+            {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
+          </div>
+        ))}
+      </Modal>
+    </div>
                 </div>
               </div>
           ) : (
@@ -543,28 +586,27 @@ export default function ViewStatusPage() {
               <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
                 Total Applicants
               </div>
-              <label>------</label>
+              <label>Adults: {adults}</label>
+              <label>Children: {childrens}</label>
 
               <Divider />
               <div>
-                {particpantdata ? (
-                  particpantdata.map((participant: any) => (
-                    <div
-                      key={participant.id}
-                      style={{
-                        marginBottom: "1rem",
-                        fontWeight: "bold",
-                        marginTop: "0.5rem",
-                      }}
-                    >
-                      <Avatar size={64} icon={<ElipseIcon />} />
+              {particpantdata && particpantdata.length > 0 ? (
+  <div
+    key={particpantdata[0].id}
+    style={{
+      marginBottom: "1rem",
+      fontWeight: "bold",
+      marginTop: "0.5rem",
+    }}
+  >
+    <Avatar size={64} icon={<ElipseIcon />} />
+    {`${particpantdata[0].relation_with.first_name} ${particpantdata[0].relation_with.last_name}`}
+  </div>
+) : (
+  <div>No participant data available</div>
+)}
 
-                      {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
-                    </div>
-                  ))
-                ) : (
-                  <div>No participant data available</div>
-                )}
               </div>
             
             </Col>
@@ -582,7 +624,7 @@ export default function ViewStatusPage() {
               {cardData.map((card, index) => (
                 <React.Fragment key={index}>
                   <Col xs={6} sm={24} md={12} lg={12} xl={8}>
-                    <div style={{ marginTop: isMobileView ? "3rem" : "7rem" }}>
+                    <div className="custom" style={{ marginTop: isMobileView ? "3rem" : "7rem" }}>
                       <div
                         className={`step-item ${
                           status1 === "ACCEPTED_BY_KHOJI" && index <= 2
@@ -663,7 +705,7 @@ export default function ViewStatusPage() {
                                   onChange={(date) => setEnddate(date)}
                                   format="YYYY-MM-DD"
                                   disabledDate={(current) =>
-                                    disabledDate(current, null, enddate)
+                                  disabledDate(current, null, enddate)
                                   }
                                 />
                               </Form.Item>

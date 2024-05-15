@@ -10,7 +10,8 @@ export const fetchUserData = async (accessToken:any) => {
     return userDataResponse;
   };
   export const fetchApplicationData = async (accessToken:any) => {
-    const applicationApiUrl = "https://hterp.tejgyan.org/django-app/event/applications/";
+    const applicationApiUrl ="https://hterp.tejgyan.org/django-app/event/applications/?ordering=-created_at";
+
     const applicationResponse = await fetch(applicationApiUrl, {
       method: "GET",
       headers: {
@@ -55,7 +56,7 @@ export const fetchParticipantData = async (accessToken: string) => {
     },
   };
 
-  const getResponse = await fetch('https://hterp.tejgyan.org/django-app/event/participants/', getRequestOptions);
+  const getResponse = await fetch('https://hterp.tejgyan.org/django-app/event/participants/?ordering=-created_at', getRequestOptions);
 
   if (!getResponse.ok) {
     throw new Error('Network response was not ok');
