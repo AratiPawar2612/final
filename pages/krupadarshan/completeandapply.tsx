@@ -169,21 +169,20 @@ const items = [
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
     
   {isMobileView && (
-  <div
-  style={{  
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingLeft:"15px",
-    paddingRight:"15px",
-    paddingTop: "10px",
-    paddingBottom: "15px",
-    backgroundColor: "white",
-    boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
-    width: "100%", // Take full width of the container
-  }}
->
-   
+   <div
+   style={{  
+     display: "flex",
+     flexDirection: "row",
+     justifyContent: "space-between",
+     paddingLeft:"15px",
+     paddingRight:"15px",
+     paddingTop: "10px",
+     paddingBottom: "15px",
+     backgroundColor: "white",
+     boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.30)", 
+     width: "100%", 
+   }}
+  >
     <>
       <LogoIcon className="logomenu" />
       <div> <CustomMobileMenu /></div>
@@ -217,7 +216,7 @@ const items = [
     </div>
       </div>
       <Divider className="divider" />
-      <div style={{ padding: "0 20px", }}>
+      <div style={{ padding: "0 30px", }}>
       <div style={{ fontWeight:"bolder", fontSize: "1rem", marginLeft: "2rem" }}>
         Summary
       </div>

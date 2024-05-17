@@ -36,7 +36,7 @@
 .logomenu,
 .logo > svg {
   width: 2.25rem;
-height: 1.6875rem;
+height: 2.6875rem;
 top: 0.625rem;
 left: 1.0625rem;
 gap: 0rem;
@@ -50,11 +50,12 @@ border: 0.0069rem 0rem 0rem 0rem;
   font-family: Manrope!important;
   font-size: 2rem!important;
   font-weight: 700!important;
-  line-height: 3.5rem!important;
+  line-height: 2.5rem!important;
   letter-spacing: -0.0444rem!important;
   text-align: left!important;
   color: #0f172a !important;
 }
+
 
 .Descriptionlabel {
   font-size: 16px !important;
@@ -554,9 +555,9 @@ border: 0.0069rem 0rem 0rem 0rem;
   background-color: #ffffff!important;
   display: flex!important;
   flex-direction: column!important;
-  justify-content: center!important;
   align-items: center!important;
   padding: 2rem!important;
+  height: 100%!important;
 }
 
 .logoTitleWrapper {
@@ -612,19 +613,8 @@ border: 0.0069rem 0rem 0rem 0rem;
  
 }
 
-/* Apply different styles for smaller screens (e.g., mobile) */
-@media (max-width: 768px) {
-  .center-steps {
-    display: flex!important;
-    flex-direction: row!important;
-  }
-  .addfamilymembercard {
-    width: "60%"!important;
-       height: "15.375rem"!important;
-       justify-content:"center"!important;
-   }
 
-}
+
 
 .addfamilymembercard {
  width: "90%"!important;

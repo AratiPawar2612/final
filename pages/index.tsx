@@ -1,8 +1,9 @@
 import useSafeReplace from "@/components/useSafeReplace";
-import { Button, Col, Row } from "antd";
+import { Button, Col, Flex, Row } from "antd";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from "@/icons/icon";
+import MainLayout from "@/components/mainlayout";
 
 
 
@@ -11,6 +12,7 @@ export default function Index() {
   const [isSessionLoading, setIsSessionLoading] = useState(false);
   const { safeReplace } = useSafeReplace();
   const gapRem = "3.125rem";
+  const [isMobileView, setIsMobileView] = useState(false);
 
 
   const handleSessionExpired = () => {
@@ -40,6 +42,19 @@ export default function Index() {
       }
     }
   }, [status, session, safeReplace, setIsSessionLoading]); 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768);
+      console.log("size", isMobileView);
+    };
+
+    handleResize(); // Call once on component mount
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+    };
+  }, [isMobileView]);
   
  
 
@@ -53,76 +68,83 @@ export default function Index() {
   };
 
   return (
-    
-    isSessionLoading ? (
-    <div>Loading...</div>
-  ) : status === "unauthenticated" ? (
     <div>
-      <div className="topPart">
-        <Row>
-          <Col>
-            <div >
-              <div
-                style={{
-                  display: "flex",
-                  width: "auto",
-                  height: "1rem",
-                  top: "11.6875rem",
-                  left: "24.75rem",
-                  gap: "2.1875rem",
-                }}
-              >
-                <LoginIcon className="logo"/>
-                <div className="loginTitle" style={{justifyContent:"center"}}>
-                  Welcome to
-                  <div />
-                  Tejgyan Global Foundation
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      </div>
-
-      <div className="bottomPart">
-        <Row justify="center">
-          <Col span={24}>
-            <label className="loginRightPanelTitle">Sign in</label>
-          </Col>
-          <Col span={24}>
-            <label className="loginRightPanelSubtitle">
-              Please Sign in using
-            </label>
-          </Col>
-          <Col span={24} style={{justifyContent:"center",marginLeft:"2rem" ,marginTop: gapRem }}>
-            <div className="buttonsContainer">
-              <Button
-                icon={<GoogleIcon />}
-                className="continueWithGoogleButton"
-                onClick={handleSignInGoogle}
-              >
-                Continue With Google
-              </Button>
-              <Button
-                icon={<AppleIcon />}
-                className="continueWithAppleButton"
-                onClick={handleSignInApple}
-              >
-                Continue With Apple
-              </Button>
-              {/* <label className="loginRightPanelSubtitle"> <InfoIcon /> When you click continue you agree to follow our Privacy Policy and our Terms an Conditions.</label> */}
-            </div>
-            
-          </Col>
-        </Row>
-        
-      </div>
-    </div>
-  ) : (
-    <div />
-  )
+      {isSessionLoading ? (
+        <div>Loading...</div>
+      ) : status === "unauthenticated" ? (
+        <div>
+          <div className="topPart">
+            <Row>
+              <Col>
+                {!isMobileView && (
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "auto",
+                        height: "1rem",
+                        gap: "2.1875rem",
+                      }}
+                    >
+                      <LoginIcon className="logo" />
+                      <div className="loginTitle" style={{ justifyContent: "center" }}>
+                        Welcome to
+                        <br />
+                        Tejgyan Global Foundation
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {isMobileView && (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <LoginIcon className="logo" />
+                    <div className="loginTitle">
+                      Welcome to <br/>
+                      Tejgyan Global Foundation
+                    </div>
+                  </div>
+                )}
+              </Col>
+            </Row>
+          </div>
   
- 
-  )
+          <div className="bottomPart">
+            <Row justify="center">
+              <Col span={24}>
+                <label className="loginRightPanelTitle">Sign in</label>
+              </Col>
+              <Col span={24}>
+                <label className="loginRightPanelSubtitle">
+                  Please Sign in using
+                </label>
+              </Col>
+              <Col span={24} style={{ justifyContent: "center", marginLeft: "2rem", marginTop: gapRem }}>
+                <div className="buttonsContainer">
+                  <Button
+                    icon={<GoogleIcon />}
+                    className="continueWithGoogleButton"
+                    onClick={handleSignInGoogle}
+                  >
+                    Continue With Google
+                  </Button>
+                  <Button
+                    icon={<AppleIcon />}
+                    className="continueWithAppleButton"
+                    onClick={handleSignInApple}
+                  >
+                    Continue With Apple
+                  </Button>
+                  {/* <label className="loginRightPanelSubtitle"> <InfoIcon /> When you click continue you agree to follow our Privacy Policy and our Terms an Conditions.</label> */}
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      ) : (
+        <div />
+      )}
+    </div>
+  );
+  
 }
 

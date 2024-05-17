@@ -16,86 +16,151 @@ body {
   background-color: #f4f4f4 !important;
 }
 
+/* Adjust the layout for small screens */
+@media screen and (max-width: 767px) {
+  .body {
+    font-display: swap !important;
+    font-weight: 400 !important;
+    font-size: 1rem !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #f4f4f4 !important;
+  }
+  .topPart {
+    padding: 0px; /* Add padding to the topPart */
+  }
+  .loginTitle {
+    font-size: 20px; /* Adjust the font size for smaller screens */
+  }
+  .bottomPart {
+    padding: 20px; /* Add padding to the bottomPart */
+  }
+  .loginRightPanelTitle,
+  .loginRightPanelSubtitle {
+    text-align: center; /* Center align the text */
+  }
+  .buttonsContainer {
+    margin-top: 20px; /* Add margin to the buttons container */
+  }
+  .loginTitle {
+    width: auto !important;
+    font-family: Manrope !important;
+    font-size: 3rem !important;
+    text-align: center !important;
+    color: #0f172a !important;
+  }
+  .loginTitle {
+    width: auto !important;
+    font-family: Manrope !important;
+    font-size: 1rem !important;
+    text-align: center !important;
+    color: #0f172a !important;
+  }
+}
 
-
- 
-  @media screen and (max-width: 768px) {
-    body {
-      margin: 0 auto;
-      padding: 0 20px;
-      max-width: 100%;
-    }
-
-
-    .my-custom-steps {
-      display: flex; 
-      justify-content: space-between; 
-      width: 16.5rem;
-      height: 2.58rem;
-      top: 11.4375rem;
-      left: 3rem;
-    }
-    
-    /* Styling for individual steps (optional) */
-    .my-custom-steps .step {
-      width: calc((100% / 3) - 10px); 
-      height: 100%; 
-      background-color: #f0f0f0; 
-      border: 1px solid #ccc;
-      box-sizing: border-box; 
-    }
-    
-    .viewstatusLabel {
-      text-align: left;
-    }
-    .loginTitle {
-      font-size: 1.8rem !important;
-      font-weight: 400 !important;
-      line-height: 1.5rem !important;
-      letter-spacing: 1px !important;
-    }
-    .logologin,
-    .logo > svg {
-      width: 4.6875rem!important;
-      height: 4.7525rem!important;
-      border: 0.0119rem 0rem 0rem 0rem!important;
-    }
-    .divider{
-      margin-top: "12rem"!important;
-    }
-    .topPart {
-      width:"auto"!important;
-      background-color: #a6d4db!important;
-      display: flex!important;
-      justify-content: center!important;
-      align-items: center!important;
-      padding: 2rem!important;
-    }
-    .bottomPart {
-      background-color: #ffffff!important;
-      display: flex!important;
-      flex-direction: column!important;
-      justify-content: center!important;
-      align-items: center!important;
-    }
+@media screen and (max-width: 768px) {
+  body {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 100%;
   }
 
+  .my-custom-steps {
+    display: flex;
+    justify-content: space-between;
+    width: 16.5rem;
+    height: 2.58rem;
+    top: 11.4375rem;
+    left: 3rem;
+  }
+
+  /* Styling for individual steps (optional) */
+  .my-custom-steps .step {
+    width: calc((100% / 3) - 10px);
+    height: 100%;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  .viewstatusLabel {
+    text-align: left;
+  }
+  .loginTitle {
+    width: auto !important;
+    font-family: Manrope !important;
+    font-size: 2rem !important;
+    text-align: center !important;
+    color: #0f172a !important;
+  }
+  .logo,
+  .logo > svg {
+    width: 5.3125rem !important;
+    height: 4.75rem !important;
+    justify-items: "center" !important;
+  }
+  .logologin,
+  .logo > svg {
+    width: 4.6875rem !important;
+    height: 4.7525rem !important;
+    border: 0.0119rem 0rem 0rem 0rem !important;
+  }
+  .divider {
+    margin-top: "12rem" !important;
+  }
+  .topPart {
+    width: "auto" !important;
+    background-color: #a6d4db !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 2rem !important;
+  }
+  .bottomPart {
+    background-color: #ffffff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .center-steps {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+  .addfamilymembercard {
+    width: "60%" !important;
+    height: "15.375rem" !important;
+    justify-content: "center" !important;
+  }
+}
 
 /* For medium-sized screens */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   body {
-    margin: 0 auto; 
-    padding: 0 20px; 
-    max-width: 90%; 
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 90%;
+  }
+  .loginTitle {
+    width:auto!important;
+    height: 6rem!important;
+    font-family: Manrope!important;
+    font-size: 2rem!important;
+    font-weight: 700!important;
+    line-height: 2.5rem!important;
+    letter-spacing: 0.0544rem!important;
+    text-align: left!important;
+    color: #0f172a !important;
   }
 }
 
 /* For larger screens */
 @media screen and (min-width: 1025px) and (max-width: 1440px) {
   body {
-    margin: 0 auto; 
-    padding: 0 20px; 
-    max-width: 1440px; 
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 1440px;
   }
 }
 
@@ -107,23 +172,23 @@ body {
     background-color: #f4f4f4 !important;
   }
 }
-  /* Styles for screens wider than 1920px */
-  @media (min-width: 1921px) {
-    body {
-      font-size: 24px;
-    }
+/* Styles for screens wider than 1920px */
+@media (min-width: 1921px) {
+  body {
+    font-size: 24px;
   }
-  
-  /* Styles for screens between 1441px and 1920px */
-  @media (max-width: 1920px) and (min-width: 1441px) {
-    body {
-      font-size: 20px;
-    }
+}
+
+/* Styles for screens between 1441px and 1920px */
+@media (max-width: 1920px) and (min-width: 1441px) {
+  body {
+    font-size: 20px;
   }
-  
-  /* Styles for screens between 1281px and 1440px */
-  @media (max-width: 1440px) and (min-width: 1281px) {
-    body {
-      font-size: 18px;
-    }
+}
+
+/* Styles for screens between 1281px and 1440px */
+@media (max-width: 1440px) and (min-width: 1281px) {
+  body {
+    font-size: 18px;
   }
+}

@@ -51,6 +51,8 @@ export default function HomePage() {
   const [status, setStatus] = useState("");
   const [applicationid, setApplicationid] = useState("");
   const [isMobileView, setIsMobileView] = useState(false);
+  const slicedData = isMobileView ? applicationdata.slice(0, 2) : applicationdata.slice(0, 5);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,8 +60,10 @@ export default function HomePage() {
         const response = await fetch("/api/getsession");
         const sessionData = await response.json();
         console.log("Session Data:", sessionData?.session);
-
-        setUserName(sessionData?.session?.user?.name);
+       
+        const capitalizedName = sessionData?.session?.user?.name.replace(/(^|\s)\S/g, (match:any) => match.toUpperCase());
+       
+        setUserName(capitalizedName);
 
         if (sessionData?.session) {
           const accessToken = sessionData.session.access_token;
@@ -713,7 +717,6 @@ export default function HomePage() {
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
       
-     
    {isMobileView && (
   <div
   style={{  
@@ -727,6 +730,7 @@ export default function HomePage() {
     backgroundColor: "white",
     boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
     width: "100%", // Take full width of the container
+    boxSizing: "border-box", // Include padding in width calculation
   }}
 >
    
@@ -753,7 +757,7 @@ export default function HomePage() {
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <Card
               style={{
-                width: "90%",
+                width: "auto",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -851,58 +855,15 @@ export default function HomePage() {
             justifyContent: "space-between",
           }}
         >
-          {/* <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-            {applicationdata.length > 0 &&
-              applicationdata[0].status !== "ACCEPTED_BY_KHOJI" && (
-                <Card
-                  style={{
-                    width: "15rem",
-                    border: "1px solid blue",
-                    borderRadius: "5px",
-                  }}
-                  onClick={handleHistoryCardClick}
-                >
-                  <Meta
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      textWrap: "wrap",
-                      width: "auto",
-                    }}
-                    title="Your Application ID"
-                    description={applicationid}
-                  />
-                  Click here to view your status
-                </Card>
-              )}
 
-            {applicationdata.length === 0 ||
-              (applicationdata[0].status === "ACCEPTED_BY_KHOJI" && (
-                <Card style={{ width: "15rem" }}>
-                  <Meta
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      textWrap: "wrap",
-                      width: "auto",
-                    }}
-                    avatar={<Avatar icon={<FileExclamationTwoTone />} />}
-                    title="No application yet"
-                    description="Your past Darshan appointments will reflect here"
-                  />
-                </Card>
-              ))}
-          </Col> */}
          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
   {applicationdata.length > 0 ? (
-    applicationdata.slice(0, 5).map((data: any, index: any) => {
+    slicedData.map((data: any, index: any) => {
       const dateParts = (data?.created_at || '').split('T')[0];
 
       const isClickable = index === 0;
-      const isLastRecord = index === 5;
+      const isLastRecord = !isMobileView ? index === 5 : index === 2;
       const hasBorder = isClickable ? "1px solid blue" : "none";
 
       return (
@@ -913,7 +874,7 @@ export default function HomePage() {
             border: hasBorder,
             borderRadius: "5px",
             marginBottom: "1rem",
-            marginLeft:"1rem"
+            marginLeft:"0.5rem"
           }}
           onClick={isClickable ? handleHistoryCardClick : undefined}
         >
@@ -937,7 +898,6 @@ export default function HomePage() {
                   </>
                 )
             }
-            // avatar={index === 0 ? null : <Avatar icon={<FileExclamationTwoTone />} />}
           />
           {isClickable && "Click here to view your status"}
         </Card>

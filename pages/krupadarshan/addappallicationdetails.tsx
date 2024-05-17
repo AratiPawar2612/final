@@ -143,7 +143,7 @@ export default function AddApplicationDetailsPage() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                height: "100%",
+                height: "auto",
               }}
             >
               <Card
@@ -187,7 +187,8 @@ export default function AddApplicationDetailsPage() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                height: "100%",
+                height: "auto",
+                width:"auto"
               }}
             >
               <Card
@@ -209,7 +210,7 @@ export default function AddApplicationDetailsPage() {
                     fontSize: "1.3rem",
                   }}
                 >
-                  Family Gyan Darshan
+                  Family Gyan<br/> Darshan
                 </div>
                 <div style={{ marginTop: "2rem" }}>
                   Select this option for Family Gyan Darshan
@@ -219,7 +220,7 @@ export default function AddApplicationDetailsPage() {
                     style={{
                       position: "absolute",
                       top: "0.625rem",
-                      right: "0.625rem",
+                      // right: "0.625rem",
                     }}
                   >
                     <CheckICon
