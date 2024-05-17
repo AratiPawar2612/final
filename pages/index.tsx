@@ -3,6 +3,7 @@ import { Button, Col, Row } from "antd";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from "@/icons/icon";
+import MainLayout from "@/components/mainlayout";
 
 
 
@@ -53,7 +54,8 @@ export default function Index() {
   };
 
   return (
-    isSessionLoading ? (
+    <MainLayout>
+    {isSessionLoading ? (
     <div>Loading...</div>
   ) : status === "unauthenticated" ? (
     <div>
@@ -64,8 +66,8 @@ export default function Index() {
               <div
                 style={{
                   display: "flex",
-                  // width: "40.495rem",
-                  // height: "1rem",
+                  width: "auto",
+                  height: "1rem",
                   top: "11.6875rem",
                   left: "24.75rem",
                   gap: "2.1875rem",
@@ -119,9 +121,9 @@ export default function Index() {
     </div>
   ) : (
     <div />
-  )
+  )}
   
- 
+ </MainLayout>
   )
 }
 

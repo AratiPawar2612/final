@@ -213,25 +213,22 @@ export default function ViewStatusPage() {
       siderClassName={isMobileView ? "" : "leftMenuPanel"}
       siderChildren={!isMobileView && <CustomMenu />}
     >
-      <div
-        style={{
-          justifyContent: "center",
-          padding: "0 20px", 
-          boxSizing: "border-box", 
-        }}
-      >
+     
         {isMobileView && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingTop: "5px",
-              paddingBottom: "5px",
-              borderBottom: "1px solid #ccc",
-            }}
-          >
-            <>
+        <div
+        style={{  
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingLeft:"15px",
+          paddingRight:"15px",
+          paddingTop: "10px",
+          paddingBottom: "15px",
+          backgroundColor: "white",
+          boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
+          width: "100%", // Take full width of the container
+        }}
+      >            <>
               <LogoIcon className="logomenu" />
               <div>
                 {" "}
@@ -495,6 +492,7 @@ export default function ViewStatusPage() {
             </Row>
           </Col>
         </Row> */}
+        <div style={{ padding: "0 20px", }}>
         <Row>
         <Col xs={24} sm={24} md={12} lg={12} xl={8}> {isMobileView ? (
               <div
@@ -728,7 +726,7 @@ export default function ViewStatusPage() {
           {/* </Col> */}
           </Col>
     </Row>
-      </div>
+    </div> 
     </MainLayout>
   );
 }

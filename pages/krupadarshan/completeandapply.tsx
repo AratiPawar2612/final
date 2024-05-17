@@ -167,24 +167,22 @@ const items = [
 ];
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-        <div
-        style={{
-          justifyContent: "center",
-          padding: "0 20px", 
-          boxSizing: "border-box", 
-        }}
-      >
+    
   {isMobileView && (
   <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingTop: "5px",
-        paddingBottom: "5px", 
-        borderBottom: "1px solid #ccc", 
-      }}
-    > 
+  style={{  
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft:"15px",
+    paddingRight:"15px",
+    paddingTop: "10px",
+    paddingBottom: "15px",
+    backgroundColor: "white",
+    boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
+    width: "100%", // Take full width of the container
+  }}
+>
    
     <>
       <LogoIcon className="logomenu" />
@@ -219,6 +217,7 @@ const items = [
     </div>
       </div>
       <Divider className="divider" />
+      <div style={{ padding: "0 20px", }}>
       <div style={{ fontWeight:"bolder", fontSize: "1rem", marginLeft: "2rem" }}>
         Summary
       </div>
@@ -267,7 +266,7 @@ const items = [
       <div>
         <Row gutter={[16, 16]}>
           <Col span={8}>
-            <div style={{ fontSize: "0.9rem", marginLeft: "1rem" }}>
+            <div style={{ fontSize: "0.9rem", marginLeft: "1rem",marginTop:"1rem" }}>
               Preferred Date
             </div>
             <div style={{ marginTop: "1rem", marginLeft: "1rem",textWrap:"nowrap" }}>
@@ -275,7 +274,7 @@ const items = [
             </div>
           </Col>
           <Col span={12}>
-            <div style={{ fontSize: "0.9rem", marginLeft: "1rem" }}>
+            <div style={{ fontSize: "0.9rem", marginLeft: "1rem",marginTop:"1rem" }}>
               Purpose of Darshan
             </div>
 

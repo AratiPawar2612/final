@@ -799,3 +799,15 @@ margin-Top: '2rem' !important;
 .divider{
 margin-top: "3rem"!important;
 }
+.mobilecontainer{ 
+  display: "flex";
+  flex-Direction: "row";
+  justify-Content: "space-between";
+  padding-Left:"0.9375rem";
+  padding-Right:"0.9375rem";
+  padding-Top: "0.625rem";
+  padding-Bottom: "0.9375rem";
+  background-Color: "white";
+  box-Shadow: "0rem 0rem 0.1062rem 0rem rgba(0, 0, 0, 0.25)";
+  width: "100%";
+}

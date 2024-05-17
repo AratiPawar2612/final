@@ -1070,27 +1070,21 @@ export default function AddPersonalDeatilsPage() {
 
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-      <div
-        style={{
-          justifyContent: "center",
-          padding: "0 20px", // Adjust padding for space on left and right
-          boxSizing: "border-box", // Ensure padding is included in width calculation
-         
-        }}
-      >
+    
    {isMobileView && (
-  <div
-  style={{
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: "5px",
-    paddingBottom: "15px",
-    backgroundColor: "white",
-    boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
-    width: "100%", // Take full width of the container
-    boxSizing: "border-box", // Include padding in width calculation
-  }}
+ <div
+ style={{  
+   display: "flex",
+   flexDirection: "row",
+   justifyContent: "space-between",
+   paddingLeft:"15px",
+   paddingRight:"15px",
+   paddingTop: "10px",
+   paddingBottom: "15px",
+   backgroundColor: "white",
+   boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.30)", // Shadow effect
+   width: "100%", // Take full width of the container
+ }}
 >
    
     <>
@@ -1489,7 +1483,6 @@ export default function AddPersonalDeatilsPage() {
             </Row>
           </Col>
         </Row>
-      </div>
       </div>
     </MainLayout>
   );

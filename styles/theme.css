@@ -16,26 +16,7 @@ body {
   background-color: #f4f4f4 !important;
 }
 
-@media screen and (max-width: 768px) {
-  body {
-    margin: 0 auto; /* Center the content */
-    padding: 0 20px; /* Add some padding to the sides */
-    max-width: 100%;
-  }
 
-  .center-steps {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-
-  .my-custom-steps {
-    width: 100%;
-  }
-  .divider{
-    margin-top: "12rem"!important;
-  }
 
  
   @media screen and (max-width: 768px) {
@@ -82,8 +63,23 @@ body {
     .divider{
       margin-top: "12rem"!important;
     }
+    .topPart {
+      width:"auto"!important;
+      background-color: #a6d4db!important;
+      display: flex!important;
+      justify-content: center!important;
+      align-items: center!important;
+      padding: 2rem!important;
+    }
+    .bottomPart {
+      background-color: #ffffff!important;
+      display: flex!important;
+      flex-direction: column!important;
+      justify-content: center!important;
+      align-items: center!important;
+    }
   }
-}
+
 
 /* For medium-sized screens */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
@@ -111,3 +107,23 @@ body {
     background-color: #f4f4f4 !important;
   }
 }
+  /* Styles for screens wider than 1920px */
+  @media (min-width: 1921px) {
+    body {
+      font-size: 24px;
+    }
+  }
+  
+  /* Styles for screens between 1441px and 1920px */
+  @media (max-width: 1920px) and (min-width: 1441px) {
+    body {
+      font-size: 20px;
+    }
+  }
+  
+  /* Styles for screens between 1281px and 1440px */
+  @media (max-width: 1440px) and (min-width: 1281px) {
+    body {
+      font-size: 18px;
+    }
+  }

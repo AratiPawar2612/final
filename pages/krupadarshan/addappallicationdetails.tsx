@@ -65,24 +65,22 @@ export default function AddApplicationDetailsPage() {
       siderClassName={isMobileView ? "" : "leftMenuPanel"}
       siderChildren={!isMobileView && <CustomMenu />}
     >
-      <div
-        style={{
-          justifyContent: "center",
-          padding: "0 20px", // Adjust padding for space on left and right
-          boxSizing: "border-box", // Ensure padding is included in width calculation
-        }}
-      >
+     
         {isMobileView && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingTop: "5px",
-              paddingBottom: "5px", // Add padding only at the bottom to create space for the border
-              borderBottom: "1px solid #ccc", // Border only at the bottom with color #ccc
-            }}
-          >
+      <div
+      style={{  
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingLeft:"15px",
+        paddingRight:"15px",
+        paddingTop: "10px",
+        paddingBottom: "15px",
+        backgroundColor: "white",
+        boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
+        width: "100%", // Take full width of the container
+      }}
+    >
             <>
               <LogoIcon className="logomenu" />
               <div>
@@ -92,7 +90,7 @@ export default function AddApplicationDetailsPage() {
             </>
           </div>
         )}
-
+<div style={{ padding: "0 20px", }}>
         <div
           style={{ fontWeight: "bold", fontSize: "1rem", marginLeft: "3rem" }}
         >
@@ -253,7 +251,7 @@ export default function AddApplicationDetailsPage() {
             {continueButtonText}
           </Button>
         </div>
-      </div>
+       </div>
     </MainLayout>
   );
 }
