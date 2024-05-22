@@ -59,8 +59,6 @@ export default function HomePage() {
       try {
         const response = await fetch("/api/getsession");
         const sessionData = await response.json();
-        console.log("Session Data:", sessionData?.session);
-       
         const capitalizedName = sessionData?.session?.user?.name.replace(/(^|\s)\S/g, (match:any) => match.toUpperCase());
        
         setUserName(capitalizedName);
@@ -71,13 +69,10 @@ export default function HomePage() {
           setData(userDataResponse);
 
           const applicationData = await fetchApplicationData(accessToken);
-          console.log("application history",applicationData)
+   
           setApplicationdata(applicationData);
           setApplicationid(applicationData[0]?.reference_code);
           setStatus(applicationData[0]?.status);
-          // console.log("status", applicationData[0]?.status);
-          // console.log("userDataResultsimverified", userDataResponse);
-          // console.log("Fetched application data:", applicationData);
         } else {
           console.log("User is not authenticated. Redirecting to Login page.");
           router.push("/");
@@ -95,14 +90,14 @@ export default function HomePage() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
-      console.log("size", isMobileView);
+      // console.log("size", isMobileView);
     };
 
-    handleResize(); // Call once on component mount
-    window.addEventListener("resize", handleResize); // Listen for window resize events
+    handleResize(); 
+    window.addEventListener("resize", handleResize); 
 
     return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+      window.removeEventListener("resize", handleResize); 
     };
   }, [isMobileView]);
 
@@ -402,7 +397,7 @@ export default function HomePage() {
             </Button>
             <Modal
               title=<VerifiedIcon />
-              visible={successModalVisible}
+              open={successModalVisible}
               onCancel={hideSuccessModal}
               footer={null}
             >
@@ -450,7 +445,7 @@ export default function HomePage() {
 
             <Modal
               title="Failure"
-              visible={failureModalVisible}
+              open={failureModalVisible}
               onCancel={hideFailureModal}
               footer={null}
             >
@@ -597,7 +592,7 @@ export default function HomePage() {
         <Modal
           className="modelpopup"
           title="Verify Your Profile"
-          visible={visible}
+          open={visible}
           centered
           footer={null}
           onCancel={handleCancel}
@@ -736,7 +731,7 @@ export default function HomePage() {
    
     <>
       <LogoIcon className="logomenu" />
-      <div> <CustomMobileMenu /></div>
+      <div style={{marginTop:"10px"}}> <CustomMobileMenu /></div>
      
     </>
   
@@ -799,8 +794,9 @@ export default function HomePage() {
                     backgroundColor: "black",
                     marginTop: "0.8rem",
                     borderRadius: "1rem",
-                    width: "159.31px",
-                    height: "39.82px",
+                     width: "159.31px",
+                     height: "auto",
+                    textAlign:"center"
                   }}
                   onClick={handleGetStarted}
                   disabled={
@@ -813,7 +809,7 @@ export default function HomePage() {
                 <div style={{ marginTop: "0.8rem" }}>
                   {" "}
                   <label>
-                    5 + opportunities this <br />
+                    5 + opportunities  <br />this
                     month
                   </label>
                 </div>

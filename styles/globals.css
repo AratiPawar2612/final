@@ -38,7 +38,7 @@
   width: 2.25rem;
 height: 2.6875rem;
 top: 0.625rem;
-left: 1.0625rem;
+left: 2.0625rem;
 gap: 0rem;
 border: 0.0069rem 0rem 0rem 0rem;
 
@@ -58,7 +58,8 @@ border: 0.0069rem 0rem 0rem 0rem;
 
 
 .Descriptionlabel {
-  font-size: 16px !important;
+  font-size: 1rem !important;
+   font-weight: 700!important;
   line-height: 1.25rem !important;
   letter-spacing: 0.0088rem !important;
   font-family: manrope!important;
@@ -696,6 +697,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   display: flex!important;
   align-items: center!important;
   position: relative!important;
+  
 }
 
 .step-circle {

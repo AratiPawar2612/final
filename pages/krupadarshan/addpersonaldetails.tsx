@@ -18,16 +18,22 @@ import {
 } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
-import axios, { AxiosResponse, AxiosError } from "axios";
-import { VerifiedIcon, ArrowLeftIcon, ScannerIcon,LogoIcon ,ViewStatusIcon} from "@/icons/icon";
-import { PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
+import {
+  VerifiedIcon,
+  ArrowLeftIcon,
+  ScannerIcon,
+  LogoIcon,
+} from "@/icons/icon";
+import { PlusOutlined,CheckCircleOutlined } from "@ant-design/icons";
 import {
   fetchParticipantData,
   fetchPurposeData,
   fetchUserData,
   submitApplication,
+  searchUser,
+  createParticipant
 } from "../api/applicationapi";
-import dayjs from "dayjs";
 import CustomMobileMenu from "@/components/custommobilemenu";
 import { ViewStatusFirstSvg } from "@/icons/svgs";
 
@@ -42,7 +48,6 @@ interface Option {
 export default function AddPersonalDeatilsPage() {
   const { Step } = Steps;
   const router = useRouter();
-  const [note, setNote] = useState(""); // State to track the note text
   const [data, setData] = useState<any>([]);
   const [inputType, setInputType] = useState("khojiID"); // State to track the selected input type
   const [khojiID, setKhojiID] = useState("");
@@ -71,28 +76,26 @@ export default function AddPersonalDeatilsPage() {
   const [showAddButton, setShowAddButton] = useState(false);
   const { isFamilyKrupaDarshan } = router.query;
   const [errorMessage, setErrorMessage] = useState("");
-  const [searchdata, setsearchdata] = useState([]); // State to store the fetched data
-  const [form] = Form.useForm(); // Create a form instance
+  const [searchdata, setsearchdata] = useState([]);
+  const [form] = Form.useForm();
   const [khojidobValue, setkhojiDobValue] = useState<Date | null>(null);
   const [khojiuserid, setkhojiuserid] = useState("");
   const [userdata, setUserData] = useState<any>([]);
   console.log("isFamilyKrupaDarshan", isFamilyKrupaDarshan);
-  const [isMobileView, setIsMobileView] = useState(false); // Define isMobileView state
-  const dayjs = require('dayjs'); // Import dayjs library or ensure it's available
-
+  const [isMobileView, setIsMobileView] = useState(false);
+  const dayjs = require("dayjs");
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth < 768); // Update isMobileView based on window width
+      setIsMobileView(window.innerWidth < 768);
     };
 
-    handleResize(); // Call once on component mount
-    window.addEventListener("resize", handleResize); // Listen for window resize events
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize); // Cleanup on component unmount
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
-
 
   useEffect(() => {
     const loadMoreData = async () => {
@@ -105,13 +108,11 @@ export default function AddPersonalDeatilsPage() {
           sessionData?.session?.access_token
         );
         setPurposeOptions(purposeOptionsResponse);
-        console.log("purposeDataResponse", purposeOptionsResponse);
 
         const userDataResponse = await fetchUserData(
           sessionData?.session?.access_token
         );
         setData(userDataResponse);
-        console.log("userDataResults", userDataResponse);
 
         setFirstName(userDataResponse?.user?.first_name);
         setLastName(userDataResponse?.user?.last_name);
@@ -131,14 +132,14 @@ export default function AddPersonalDeatilsPage() {
             participantUserResponseData.results.map(
               (participant: any) => participant.id
             );
-          console.log("participantUserResponseData", updatedParticipantData);
+
           setParticipantUserid(updatedParticipantData);
           setUserData(participantUserResponseData);
           console.log(
             "participantUserResponseData",
             participantUserResponseData
           );
-          console.log("userids", updatedParticipantData);
+         
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -149,47 +150,38 @@ export default function AddPersonalDeatilsPage() {
   }, []);
 
   const [selectedRelationship, setSelectedRelationship] = useState("");
-  const disabledDate = (current:any, startDate:any, endDate:any) => {
-  // Disable dates before today
-  if (current && current < dayjs().startOf('day')) {
-    return true;
-  }
-
-  // Disable dates before the selected start date or after the selected end date
-  if (
-    startDate &&
-    current &&
-    current < dayjs(startDate).startOf('day')
-  ) {
-    return true;
-  }
-
-  if (
-    endDate &&
-    current &&
-    current > dayjs(endDate).endOf('day')
-  ) {
-    return true;
-  }
-
-  // Check if both startDate and endDate are specified
-  if (startDate && endDate) {
-    const start = dayjs(startDate).startOf('day');
-    const end = dayjs(endDate).endOf('day');
-
-    // Calculate the difference in days between start date and end date
-    const differenceDays = end.diff(start, 'day');
-
-    // Disable the current date if the difference is not exactly 5 days
-    if (differenceDays !== 5) {
+  const disabledDate = (current: any, startDate: any, endDate: any) => {
+    // Disable dates before today
+    if (current && current < dayjs().startOf("day")) {
       return true;
     }
-  }
 
-  // Enable the current date by default if no disabling conditions are met
-  return false;
+    // Disable dates before the selected start date or after the selected end date
+    if (startDate && current && current < dayjs(startDate).startOf("day")) {
+      return true;
+    }
+
+    if (endDate && current && current > dayjs(endDate).endOf("day")) {
+      return true;
+    }
+
+    // Check if both startDate and endDate are specified
+    if (startDate && endDate) {
+      const start = dayjs(startDate).startOf("day");
+      const end = dayjs(endDate).endOf("day");
+
+      // Calculate the difference in days between start date and end date
+      const differenceDays = end.diff(start, "day");
+
+      // Disable the current date if the difference is not exactly 5 days
+      if (differenceDays !== 5) {
+        return true;
+      }
+    }
+
+    // Enable the current date by default if no disabling conditions are met
+    return false;
   };
-  
 
   const handleSelectChange = (event: any) => {
     setSelectedRelationship(event.target.value);
@@ -226,164 +218,85 @@ export default function AddPersonalDeatilsPage() {
     { label: "Daughter-in-law", value: "DAUGHTER_IN_LAW" },
     { label: "Other", value: "OTHER" },
   ];
-//   const handleRadioChange = (e: any) => {
-//     console.log("Radio button clicked"); 
-//     const value = e.target.value;
-//     console.log("Radio button value:", value); 
-//     if (value === "yes") {
-     
-//       form.setFieldsValue({
-//         khojiID: "",
-//         user: { first_name: "", last_name: "", email: "", contact_no: "" },
-//         relation: ""
-//       });
-//     } else {
-    
-//       form.setFieldsValue({ khojiID: "" });
-//     }
-// };
-
-  
-  // Inside the Form.Item components, add a 'disabled' prop
- 
-  
-  
-  
-  
 
   const onFinish = () => {
     form
-      .validateFields() // Validate all fields
+      .validateFields()
       .then((values) => {
-        // Proceed with the desired action if validation passes
-        // For example, navigate to the next step
-       onclickNextBtn();
+        onclickNextBtn();
       })
       .catch((errorInfo) => {
-        // Handle validation errors if any
         console.log("Validation failed:", errorInfo);
       });
   };
 
-  const handleaddclick = async () => {
+  const handleAddClick = async () => {
     try {
       if (!selectedRelationship) {
         alert("Please fill in all required fields.");
-      } else {
-        const requestBody = {
-          status: "PUB",
-          sort: 1,
-          user: userid,
-          relation_with: khojiuserid,
-          relation: selectedRelationship,
-        };
-
-        const requestBodyJSON = JSON.stringify(requestBody);
-
-        const requestOptions = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: requestBodyJSON,
-        };
-
-        fetch(
-          "https://hterp.tejgyan.org/django-app/event/participants/",
-          requestOptions
-        )
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log("Response from server:", data);
-            alert("Participant Added successfully");
-            form.resetFields();
-            setShowSearchButton(true);
-            setShowAddButton(false);
-            window.location.reload();
-          })
-          .catch((error) => {
-            console.error(
-              "There was a problem with your fetch operation:",
-              error
-            );
-          });
-        setErrorMessage("");
-        // Proceed with add logic
+        return;
       }
+  
+      const requestBody = {
+        status: "PUB",
+        sort: 1,
+        user: userid,
+        relation_with: khojiuserid,
+        relation: selectedRelationship,
+      };
+  
+      const participantData = await createParticipant(requestBody, token);
+  
+      console.log("Response from server:", participantData);
+      alert("Participant Added successfully");
+      form.resetFields();
+      setShowSearchButton(true);
+      setShowAddButton(false);
+      window.location.reload();
+      setErrorMessage("");
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error adding participant:", error);
     }
   };
-
-
-
-  const handleseachclick = async () => {
-
-    let url = "";
-    try {
-
-      // if (!khojiID || !khojifirstName || !khojilastName || !khojiemail || !khojimobile ) {
-         if (!khojiID ) {
-        alert('Please Enter Khoji id .');
-      } else {
-
-      const requestOption = {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      if (khojiID) {
-        url = `https://hterp.tejgyan.org/django-app/iam/users/?khoji_id=${khojiID}`;
-      } else if (khojifirstName) {
-        url = `https://hterp.tejgyan.org/django-app/iam/users/?first_name=${khojifirstName}`;
-      }
-      const response = await fetch(url, requestOption);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const responseData = await response.json();
-      setkhojiuserid(responseData.results[0].user.id);
-      console.log("userid",responseData.results[0].user.id);
-     
-      const user = responseData.results[0];
   
-          setsearchdata(responseData.results[0]); // Update searchdata with dob set to null if not available
-          form.setFieldsValue(user);
-      console.log("searchdata",searchdata);
-      if (responseData.results && responseData.results.length > 0) {
-        console.log("Data found");
-        // Update form fields with responseData.results[0]
-        form.setFieldsValue(responseData.results[0]);
-        console.log("responseData[0]", responseData.results[0]);
+
+  
+  const handleSearchClick = async () => {
+    try {
+      if (!khojiID && !khojifirstName) {
+        alert("Please Enter Khoji id");
+        return;
+      }
+  
+      const criteria = khojiID ? `khoji_id=${khojiID}` : `first_name=${khojifirstName}`;
+      const searchResults = await searchUser(token, criteria);
+  
+      if (searchResults.length > 0) {
+        const firstUser = searchResults[0];
+        setkhojiuserid(firstUser.user.id);
+        setsearchdata(firstUser);
+        form.setFieldsValue(firstUser);
         setShowSearchButton(false);
         setShowAddButton(true);
       } else {
-
         alert("No data found");
       }
-
-    }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error handling search click:", error);
     }
   };
+  
 
+  
   const onclickNextBtn = async () => {
-    if (!selectedPurpose || !startdate || !enddate  ) {
-      alert("Please Enter All required field");
+    if (!selectedPurpose || !startdate || !enddate) {
+      alert("Please Enter All required fields");
     } else {
       const requestBody = {
         user: userid,
         status: "SUBMITTED",
         have_participants: isFamilyKrupaDarshan,
-        participants: isFamilyKrupaDarshan ? participantuserid : null,
+        participants: isFamilyKrupaDarshan ? selectedUserIds : null,
         purposes: selectedPurpose,
         preferred_start_date: startdate,
         preferred_end_date: enddate,
@@ -395,18 +308,14 @@ export default function AddPersonalDeatilsPage() {
           requestBody,
           token
         );
-       console.log("applicationSubmitted", applicationSubmitted);
-       //const applicationStatus= await applicationSubmitted.json();
+        console.log("applicationSubmitted", applicationSubmitted);
         if (applicationSubmitted) {
           alert("Application Submitted successfully");
-
           router.push("/krupadarshan/completeandapply");
         } else {
-          // Handle submission error
           console.error("Application submission failed");
         }
       } catch (error) {
-        // Handle error
         console.error("Error submitting application:", error);
       }
     }
@@ -446,7 +355,6 @@ export default function AddPersonalDeatilsPage() {
   };
   const renderInputComponent = () => {
     if (inputType === "khoji") {
-     
       return (
         <Form form={form}>
           {/* <Row gutter={16}>
@@ -474,7 +382,7 @@ export default function AddPersonalDeatilsPage() {
             </Col>
           </Row> */}
           <Row gutter={16}>
-          <Col span={24}>
+            <Col span={24}>
               <Form.Item
                 label="Enter Khoji ID"
                 labelCol={{ span: 24 }}
@@ -491,14 +399,13 @@ export default function AddPersonalDeatilsPage() {
                     height: "2rem",
                     width: "100%",
                   }}
-                  
                 />
               </Form.Item>
             </Col>
           </Row>
           <Divider>Or enter</Divider>
           <Row gutter={16}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
                 label="First Name"
                 name={["user", "first_name"]}
@@ -513,7 +420,6 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojifirstName(e.target.value)}
-                  
                 />
               </Form.Item>
             </Col>
@@ -532,7 +438,6 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojilastName(e.target.value)}
-                 
                 />
               </Form.Item>
             </Col>
@@ -559,7 +464,6 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojiemail(e.target.value)}
-                  
                 />
               </Form.Item>
             </Col>
@@ -617,7 +521,6 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojimobile(e.target.value)}
-                 
                 />
               </Form.Item>
             </Col>
@@ -642,9 +545,8 @@ export default function AddPersonalDeatilsPage() {
                   value={selectedRelationship}
                   onChange={handleSelectChange}
                 >
-                 
                   <option value="">--Select Relationship--</option>
-            
+
                   {relationshipOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -670,7 +572,7 @@ export default function AddPersonalDeatilsPage() {
                   width: "100%",
                   marginBottom: "1rem",
                 }}
-                onClick={handleseachclick}
+                onClick={handleSearchClick}
               >
                 Search
               </Button>
@@ -684,7 +586,7 @@ export default function AddPersonalDeatilsPage() {
                   width: "100%",
                   marginBottom: "1rem",
                 }}
-                onClick={handleaddclick}
+                onClick={handleAddClick}
               >
                 Add
               </Button>
@@ -696,7 +598,7 @@ export default function AddPersonalDeatilsPage() {
       return (
         <Form>
           <Row gutter={16}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
                 label="First Name"
                 // name={['user', 'first_name']}
@@ -834,12 +736,12 @@ export default function AddPersonalDeatilsPage() {
                 key={index}
                 xs={12}
                 sm={24}
-                md={12}
+                md={12} 
                 lg={12}
                 xl={12}
                 style={{ marginBottom: "16px", marginLeft: "1rem" }}
               >
-                {buildUserdataCard(user, index)}
+                {buildUserdataCard(user, index, selectedUserIds, setSelectedUserIds)}
               </Col>
             ))}
           </Row>
@@ -851,68 +753,144 @@ export default function AddPersonalDeatilsPage() {
 
     return null;
   };
-  // function buildUserdataCard(user: any, index: any) {
-  //   return user ? (
-  //     <div
-  //       className={`${
-  //         index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
-  //       }`}
-  //       key={user.id}
-  //     >
-  //       <div className="userProfileTopSection" />
-  //       <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-  //         <Avatar className="userProfileImage" src={user.avtar} />
-  //         <div className="userProfileVerifiedBadge">
-  //           <label className="userProfileVerifiedBadgeLabel">Verified</label>
-  //           <VerifiedIcon />
-  //         </div>
-  //       </div>
-  //       <div className="displayFlex flexDirectionColumn marginLeft16">
-  //         <label className="userNameLabel">{user.relation_with?.email}</label>
-  //         <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-  //           <div
-  //             className="displayFlex flexDirectionColumn flex1"
-  //             style={{ marginTop: "1rem" }}
-  //           >
-  //             <label className="userProfileInfoTitle">Name</label>
-  //             <label className="userProfileInfoValue">
-  //               {user.relation_with?.first_name} {user.relation_with?.last_name}{" "}
-  //             </label>
-  //           </div>
-  //           <div
-  //             className="displayFlex flexDirectionColumn flex1"
-  //             style={{ marginTop: "1rem" }}
-  //           >
-  //             <label className="userProfileInfoTitle">Relation</label>
-  //             <label className="userProfileInfoValue">{user.relation}</label>
-  //           </div>
-  //           <div
-  //             className="displayFlex flexDirectionColumn flex1"
-  //             style={{ marginTop: "1rem" }}
-  //           >
-  //             <label className="userProfileInfoTitle">DOB</label>
-  //             <label className="userProfileInfoValue">{user.dob}</label>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   ) : (
-  //     <div className="userProfilePlaceholderCard" />
-  //   );
-  // }
-  function buildUserdataCard(user: any, index: any) {
+
+
+
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+
+// Function to handle card click
+
+ 
+
+
+function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelectedUserIds: any) {
+
+  const handleCardClick = () => {
+    // Check if the user ID is already selected
+    const isSelected = selectedUserIds.includes(user.id);
+
+    // If selected, remove from the list; otherwise, add to the list
+    if (isSelected) {
+      setSelectedUserIds((prevIds: any) => prevIds.filter((id: any) => id !== user.id));
+    } else {
+      setSelectedUserIds((prevIds: any) => [...prevIds, user.id]);
+    }
+  };
+
+  if (!user) {
+    return <div className="userProfilePlaceholderCard" />;
+  }
+
+  const isSelected = selectedUserIds.includes(user.id);
+
+  return (
+    <div
+      className={`${index === 1 ? "userProfileRightCard" : "userProfileLeftCard"} ${isSelected ? "selectedCard" : ""}`}
+      key={user.id}
+      style={{
+        width: "100%",
+        marginBottom: "16px",
+        marginTop: "2rem",
+        textAlign: "center",
+        cursor: "pointer", // Add cursor pointer to indicate clickable
+      }}
+      onClick={handleCardClick}
+    >
+      {/* Render card content here */}
+      <div className="userProfileTopSection" />
+      
+      <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
+    
+        <Avatar className="userProfileImage" src={user.avtar} />
+        <div className="userProfileVerifiedBadge">
+        
+          <label className="userProfileVerifiedBadgeLabel">Verified</label>
+          <VerifiedIcon />
+        </div>
+      </div>
+      <div
+        className="displayFlex flexDirectionColumn"
+        style={{ textAlign: "center" }}
+      >
+        {isSelected && <CheckCircleOutlined style={{ color: 'green' }} />}
+        <label className="userNameLabel" style={{ marginRight: "12rem" }}>
+          {user?.relation_with?.user?.first_name}{" "}
+          {user?.relation_with?.user?.last_name}
+        </label>
+         <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+             <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Khoji Id</label>
+              <label className="userProfileInfoValue">
+                {user?.relation_with?.khoji_id}
+              </label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle"></label>
+              <label className="userProfileInfoValue"></label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem", marginLeft: "1rem" }}
+            >
+              <ScannerIcon />
+            </div>
+          </div>
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Tejsthan</label>
+              <label className="userProfileInfoValue">
+                {user?.relation_with?.current_tejsthan?.name}
+              </label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">Shivir level</label>
+              <label className="userProfileInfoValue">
+                {user?.relation_with?.shivir_name}
+              </label>
+            </div>
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
+              <label className="userProfileInfoTitle">DOB</label>
+              <label className="userProfileInfoValue">
+                {user.relation_with?.dob}
+              </label>
+            </div>
+          </div>
+        
+        </div>
+      </div>
+    
+      
+      
+    
+  );
+}
+
+  
+  
+  
+
+  function buildUserCard(user: any, index: any) {
     return user ? (
       <div
         className={`${
-          index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
+          index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
         }`}
         key={user.id}
-        style={{
-          width: "100%", // Set width to 100%
-          marginBottom: "16px", // Add margin at the bottom of cards
-          marginTop: "2rem", // Add margin at the top of cards
-          textAlign: "center", // Center the card horizontally
-        }}
       >
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
@@ -927,7 +905,7 @@ export default function AddPersonalDeatilsPage() {
           style={{ textAlign: "center" }}
         >
           <label className="userNameLabel" style={{ marginRight: "12rem" }}>
-            {user?.relation_with?.first_name} {user?.relation_with?.last_name}
+            {user?.user?.first_name} {user?.user?.last_name}
           </label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
             <div
@@ -957,81 +935,8 @@ export default function AddPersonalDeatilsPage() {
               style={{ marginTop: "1rem" }}
             >
               <label className="userProfileInfoTitle">Tejsthan</label>
-              <label className="userProfileInfoValue">{user.location}</label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle">Shivir level</label>
-              <label className="userProfileInfoValue">{user.location}</label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle">DOB</label>
-              <label className="userProfileInfoValue">{user.dob}</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <div className="userProfilePlaceholderCard" />
-    );
-  }
-
-  function buildUserCard(user: any, index: any) {
-    return user ? (
-      <div
-        className={`${
-          index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
-        }`}
-        key={user.id}
-      >
-        <div className="userProfileTopSection" />
-        <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-          <Avatar className="userProfileImage" src={user.avtar} />
-          <div className="userProfileVerifiedBadge">
-            <label className="userProfileVerifiedBadgeLabel">Verified</label>
-            <VerifiedIcon />
-          </div>
-        </div>
-        <div className="displayFlex flexDirectionColumn" style={{textAlign:"center"}}>
-          <label className="userNameLabel" style={{marginRight:"12rem"}}>   
-          {user?.user?.first_name} {user?.user?.last_name}</label>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem"}}
-            >
-              <label className="userProfileInfoTitle">Khoji Id</label>
               <label className="userProfileInfoValue">
-                {user.khoji_id}
-              </label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle"></label>
-              <label className="userProfileInfoValue"></label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem",marginLeft:"1rem" }}
-            >
-              <ScannerIcon/>
-            </div>
-          </div>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem"}}
-            >
-              <label className="userProfileInfoTitle">Tejsthan</label>
-              <label className="userProfileInfoValue">
-              {user?.current_tejsthan?.name}
+                {user?.current_tejsthan?.name}
               </label>
             </div>
             <div
@@ -1069,420 +974,456 @@ export default function AddPersonalDeatilsPage() {
   }
 
   return (
-    <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
-    
-   {isMobileView && (
- <div
- style={{  
-   display: "flex",
-   flexDirection: "row",
-   justifyContent: "space-between",
-   paddingLeft:"15px",
-   paddingRight:"15px",
-   paddingTop: "10px",
-   paddingBottom: "15px",
-   backgroundColor: "white",
-   boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.30)", // Shadow effect
-   width: "100%", // Take full width of the container
- }}
->
-   
-    <>
-      <LogoIcon className="logomenu" />
-      <div> <CustomMobileMenu /></div>
-     
-    </>
-  
-</div>
-)}
-      <div style={{ marginLeft: "3rem" }}>
-        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-          <ArrowLeftIcon onClick={() => router.back()} />
-          Apply for Gyan Darshan
+    <MainLayout
+      siderClassName={isMobileView ? "" : "leftMenuPanel"}
+      siderChildren={!isMobileView && <CustomMenu />}
+    >
+      {isMobileView && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingLeft: "15px",
+            paddingRight: "15px",
+            paddingTop: "10px",
+            paddingBottom: "15px",
+            backgroundColor: "white",
+            boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.30)", // Shadow effect
+            width: "100%", // Take full width of the container
+          }}
+        >
+          <>
+            <LogoIcon className="logomenu" />
+            <div>
+              {" "}
+              <CustomMobileMenu />
+            </div>
+          </>
         </div>
-        <div style={{ marginLeft: '1.2rem' }}>
-        <label className="Descriptionlabel">Add Application details</label>
-        </div>
-        <Row justify="center">
-      <Col xs={24} xl={24}>
-        {/* <div className="center-steps">
-          <Steps current={-1} style={{ width: "50%" }} direction="horizontal" labelPlacement='vertical'>
-            <Step title="Add application details" />
-            <Step title="Complete & apply" />
-            <Step title="View status" />
-          </Steps>
-        </div> */}
-         <div className="center-steps">
-      {isMobileView ? (
-        <ViewStatusFirstSvg /> // Use uppercase for component name
-      ) : (
-        <Steps current={-1} style={{ width: "50%" }} labelPlacement="vertical">
-          <Steps.Step title="Add application details" />
-          <Steps.Step title="Complete & apply" />
-          <Steps.Step title="View status" />
-        </Steps>
       )}
-    </div>
-      </Col>
-    </Row>
-      </div>
-      <Divider className="divider" />
-      <div
-        style={{ fontWeight: "bold", fontSize: "0.8rem", marginLeft: "3rem" }}
-      >
-        Add Personal details
-      </div>
-      <div style={{ marginLeft: "3rem" }}>
-        <Row gutter={[16, 16]}>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Form
-              style={{ width: "100%", maxWidth: "500px" }}
-              onFinish={onFinish}
-            >
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    label="First Name"
-                    name={firstName}
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    initialValue={firstName}
+      <div style={{ padding: "0 20px" }}>
+        <div
+          style={isMobileView ? { marginLeft: "1rem" } : { marginLeft: "3rem" }}
+        >
+          <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+            <ArrowLeftIcon onClick={() => router.back()} />
+            Apply for Gyan Darshan
+          </div>
+          <div style={{ marginLeft: "1.2rem" }}>
+            <label className="Descriptionlabel">Add Application details</label>
+          </div>
+          <Row justify="center">
+            <Col xs={24} xl={24}>
+              <div className="center-steps">
+                {isMobileView ? (
+                  <ViewStatusFirstSvg /> // Use uppercase for component name
+                ) : (
+                  <Steps
+                    current={-1}
+                    style={{ width: "50%" }}
+                    labelPlacement="vertical"
+                    responsive={false}
                   >
-                    <Input
-                      style={{
-                        borderRadius: "2rem",
-                        height: "2rem",
-                        width: "100%",
-                      }}
-                      disabled
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    label="Last Name"
-                    name={lastName}
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    initialValue={lastName}
-                  >
-                    <Input
-                      style={{
-                        borderRadius: "2rem",
-                        height: "2rem",
-                        width: "100%",
-                      }}
-                      disabled
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <Form.Item
-                    label="Email ID"
-                    name={email}
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    initialValue={email}
-                  >
-                    <Input
-                      style={{
-                        borderRadius: "2rem",
-                        height: "2rem",
-                        width: "100%",
-                      }}
-                      disabled
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <Form.Item
-                    label="Mobile Number"
-                    name={mobile}
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    initialValue={mobile}
-                  >
-                    <Input
-                      style={{
-                        borderRadius: "2rem",
-                        height: "2rem",
-                        width: "100%",
-                      }}
-                      disabled
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <Form.Item
-                    label="Choose the purpose of the Darshan"
-                    name="purpose"
-                    labelCol={{ span: 24 }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select your puppose!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      mode="tags"
-                      style={{ width: "100%", height: "auto" }}
-                      placeholder="Select Purpose"
-                      value={selectedPurpose} 
-                      onChange={(value) => setSelectedPurpose(value)}
-                      >
-                      {purposeOptions.map((option) => (
-                        <Option key={option.key} value={option.value}>
-                          {option.label}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item
-                    label="Select preferred date range"
-                    name={["startdate"]}
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select preferred start date!",
-                      },
-                    ]}
-                  >
-                    <DatePicker
-                      style={{
-                        borderRadius: "2rem",
-                        height: "2rem",
-                        width: "100%",
-                      }}
-                      disabledDate={(current) =>
-                        disabledDate(current, null, enddate)
-                      }
-                      onChange={(date, dateString) => {
-                        if (typeof dateString === "string") {
-                          setStartdate(dateString);
-                        }
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    label="    "
-                    name={["enddate"]}
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select preferred end date!",
-                      },
-                    ]}
-                  >
-                    <DatePicker
-                      style={{
-                        borderRadius: "2rem",
-                        height: "2rem",
-                        width: "100%",
-                      }}
-                      disabledDate={(current) =>
-                        disabledDate(current, startdate, null)
-                      }
-                      onChange={(date, dateString) => {
-                        if (typeof dateString === "string") {
-                          setEnddate(dateString);
-                        }
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <Form.Item
-                    label="Add Note"
-                    name="addnote"
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                   
-                  >
-                    <TextArea
-                      style={{
-                        width: "30.75rem",
-                        height: "4rem",
-                        borderRadius: "1rem",
-                      }}
-                      value={addnote}
-                      onChange={(e) => setAddNote(e.target.value)}
-                      autoSize={{ minRows: 3, maxRows: 5 }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col span={24}>
-                {showNextButton && isFamilyKrupaDarshan && (
-                  <Button
-                    type="primary"
-                    style={{
-                      borderRadius: "2rem",
-                      marginLeft: "1rem",
-                      width: "12rem",
-                      height: "2rem",
-                      backgroundColor: "black",
-                      marginBottom: "1rem",
-                    }}
-                    onClick={onclickNextBtn}
-                  >
-                    Next
-                  </Button>
+                    <Steps.Step title="Add application details" />
+                    <Steps.Step title="Complete & apply" />
+                    <Steps.Step title="View status" />
+                  </Steps>
                 )}
-                </Col>
-              </Row>
-            </Form>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Row gutter={[16, 16]} style={{ justifyContent: "space-between" }}>
-              <Col
-                xs={24}
-                sm={12}
-                md={12}
-                lg={12}
-                xl={12}
-                style={{ marginBottom: "16px" }}
-              >
-                {buildProfiles()}
-              </Col>
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <Divider className="divider" />
 
-              <Col
-                xs={10}
-                sm={12}
-                md={24}
-                lg={12}
-                xl={12}
-                style={{ marginBottom: "16px" }}
+        <div
+          style={
+            isMobileView
+              ? { fontWeight: "bold", fontSize: "0.8rem", marginLeft: "1rem" }
+              : { fontWeight: "bold", fontSize: "0.8rem", marginLeft: "3rem" }
+          }
+        >
+          Add Personal details
+        </div>
+        <div
+          style={isMobileView ? { marginLeft: "1rem" } : { marginLeft: "3rem" }}
+        >
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+              <Form
+                style={{ width: "100%", maxWidth: "500px" }}
+                onFinish={onFinish}
               >
-                {isFamilyKrupaDarshan === "true" && (
-                  <div
-                    style={{
-                      width: "13rem",
-                      height: "20rem",
-                      overflow: "auto",
-                      marginLeft: "2rem",
-                    }}
-                  >
-                    <Card onClick={showModal} className="addfamilymembercard">
-                      <div
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Form.Item
+                      label="First Name"
+                      name={firstName}
+                      labelCol={{ span: 24 }}
+                      wrapperCol={{ span: 24 }}
+                      initialValue={firstName}
+                    >
+                      <Input
                         style={{
-                          textAlign: "center",
-                          color: "gray",
-                          fontSize: "2.8rem",
-                          justifyContent:"center"
+                          borderRadius: "2rem",
+                          height: "2rem",
+                          width: "100%",
                         }}
+                        disabled
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      label="Last Name"
+                      name={lastName}
+                      labelCol={{ span: 24 }}
+                      wrapperCol={{ span: 24 }}
+                      initialValue={lastName}
+                    >
+                      <Input
+                        style={{
+                          borderRadius: "2rem",
+                          height: "2rem",
+                          width: "100%",
+                        }}
+                        disabled
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <Form.Item
+                      label="Email ID"
+                      name={email}
+                      labelCol={{ span: 24 }}
+                      wrapperCol={{ span: 24 }}
+                      initialValue={email}
+                    >
+                      <Input
+                        style={{
+                          borderRadius: "2rem",
+                          height: "2rem",
+                          width: "100%",
+                        }}
+                        disabled
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <Form.Item
+                      label="Mobile Number"
+                      name={mobile}
+                      labelCol={{ span: 24 }}
+                      wrapperCol={{ span: 24 }}
+                      initialValue={mobile}
+                    >
+                      <Input
+                        style={{
+                          borderRadius: "2rem",
+                          height: "2rem",
+                          width: "100%",
+                        }}
+                        disabled
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <Form.Item
+                      label="Choose the purpose of the Darshan"
+                      name="purpose"
+                      labelCol={{ span: 24 }}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select your puppose!",
+                        },
+                      ]}
+                    >
+                      <Select
+                        mode="tags"
+                        style={{ width: "100%", height: "auto" }}
+                        placeholder="Select Purpose"
+                        value={selectedPurpose}
+                        onChange={(value) => setSelectedPurpose(value)}
                       >
-                        <PlusOutlined />
-                        <br />
-                        <Text style={{ color: "gray" }}>
-                          Add Family Member Here
-                        </Text>
-                      </div>
-                    </Card>
+                        {purposeOptions.map((option) => (
+                          <Option key={option.key} value={option.value}>
+                            {option.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Form.Item
+                      label="Select preferred date range"
+                      name={["startdate"]}
+                      labelCol={{ span: 24 }}
+                      wrapperCol={{ span: 24 }}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select preferred start date!",
+                        },
+                      ]}
+                    >
+                      <DatePicker
+                        style={{
+                          borderRadius: "2rem",
+                          height: "2rem",
+                          width: "100%",
+                        }}
+                        disabledDate={(current) =>
+                          disabledDate(current, null, enddate)
+                        }
+                        onChange={(date, dateString) => {
+                          if (typeof dateString === "string") {
+                            setStartdate(dateString);
+                          }
+                        }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      label="    "
+                      name={["enddate"]}
+                      labelCol={{ span: 24 }}
+                      wrapperCol={{ span: 24 }}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select preferred end date!",
+                        },
+                      ]}
+                    >
+                      <DatePicker
+                        style={{
+                          borderRadius: "2rem",
+                          height: "2rem",
+                          width: "100%",
+                        }}
+                        disabledDate={(current) =>
+                          disabledDate(current, startdate, null)
+                        }
+                        onChange={(date, dateString) => {
+                          if (typeof dateString === "string") {
+                            setEnddate(dateString);
+                          }
+                        }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <Form.Item
+                      label="Add Note"
+                      name="addnote"
+                      labelCol={{ span: 24 }}
+                      wrapperCol={{ span: 24 }}
+                    >
+                      <TextArea
+                        style={{
+                          width: "30.75rem",
+                          height: "4rem",
+                          borderRadius: "1rem",
+                        }}
+                        value={addnote}
+                        onChange={(e) => setAddNote(e.target.value)}
+                        autoSize={{ minRows: 3, maxRows: 5 }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Row gutter={16}>
+                  <Col span={24}>
+                    {showNextButton && isFamilyKrupaDarshan && (
+                      <Button
+                        type="primary"
+                        style={{
+                          borderRadius: "2rem",
+                          marginLeft: "1rem",
+                          width: "12rem",
+                          height: "2rem",
+                          backgroundColor: "black",
+                          marginBottom: "1rem",
+                        }}
+                        onClick={onclickNextBtn}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </Col>
+                </Row>
+              </Form>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+              <Row
+                gutter={[16, 16]}
+                style={{ justifyContent: "space-between" }}
+              >
+                <Col
+                  xs={24}
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  xl={12}
+                  style={{ marginBottom: "16px" }}
+                >
+                  {buildProfiles()}
+                </Col>
+
+                <Col
+                  xs={10}
+                  sm={12}
+                  md={24}
+                  lg={12}
+                  xl={12}
+                  style={{ marginBottom: "16px" }}
+                >
+                  {isFamilyKrupaDarshan === "true" && (
                     <div
                       style={{
-                        display: "flex",
-                        marginTop: "8px",
+                        width: "13rem",
+                        height: "20rem",
+                        // overflow: "auto",
+                        marginLeft: "2rem",
                       }}
                     >
-                      <Button
-                        style={{
-                          marginTop: "1rem",
-                          // marginRight: "16px",
-                          borderRadius: "1rem",
-                          backgroundColor: "#1E1E1E",
-                          color: "white",
-                          alignItems:"end",
-                         width:"auto"
-                        }}
-                        onClick={() => handleInputTypeChange("View all")}
+                      <Card onClick={showModal} className="addfamilymembercard">
+                        <div
+                          style={{
+                            textAlign: "center",
+                            color: "gray",
+                            fontSize: "2.8rem",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <PlusOutlined />
+                          <br />
+                          <Text style={{ color: "gray" }}>
+                            Add Family Member Here
+                          </Text>
+                        </div>
+                      </Card>
+                      <Col
+                        xs={10}
+                        sm={12}
+                        md={24}
+                        lg={12}
+                        xl={12}
+                        style={{ marginBottom: "16px" }}
                       >
-                        View all
-                      </Button>
-                    </div>
-                    <Modal
-                      title={
-                        inputType === "View all"
-                          ? "Added Family Members"
-                          : "Family Member 1"
-                      }
-                      open={isModalVisible}
-                      footer={null}
-                      style={{ top: 20 }}
-                      onCancel={handleCancel}
-                    >
-                      <div
-                        style={{
-                          maxHeight: "60vh",
-                          overflowY: "auto",
-                          padding: "0 24px",
-                        }}
+                        <div
+                      
+                        >
+                          <Button
+                           style={isMobileView ? {
+                            borderRadius: "1rem",
+                           backgroundColor: "#1E1E1E",
+                           alignItems:"center",
+                           color: "white",
+                           marginTop: "2rem", 
+                           marginLeft:"3rem"
+                          } 
+                           : 
+                           { marginTop: "1rem",
+                           borderRadius: "1rem",
+                           backgroundColor: "#1E1E1E",
+                           color: "white",
+                           width: "100%",
+                           marginLeft:"6rem"
+                            
+                           }}
+                            
+                            onClick={() => handleInputTypeChange("View all")}
+                          >
+                            View all
+                          </Button>
+                        </div>
+                      </Col>
+                      <Modal
+                        title={
+                          inputType === "View all"
+                            ? "Added Family Members"
+                            : "Family Member 1"
+                        }
+                        open={isModalVisible}
+                        footer={null}
+                        style={{ top: 20 }}
+                        onCancel={handleCancel}
                       >
                         <div
                           style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
+                            maxHeight: "60vh",
+                            overflowY: "auto",
+                            padding: "0 24px",
                           }}
                         >
-                          <div style={{ marginBottom: 16 }}>
-                            {inputType !== "View all" && (
-                              <>
-                                <Button
-                                  type="link"
-                                  style={{
-                                    marginRight: 10,
-                                    color:
-                                      inputType === "khoji" ? "blue" : "black",
-                                  }}
-                                  onClick={() => handleInputTypeChange("khoji")}
-                                >
-                                  Khoji
-                                </Button>
-                                <Button
-                                  type="link"
-                                  style={{
-                                    marginRight: 10,
-                                    color:
-                                      inputType === "guest" ? "blue" : "black",
-                                  }}
-                                  onClick={() => handleInputTypeChange("guest")}
-                                >
-                                  Guest Khoji
-                                </Button>
-                              </>
-                            )}
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                            }}
+                          >
+                            <div style={{ marginBottom: 16 }}>
+                              {inputType !== "View all" && (
+                                <>
+                                  <Button
+                                    type="link"
+                                    style={{
+                                      marginRight: 10,
+                                      color:
+                                        inputType === "khoji"
+                                          ? "blue"
+                                          : "black",
+                                    }}
+                                    onClick={() =>
+                                      handleInputTypeChange("khoji")
+                                    }
+                                  >
+                                    Khoji
+                                  </Button>
+                                  <Button
+                                    type="link"
+                                    style={{
+                                      marginRight: 10,
+                                      color:
+                                        inputType === "guest"
+                                          ? "blue"
+                                          : "black",
+                                    }}
+                                    onClick={() =>
+                                      handleInputTypeChange("guest")
+                                    }
+                                  >
+                                    Guest Khoji
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                            {renderInputComponent()}
                           </div>
-                          {renderInputComponent()}
                         </div>
-                      </div>
-                    </Modal>
-                  </div>
-                )}
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+                      </Modal>
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </div>
       </div>
     </MainLayout>
   );

@@ -1,5 +1,4 @@
-
-import Icon from '@ant-design/icons';
+import Icon from "@ant-design/icons";
 import {
   AppleSvg,
   ArrowLeftSvg,
@@ -37,36 +36,51 @@ import {
   ViewStatusSecondSvg,
   YourSelfSvg,
   WithFamilySvg,
-  CheckSvg
-} from './svgs';
+  CheckSvg,
+  MobileMenuSvg,
+} from "./svgs";
 
 export const LogoIcon = (props: any) => <Icon component={LogoSvg} {...props} />;
-export const LoginTitleIcon = (props: any) => <Icon component={LoginTitleSvg} {...props} />
-export const ScannerIcon = (props: any) => <Icon component={ScannerSvg} {...props} />
-export const ElipseIcon = (props: any) => <Icon component={ElipseSvg} {...props} />
-export const ViewStatusIcon = (props: any) => <Icon component={ViewStatusThirdSvg} {...props} />
-export const iewStatusFirstIcon = (props: any) => <Icon component={ViewStatusFirstSvg} {...props} />
-export const ViewStatusSecondIcon = (props: any) => <Icon component={ViewStatusSecondSvg} {...props} />
-export const YourSelfIcon = (props: any) => <Icon component={YourSelfSvg} {...props} />
-export const WithFamilyIcon = (props: any) => <Icon component={WithFamilySvg} {...props} />
-export const CheckICon = (props: any) => <Icon component={CheckSvg} {...props} />
+export const LoginTitleIcon = (props: any) => (
+  <Icon component={LoginTitleSvg} {...props} />
+);
+export const ScannerIcon = (props: any) => (
+  <Icon component={ScannerSvg} {...props} />
+);
+export const ElipseIcon = (props: any) => (
+  <Icon component={ElipseSvg} {...props} />
+);
+export const ViewStatusIcon = (props: any) => (
+  <Icon component={ViewStatusThirdSvg} {...props} />
+);
+export const iewStatusFirstIcon = (props: any) => (
+  <Icon component={ViewStatusFirstSvg} {...props} />
+);
+export const ViewStatusSecondIcon = (props: any) => (
+  <Icon component={ViewStatusSecondSvg} {...props} />
+);
+export const YourSelfIcon = (props: any) => (
+  <Icon component={YourSelfSvg} {...props} />
+);
+export const WithFamilyIcon = (props: any) => (
+  <Icon component={WithFamilySvg} {...props} />
+);
+export const CheckICon = (props: any) => (
+  <Icon component={CheckSvg} {...props} />
+);
 
-
-
-
-
+export const MobileMenuIcon = (props: any) => (
+  <Icon component={MobileMenuSvg} {...props} />
+);
 
 export const GoogleIcon = (props: any) => (
   <Icon component={GoogleSvg} {...props} />
 );
-export const ChatIcon=(props:any)=> <Icon component={ChatSvg} {...props} />;
-
+export const ChatIcon = (props: any) => <Icon component={ChatSvg} {...props} />;
 
 export const AppleIcon = (props: any) => (
   <Icon component={AppleSvg} {...props} />
 );
-
-
 
 export const KhojiProfileIcon = (props: any) => (
   <Icon component={KhojiProfileSvg} {...props} />
@@ -81,14 +95,11 @@ export const MessagesIcon = (props: any) => (
   <Icon component={MessagesSvg} {...props} />
 );
 
-
 export const SettingsIcon = (props: any) => (
   <Icon component={SettingsSvg} {...props} />
 );
 
 export const HelpIcon = (props: any) => <Icon component={HelpSvg} {...props} />;
-
-
 
 export const VerifyKhojiBg = (props: any) => (
   <Icon component={VerifyKhojiSvg} {...props} />

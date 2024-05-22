@@ -1,70 +1,133 @@
-export const fetchUserData = async (accessToken:any) => {
-    const userApiUrl = "https://hterp.tejgyan.org/django-app/iam/users/me/";
-    const userResponse = await fetch(userApiUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const userDataResponse = await userResponse.json();
-    return userDataResponse;
-  };
-  export const fetchApplicationData = async (accessToken:any) => {
-    const applicationApiUrl ="https://hterp.tejgyan.org/django-app/event/applications/?ordering=-created_at";
 
-    const applicationResponse = await fetch(applicationApiUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-  
-    if (!applicationResponse.ok) {
-      throw new Error("Failed to fetch application data");
-    }
-  
-    const applicationData = await applicationResponse.json();
-    return applicationData.results ?? [];
-  };
-  // fetchPurposeData.ts
+
+const baseUrl = "https://hterp.tejgyan.org/django-app/";
+// const baseUrl = "http://192.168.1.247:8000/";
+const eventUrl = `${baseUrl}event/`;
+
+
+export const fetchUserData = async (accessToken: any) => {
+  const userApiUrl = `${baseUrl}iam/users/me/`;
+  const userResponse = await fetch(userApiUrl, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const userDataResponse = await userResponse.json();
+  return userDataResponse;
+};
+
+export const fetchApplicationData = async (accessToken: any) => {
+  const applicationApiUrl = `${baseUrl}event/applications/?ordering=-created_at`;
+
+  const applicationResponse = await fetch(applicationApiUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!applicationResponse.ok) {
+    throw new Error("Failed to fetch application data");
+  }
+
+  const applicationData = await applicationResponse.json();
+  return applicationData.results ?? [];
+};
 
 export const fetchPurposeData = async (accessToken: string) => {
-  const purposeApiUrl = 'https://hterp.tejgyan.org/django-app/event/purposes/';
+  const purposeApiUrl = `${baseUrl}event/purposes/`;
   const purposeResponse = await fetch(purposeApiUrl, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
   const purposeDataResponse = await purposeResponse.json();
   const options = purposeDataResponse.results.map((purpose: any) => ({
     key: purpose.id,
     value: purpose.id,
-    label: purpose.title, // Change this to purpose.title
+    label: purpose.title,
   }));
   return options;
 };
 
-
-
 export const fetchParticipantData = async (accessToken: string) => {
   const getRequestOptions = {
-    method: 'GET',
+    method: "GET",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   };
 
-  const getResponse = await fetch('https://hterp.tejgyan.org/django-app/event/participants/?ordering=-created_at', getRequestOptions);
+  const getResponse = await fetch(
+    `${baseUrl}event/participants/?ordering=-created_at`,
+    getRequestOptions
+  );
 
   if (!getResponse.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error("Network response was not ok");
   }
 
   const responseData = await getResponse.json();
   return responseData;
 };
+
+export const searchUser = async (token:any, criteria:any) => {
+  try {
+    let url = "";
+    if (!criteria) {
+      throw new Error("Please provide search criteria.");
+    } else if (criteria.startsWith("khoji_id=")) {
+      url = `${baseUrl}iam/users/?${criteria}`;
+    } else if (criteria.startsWith("first_name=")) {
+      url = `${baseUrl}iam/users/?${criteria}`;
+    } else {
+      throw new Error("Invalid search criteria.");
+    }
+
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await fetch(url, requestOptions);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const responseData = await response.json();
+    return responseData.results ?? [];
+  } catch (error) {
+    console.error("Error searching user:", error);
+    throw error;
+  }
+};
+
+
+
+export const createParticipant = async (requestData:any, token:any) => {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(requestData),
+  };
+
+  const response = await fetch(`${eventUrl}participants/`, requestOptions);
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 export const submitApplication = async (
   requestBody: Record<string, any>,
   token: string
@@ -75,10 +138,10 @@ export const submitApplication = async (
   // Convert request body to FormData
   Object.entries(requestBody).forEach(([key, value]) => {
     if (value === null || value === undefined) {
-      formData.append(key, '');
-    } else if (typeof value === 'boolean') {
+      formData.append(key, "");
+    } else if (typeof value === "boolean") {
       formData.append(key, value.toString());
-    } else if (typeof value === 'object') {
+    } else if (typeof value === "object") {
       formData.append(key, JSON.stringify(value));
     } else {
       formData.append(key, String(value));
@@ -87,7 +150,7 @@ export const submitApplication = async (
 
   // Construct request options
   const requestOptions = {
-    method: 'POST',
+    method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -97,33 +160,27 @@ export const submitApplication = async (
   try {
     // Send POST request
     const response = await fetch(
-      'https://hterp.tejgyan.org/django-app/event/applications/',
+      `${baseUrl}event/applications/`,
       requestOptions
     );
 
     // Check if response is OK
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     } else {
       // Application submitted successfully
-    //  alert('Application Submitted successfully');
       return true;
     }
-
-    
   } catch (error) {
     // Handle fetch error
-    console.error('There was a problem with your fetch operation:', error);
+    console.error("There was a problem with your fetch operation:", error);
     return false;
   }
 };
 
-export default submitApplication;
-
-
-export const fetchPurposeOptions = async (userid :any, accessToken:any) => {
+export const fetchPurposeOptions = async (userid: any, accessToken: any) => {
   try {
-    const purposeApiUrl = `https://hterp.tejgyan.org/django-app/event/applications/?user=${userid}`;
+    const purposeApiUrl = `${baseUrl}event/applications/?user=${userid}`;
     const purposeResponse = await fetch(purposeApiUrl, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -131,19 +188,19 @@ export const fetchPurposeOptions = async (userid :any, accessToken:any) => {
       },
     });
     const purposeDataResponse = await purposeResponse.json();
-    console.log("purposeDataResponse",purposeDataResponse)
+    console.log("purposeDataResponse", purposeDataResponse);
 
     if (purposeDataResponse.results.length > 0) {
       const purpose = purposeDataResponse.results[0];
-      console.log("purpose",purpose)
+      console.log("purpose", purpose);
       const options = [
         {
           key: purpose.id,
           value: purpose.id,
-          label: purpose.purposes[0].description, // Change 'title' to 'label'
+          label: purpose.purposes[0].description,
         },
       ];
-      console.log("options",options)
+      console.log("options", options);
 
       return options;
     } else {
@@ -156,6 +213,58 @@ export const fetchPurposeOptions = async (userid :any, accessToken:any) => {
   }
 };
 
+export const updateApplicationStatus = async (applicationId:any, newStatus:any, token:any) => {
+  try {
+    const apiUrl = `${eventUrl}applications/${applicationId}/`;
+    const response = await fetch(apiUrl, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update application status");
+    } else {
+      const responseData = await response.json();
+      console.log("Updated application:", responseData);
+      return responseData;
+    }
+  } catch (error) {
+    console.error("Error updating application status:", error);
+    throw error;
+  }
+};
+
+export const submitRescheduleForm = async (applicationId:any, startDate:any, endDate:any, token:any) => {
+  try {
+    const apiUrl = `${eventUrl}applications/${applicationId}/reschedule/`;
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        preferred_start_date: startDate,
+        preferred_end_date: endDate,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update application status");
+    } else {
+      const responseData = await response.json();
+      console.log("Updated application:", responseData);
+      return responseData;
+    }
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    throw error;
+  }
+};
 
 
 

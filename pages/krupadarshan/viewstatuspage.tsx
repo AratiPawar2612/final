@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import {
   Button,
@@ -12,19 +12,15 @@ import {
   Modal,
   DatePicker,
 } from "antd";
-import {
-  ElipseIcon,
-  LogoIcon,
-  ViewStatusIcon,
-  ViewStatusSecondIcon,
-} from "@/icons/icon";
+import { ElipseIcon, LogoIcon } from "@/icons/icon";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
 import { ArrowLeftIcon } from "@/icons/icon";
-import { fetchParticipantData } from "../api/applicationapi";
+import { fetchApplicationData,updateApplicationStatus,submitRescheduleForm } from "../api/applicationapi";
+import DeleteOutlined from "@ant-design/icons";
 import dayjs from "dayjs";
 import CustomMobileMenu from "@/components/custommobilemenu";
-import { ViewStatusFirstSvg, ViewStatusThirdSvg } from "@/icons/svgs";
+import { ViewStatusThirdSvg } from "@/icons/svgs";
 
 export default function ViewStatusPage() {
   const router = useRouter();
@@ -34,14 +30,17 @@ export default function ViewStatusPage() {
   const [token, setToken] = useState("");
   const [appliid, setAppliid] = useState("");
   const [referenceCode, setReferenceCode] = useState("");
-  const [adults, setadults] = useState("0");
-  const [childrens, Setchildrens] = useState("0");
-  const [particpantdata, setParticpantdata] = useState<any>([]);
+  const [adults, setAdults] = useState("0");
+  const [childrens, setChildrens] = useState("0");
+  const [particpantdata, setParticipantData] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [startdate, setStartdate] = useState("");
   const [enddate, setEnddate] = useState("");
   const [isMobileView, setIsMobileView] = useState(false);
+  // const baseUrl = "https://hterp.tejgyan.org/django-app/";
+  // // const baseUrl = "http://192.168.1.247:8000/";
+  // const eventUrl = `${baseUrl}event/`;
 
   useEffect(() => {
     const handleResize = () => {
@@ -55,6 +54,8 @@ export default function ViewStatusPage() {
     };
   }, []);
 
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,46 +63,29 @@ export default function ViewStatusPage() {
         const sessionData = await sessionResponse.json();
         setUsername(sessionData?.session?.user.name);
         setToken(sessionData?.session?.access_token);
-
+  
         if (sessionData?.session) {
-          const apiUrl =
-          "https://hterp.tejgyan.org/django-app/event/applications/?ordering=-created_at";
-
-
-          const getApplicationId = await fetch(apiUrl, {
-            headers: {
-              Authorization: `Bearer ${sessionData?.session?.access_token}`,
-              "Content-Type": "application/json",
-            },
-          });
-          const appliidres = await getApplicationId.json();
-          const userDataResults1 = appliidres.results ?? [];
-          setAppliid(userDataResults1[0]?.id);
-          setReferenceCode(userDataResults1[0]?.reference_code);
-          setadults(userDataResults1[0]?.age_counts?.adults);
-          Setchildrens(userDataResults1[0]?.age_counts?.childrens);
-          console.log("applicationdata", userDataResults1);
-          const participantUserResponseData = await fetchParticipantData(
-            sessionData?.session?.access_token
-          );
-          const participantresp = participantUserResponseData.results ?? [];
-          if (participantresp.length > 0) {
-            setParticpantdata(participantresp );
-            console.log("participantresp",participantresp)
+          const applicationData = await fetchApplicationData(sessionData?.session?.access_token);
+  
+          if (applicationData.length > 0) {
+            const firstApplication = applicationData[0];
+            setAppliid(firstApplication?.id);
+            setReferenceCode(firstApplication?.reference_code);
+            setAdults(firstApplication?.age_counts?.adults);
+            setChildrens(firstApplication?.age_counts?.childrens);
+            console.log("applicationdata", firstApplication);
+  
+            const participantresp = firstApplication?.participants;
+            console.log("participant", participantresp);
+            if (participantresp.length > 0) {
+              setParticipantData(participantresp);
+              console.log("participantresp", participantresp);
+            }
+  
+            setStatus(firstApplication?.status);
+          } else {
+            console.error("No application data found");
           }
-
-          const userApiUrl =   "https://hterp.tejgyan.org/django-app/event/applications/?ordering=-created_at";
-
-          const userResponse = await fetch(userApiUrl, {
-            headers: {
-              Authorization: `Bearer ${sessionData?.session?.access_token}`,
-              "Content-Type": "application/json",
-            },
-          });
-          const userDataResponse = await userResponse.json();
-          const userDataResults = userDataResponse.results[0] ?? [];
-          setData(userDataResponse);
-          setStatus(userDataResults?.status);
         } else {
           router.push("/");
         }
@@ -109,9 +93,10 @@ export default function ViewStatusPage() {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
-  }, [router]); // Dependency on router to refetch data when router changes
+  }, [router]);
+  
 
   const handleOpenModal = () => {
     setIsModalVisible(true);
@@ -123,65 +108,27 @@ export default function ViewStatusPage() {
 
   const handleConfirmClick = async () => {
     try {
-      const response = await fetch(
-        `https://hterp.tejgyan.org/django-app/event/applications/${appliid}/`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: "ACCEPTED_BY_KHOJI" }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update application status");
-      } else {
-        const responseData = await response.json();
-        console.log("Updated application:", responseData);
-        alert("Your application is confirmed");
-        window.location.reload();
-        return responseData;
-      }
+      await updateApplicationStatus(appliid, "ACCEPTED_BY_KHOJI", token);
+      alert("Your application is confirmed");
+      window.location.reload();
     } catch (error) {
       console.error("Error updating application status:", error);
-      throw error;
     }
   };
+
 
   const handleFormSubmit = async () => {
     try {
-      const response = await fetch(
-        `https://hterp.tejgyan.org/django-app/event/applications/${appliid}/reschedule/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            preferred_start_date: startdate,
-            preferred_end_date: enddate,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update application status");
-      } else {
-        const responseData = await response.json();
-        console.log("Updated application:", responseData);
-        alert("Your application reschedule");
-        setIsModalVisible(false);
-        window.location.reload();
-        return responseData;
-      }
+      await submitRescheduleForm(appliid, startdate, enddate, token);
+      alert("Your application has been rescheduled");
+      setIsModalVisible(false);
+      window.location.reload();
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error rescheduled application:", error);
     }
   };
 
+ 
   const disabledDate = (current: any, startDate: any, endDate: any) => {
     return (
       current &&
@@ -202,305 +149,105 @@ export default function ViewStatusPage() {
   };
 
   const cardData = [
-    { title: 'Application received', content: 'Your application has been successfully submitted to the admin. You will be notified of further updates. Kindly check your status within 24 hours.' },
-    { title: 'Event assigned', content: 'Content for card 2' },
-    { title: 'Event Confirmed', content: 'Congratulations! Your application has been confirmed by the admin.' },
+    {
+      title: "Application received",
+      content:
+        "Your application has been successfully submitted to the admin. You will be notified of further updates. Kindly check your status within 24 hours.",
+    },
+    { title: "Event assigned", content: "Content for card 2" },
+    {
+      title: "Event Confirmed",
+      content:
+        "Congratulations! Your application has been confirmed by the admin.",
+    },
   ];
 
-  
   return (
     <MainLayout
       siderClassName={isMobileView ? "" : "leftMenuPanel"}
       siderChildren={!isMobileView && <CustomMenu />}
     >
-     
-        {isMobileView && (
+      {isMobileView && (
         <div
-        style={{  
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingLeft:"15px",
-          paddingRight:"15px",
-          paddingTop: "10px",
-          paddingBottom: "15px",
-          backgroundColor: "white",
-          boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
-          width: "100%", // Take full width of the container
-        }}
-      >            <>
-              <LogoIcon className="logomenu" />
-              <div>
-                {" "}
-                <CustomMobileMenu />
-              </div>
-            </>
-          </div>
-        )}
-
-        <div style={{ marginLeft: "3rem" }}>
-          <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-            <ArrowLeftIcon onClick={() => router.back()} />
-            Apply for Gyan Darshan
-          </div>
-          <div style={{ marginLeft: "1.2rem" }}>
-            <label className="Descriptionlabel">View Status</label>
-          </div>
-
-          <div className="center-steps">
-            {isMobileView ? (
-              <ViewStatusThirdSvg />
-            ) : (
-              <Steps
-                current={2}
-                style={{ width: "50%" }}
-                labelPlacement="vertical"
-              >
-                <Steps.Step title="Add application details" />
-                <Steps.Step title="Complete & apply" />
-                <Steps.Step title="View status" />
-              </Steps>
-            )}
-          </div>
-        </div>
-        <Divider className="divider" />
-        <div
-          className="StatusMessageLabel"
           style={{
             display: "flex",
             flexDirection: "row",
-            fontWeight: "bold",
-            fontSize: "22px",
+            justifyContent: "space-between",
+            paddingLeft: "15px",
+            paddingRight: "15px",
+            paddingTop: "10px",
+            paddingBottom: "15px",
+            backgroundColor: "white",
+            boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)",
+            width: "100%",
           }}
         >
-          {status1 === "SUBMITTED" &&
-            "Congratulations! Your application has been submitted successfully"}
-          {status1 === "APPROVED_BY_DKD" &&
-            "Congratulations! Your application has been event assigned"}
-          {status1 === "ACCEPTED_BY_KHOJI" &&
-            "Congratulations! Your application has been accepted"}
+          {" "}
+          <>
+            <LogoIcon className="logomenu" />
+            <div>
+              {" "}
+              <CustomMobileMenu />
+            </div>
+          </>
+        </div>
+      )}
+
+      <div>
+        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+          <ArrowLeftIcon onClick={() => router.back()} />
+          Apply for Gyan Darshan
+        </div>
+        <div style={{ marginLeft: "1.2rem" }}>
+          <label className="Descriptionlabel">View Status</label>
         </div>
 
-        {/* <Row gutter={[16, 16]} style={{ marginTop: "2rem", display: "flex" }}>
+        <div className="center-steps">
           {isMobileView ? (
-            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>
-                  <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                    Application History
-                  </div>
-                  <label>{referenceCode}</label>
-
-                  <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                    Application Type
-                  </div>
-                  <label>Gyandarshan</label>
-
-                  <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                    Total Applicants
-                  </div>
-                  <label>------</label>
-                </div>
-                <div>
-                  <div>
-                    <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                      Total Applicants
-                    </div>
-                    <label>------</label>
-                    {particpantdata ? (
-                      particpantdata.map((participant: any) => (
-                        <div
-                          key={participant.id}
-                          style={{
-                            marginBottom: "1rem",
-                            fontWeight: "bold",
-                            marginTop: "0.5rem",
-                          }}
-                        >
-                          <Avatar size={64} icon={<ElipseIcon />} />
-
-                          {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
-                        </div>
-                      ))
-                    ) : (
-                      <div>No participant data available</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Col>
+            <ViewStatusThirdSvg />
           ) : (
-            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                Application History
-              </div>
-              <label>{referenceCode}</label>
-
-              <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                Application Type
-              </div>
-              <label>Gyandarshan</label>
-
-              <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                Total Applicants
-              </div>
-              <label>------</label>
-
-              <Divider />
-              <div>
-                {particpantdata ? (
-                  particpantdata.map((participant: any) => (
-                    <div
-                      key={participant.id}
-                      style={{
-                        marginBottom: "1rem",
-                        fontWeight: "bold",
-                        marginTop: "0.5rem",
-                      }}
-                    >
-                      <Avatar size={64} icon={<ElipseIcon />} />
-
-                      {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
-                    </div>
-                  ))
-                ) : (
-                  <div>No participant data available</div>
-                )}
-              </div>
-            </Col>
+            <Steps
+              current={2}
+              style={{ width: "50%" }}
+              labelPlacement="vertical"
+              responsive={false} // or responsive={false}
+            >
+              <Steps.Step title="Add application details" />
+              <Steps.Step title="Complete & apply" />
+              <Steps.Step title="View status" />
+            </Steps>
           )}
+        </div>
+      </div>
+      <Divider className="divider" />
+      <div
+        className="StatusMessageLabel"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          fontWeight: "bold",
+          fontSize: "22px",
+        }}
+      >
+        {status1 === "SUBMITTED" &&
+          "Congratulations! Your application has been submitted successfully"}
+        {status1 === "APPROVED_BY_DKD" &&
+          "Congratulations! Your application has been event assigned"}
+        {status1 === "ACCEPTED_BY_KHOJI" &&
+          "Congratulations! Your application has been accepted"}
+      </div>
 
-          <Col xs={12} sm={12} md={12} lg={12} xl={12}>
-            <div style={{ marginTop: "1rem", textAlignLast: "center" }}>
-              <div style={{ marginBottom: "1rem", fontWeight: "bold" }}>
-                Hi {username},
-              </div>
-              <label
-                style={{ textWrap: "nowrap" }}
-              >{`Here's the status of your Krupa Darshan application`}</label>
-            </div>
-            <Row gutter={[4, 28]}>
-              {cardData.map((card, index) => (
-                <React.Fragment key={index}>
-                  <Col xs={6} sm={24} md={12} lg={12} xl={8}>
-                    <div style={{ marginTop: isMobileView ? "3rem" : "7rem" }}>
-                      <div
-                        className={`step-item ${
-                          status1 === "ACCEPTED_BY_KHOJI" && index <= 2
-                            ? "completed"
-                            : ""
-                        }`}
-                      >
-                        <div className="step-circle">{index + 1}</div>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col xs={16} sm={24} md={12} lg={12} xl={12}>
-                    <Card
-                      title={card.title}
-                      style={{ marginTop: isMobileView ? "2rem" : "5rem" }}
-                      className={
-                        (status1 === "SUBMITTED" && index === 0) ||
-                        (status1 === "APPROVED_BY_DKD" && index < 2) ||
-                        (status1 === "ACCEPTED_BY_KHOJI" && index === 2)
-                          ? "enabled-card"
-                          : "disabled-card"
-                      }
-                    >
-                      {card.content}
-                      {(status1 === "APPROVED_BY_DKD" && index === 1) ||
-                      (status1 === "ACCEPTED_BY_KHOJI" && index === 1) ? (
-                        <div
-                          style={{
-                            marginTop: "1rem",
-                            display: "flex",
-                            flexDirection: "row",
-                          }}
-                        >
-                          <Button
-                            style={{ marginRight: "1rem" }}
-                            type="default"
-                            onClick={handleOpenModal}
-                          >
-                            Reschedule
-                          </Button>
-                          <Modal
-                            title="Reschedule Application"
-                            visible={isModalVisible}
-                            onCancel={handleCloseModal}
-                            footer={[
-                              <Button key="cancel" onClick={handleCloseModal}>
-                                Cancel
-                              </Button>,
-                              <Button
-                                key="submit"
-                                type="primary"
-                                onClick={handleFormSubmit}
-                              >
-                                Submit
-                              </Button>,
-                            ]}
-                          >
-                            <Form layout="vertical" onFinish={handleFormSubmit}>
-                              <Form.Item
-                                label="Preferred Start Date"
-                                name="preferredStartDate"
-                              >
-                                <DatePicker
-                                  value={startdate}
-                                  onChange={(date) => setStartdate(date)}
-                                  format="YYYY-MM-DD"
-                                  disabledDate={(current) =>
-                                    disabledDate(current, null, startdate)
-                                  }
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                label="Preferred End Date"
-                                name="preferredEndDate"
-                              >
-                                <DatePicker
-                                  value={enddate}
-                                  onChange={(date) => setEnddate(date)}
-                                  format="YYYY-MM-DD"
-                                  disabledDate={(current) =>
-                                    disabledDate(current, null, enddate)
-                                  }
-                                />
-                              </Form.Item>
-                            </Form>
-                          </Modal>
-                          <Button
-                            onClick={handleConfirmClick}
-                            type="primary"
-                            style={{ backgroundColor: "green" }}
-                          >
-                            Confirm
-                          </Button>
-                        </div>
-                      ) : null}
-                    </Card>
-                  </Col>
-                </React.Fragment>
-              ))}
-            </Row>
-          </Col>
-        </Row> */}
-        <div style={{ padding: "0 20px", }}>
+      <div style={{ padding: "0 20px" }}>
         <Row>
-        <Col xs={24} sm={24} md={12} lg={12} xl={8}> {isMobileView ? (
+          <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+            {" "}
+            {isMobileView ? (
               <div
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginTop:"2rem"
+                  marginTop: "2rem",
                 }}
               >
                 <div>
@@ -518,215 +265,234 @@ export default function ViewStatusPage() {
                     Total Applicants
                   </div>
                   <label>Adults: {adults}</label>
-              <label>Children: {childrens}</label>
+                  <label>Children: {childrens}</label>
                 </div>
                 <div>
-                <div>
-      {particpantdata ? (
-        <>
-          {particpantdata.slice(0, displayedRecords).map((participant:any) => (
-            <div
-              key={participant.id}
-              style={{
-                marginBottom: "1rem",
-                fontWeight: "bold",
-                marginTop: "0.5rem",
-              }}
-            >
-              <Avatar size={64} icon={<ElipseIcon />} style={{marginRight:"2rem"}} />
-              {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
-            </div>
-          ))}
-          {particpantdata.length > 2 && (
-            <Button type="link" onClick={handleViewMore} style={{alignItems:"center"}}>View More</Button>
-          )}
-        </>
-      ) : (
-        <div>No participant data available</div>
-      )}
+                  <div>
+                    {particpantdata ? (
+                      <>
+                        {particpantdata
+                          .slice(0, displayedRecords)
+                          .map((participant: any) => (
+                            <div
+                              key={participant.id}
+                              style={{
+                                marginBottom: "1rem",
+                                fontWeight: "bold",
+                                marginTop: "0.5rem",
+                              }}
+                            >
+                              <Avatar
+                                size={64}
+                                icon={<ElipseIcon />}
+                                style={{ marginRight: "2rem" }}
+                              />
+                              {`${participant.first_name} ${participant.last_name}`}
+                            </div>
+                          ))}
+                        {particpantdata.length > 2 && (
+                          <Button
+                            type="link"
+                            onClick={handleViewMore}
+                            style={{ alignItems: "center" }}
+                          >
+                            View More
+                          </Button>
+                        )}
+                      </>
+                    ) : (
+                      <div>No participant data available</div>
+                    )}
 
-      <Modal
-        title="Additional Participants"
-        open={showPopup}
-        onCancel={handleClosePopup}
-        footer={null}
-      >
-        {particpantdata.slice(displayedRecords).map((participant:any) => (
-          <div
-            key={participant.id}
-            style={{
-              marginBottom: "1rem",
-              fontWeight: "bold",
-              marginTop: "0.5rem",
-            }}
-          >
-            <Avatar size={64} icon={<ElipseIcon />} />
-            {`${participant.relation_with.first_name} ${participant.relation_with.last_name}`}
-          </div>
-        ))}
-      </Modal>
-    </div>
+                    <Modal
+                      title="Additional Participants"
+                      open={showPopup}
+                      onCancel={handleClosePopup}
+                      footer={null}
+                    >
+                      {particpantdata
+                        .slice(displayedRecords)
+                        .map((participant: any) => (
+                          <div
+                            key={participant.id}
+                            style={{
+                              marginBottom: "1rem",
+                              fontWeight: "bold",
+                              marginTop: "0.5rem",
+                            }}
+                          >
+                            <Avatar size={64} icon={<ElipseIcon />} />
+                            {`${participant.first_name} ${participant.last_name}`}
+                          </div>
+                        ))}
+                    </Modal>
+                  </div>
                 </div>
               </div>
-          ) : (
-            <Col xs={24} sm={24} md={12} lg={16} xl={12}>
-           
-              <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                Application History
-              </div>
-              <label>{referenceCode}</label>
+            ) : (
+              <Col xs={24} sm={24} md={12} lg={16} xl={12}>
+                <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
+                  Application History
+                </div>
+                <label>{referenceCode}</label>
 
-              <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                Application Type
-              </div>
-              <label>Gyandarshan</label>
+                <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
+                  Application Type
+                </div>
+                <label>Gyandarshan</label>
 
-              <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                Total Applicants
-              </div>
-              <label>Adults: {adults}</label>
-              <label>Children: {childrens}</label>
+                <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
+                  Total Applicants
+                </div>
+                <label>Adults: {adults}</label>
+                <label>Children: {childrens}</label>
 
-              <Divider />
-              <div>
-              {particpantdata && particpantdata.length > 0 ? (
-  <div
-    key={particpantdata[0].id}
-    style={{
-      marginBottom: "1rem",
-      fontWeight: "bold",
-      marginTop: "0.5rem",
-    }}
-  >
-    <Avatar size={64} icon={<ElipseIcon />} />
-    {`${particpantdata[0].relation_with.first_name} ${particpantdata[0].relation_with.last_name}`}
-  </div>
-) : (
-  <div>No participant data available</div>
-)}
-
-              </div>
-            
-            </Col>
-          )}</Col>
-     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                <Divider />
+                <div>
+                  {particpantdata && particpantdata.length > 0 ? (
+                    particpantdata.map((participant: any) => (
+                      <div
+                        key={participant.id}
+                        style={{ marginBottom: "1rem", fontWeight: "bold" }}
+                      >
+                        <Avatar
+                          size={64}
+                          icon={<ElipseIcon />}
+                          style={{ marginRight: "1rem" }}
+                        />
+                        {`${participant.first_name} ${participant.last_name}`}
+                      </div>
+                    ))
+                  ) : (
+                    <div>No participant data available</div>
+                  )}
+                </div>
+              </Col>
+            )}
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
             <div style={{ marginTop: "1rem", textAlignLast: "center" }}>
               <div style={{ marginBottom: "1rem", fontWeight: "bold" }}>
                 Hi {username},
               </div>
               <label
                 style={{ textWrap: "nowrap" }}
-              >{`Here's the status of your Krupa Darshan application`}</label>
+              >{`Here's the status of your Gyan Darshan application`}</label>
             </div>
             <Row gutter={[6, 28]}>
               {cardData.map((card, index) => (
-                <React.Fragment key={index}>
-                  <Col xs={6} sm={24} md={12} lg={12} xl={8}>
-                    <div className="custom" style={{ marginTop: isMobileView ? "3rem" : "7rem" }}>
-                      <div
-                        className={`step-item ${
-                          status1 === "ACCEPTED_BY_KHOJI" && index <= 2
-                            ? "completed"
-                            : ""
-                        }`}
-                      >
-                        <div className="step-circle">{index + 1}</div>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col xs={16} sm={24} md={12} lg={12} xl={12}>
-                    <Card
-                      title={card.title}
-                      style={{ marginTop: isMobileView ? "2rem" : "5rem" }}
-                      className={
-                        (status1 === "SUBMITTED" && index === 0) ||
-                        (status1 === "APPROVED_BY_DKD" && index < 2) ||
-                        (status1 === "ACCEPTED_BY_KHOJI" && index === 2)
-                          ? "enabled-card"
-                          : "disabled-card"
-                      }
+        <React.Fragment key={index}>
+          <Col span={24} style={{ display: "flex", alignItems: "flex-start", marginBottom: "1rem" }}>
+            {/* Step and Line Column */}
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+              <div
+                className="custom"
+                style={{ marginTop: isMobileView ? "3rem" : "7rem", borderRight: "1px solid #e8e8e8", paddingRight: "1rem" }}
+              >
+                <div
+                  className={`step-item ${
+                    status1 === "ACCEPTED_BY_KHOJI" && index <= 2 ? "completed" : ""
+                  }`}
+                >
+                  <div className="step-circle">{index + 1}</div>
+                </div>
+              </div>
+            </div>
+            {/* Card Column */}
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} style={{ marginLeft: "1rem" }}>
+              <Card
+                title={card.title}
+                style={{ marginTop: isMobileView ? "2rem" : "5rem" }}
+                className={
+                  (status1 === "SUBMITTED" && index === 0) ||
+                  (status1 === "APPROVED_BY_DKD"||status1==="RESCHEDULED_BY_KHOJI" && index < 2) ||
+                  (status1 === "ACCEPTED_BY_KHOJI" && index === 2)
+                    ? "enabled-card"
+                    : "disabled-card"
+                }
+              >
+                {card.content}
+                {(status1 === "APPROVED_BY_DKD" ||status1==="RESCHEDULED_BY_KHOJI"&& index === 1) ||
+                (status1 === "ACCEPTED_BY_KHOJI" && index === 1) ? (
+                  <div
+                    style={{
+                      marginTop: "1rem",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Button
+                      style={{ marginRight: "1rem" }}
+                      type="default"
+                      onClick={handleOpenModal}
                     >
-                      {card.content}
-                      {(status1 === "APPROVED_BY_DKD" && index === 1) ||
-                      (status1 === "ACCEPTED_BY_KHOJI" && index === 1) ? (
-                        <div
-                          style={{
-                            marginTop: "1rem",
-                            display: "flex",
-                            flexDirection: "row",
-                          }}
+                      Reschedule
+                    </Button>
+                    <Modal
+                      title="Reschedule Application"
+                      open={isModalVisible}
+                      onCancel={handleCloseModal}
+                      footer={[
+                        <Button key="cancel" onClick={handleCloseModal}>
+                          Cancel
+                        </Button>,
+                        <Button
+                          key="submit"
+                          type="primary"
+                          onClick={handleFormSubmit}
                         >
-                          <Button
-                            style={{ marginRight: "1rem" }}
-                            type="default"
-                            onClick={handleOpenModal}
-                          >
-                            Reschedule
-                          </Button>
-                          <Modal
-                            title="Reschedule Application"
-                            visible={isModalVisible}
-                            onCancel={handleCloseModal}
-                            footer={[
-                              <Button key="cancel" onClick={handleCloseModal}>
-                                Cancel
-                              </Button>,
-                              <Button
-                                key="submit"
-                                type="primary"
-                                onClick={handleFormSubmit}
-                              >
-                                Submit
-                              </Button>,
-                            ]}
-                          >
-                            <Form layout="vertical" onFinish={handleFormSubmit}>
-                              <Form.Item
-                                label="Preferred Start Date"
-                                name="preferredStartDate"
-                              >
-                                <DatePicker
-                                  value={startdate}
-                                  onChange={(date) => setStartdate(date)}
-                                  format="YYYY-MM-DD"
-                                  disabledDate={(current) =>
-                                    disabledDate(current, null, startdate)
-                                  }
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                label="Preferred End Date"
-                                name="preferredEndDate"
-                              >
-                                <DatePicker
-                                  value={enddate}
-                                  onChange={(date) => setEnddate(date)}
-                                  format="YYYY-MM-DD"
-                                  disabledDate={(current) =>
-                                  disabledDate(current, null, enddate)
-                                  }
-                                />
-                              </Form.Item>
-                            </Form>
-                          </Modal>
-                          <Button
-                            onClick={handleConfirmClick}
-                            type="primary"
-                            style={{ backgroundColor: "green" }}
-                          >
-                            Confirm
-                          </Button>
-                        </div>
-                      ) : null}
-                    </Card>
-                  </Col>
-                </React.Fragment>
-              ))}
-            </Row>
-          {/* </Col> */}
+                          Submit
+                        </Button>,
+                      ]}
+                    >
+                      <Form layout="vertical" onFinish={handleFormSubmit}>
+                        <Form.Item
+                          label="Preferred Start Date"
+                          name="preferredStartDate"
+                        >
+                          <DatePicker
+                            value={startdate}
+                            onChange={(date) => setStartdate(date)}
+                            format="YYYY-MM-DD"
+                            disabledDate={(current) =>
+                              disabledDate(current, null, startdate)
+                            }
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          label="Preferred End Date"
+                          name="preferredEndDate"
+                        >
+                          <DatePicker
+                            value={enddate}
+                            onChange={(date) => setEnddate(date)}
+                            format="YYYY-MM-DD"
+                            disabledDate={(current) =>
+                              disabledDate(current, null, enddate)
+                            }
+                          />
+                        </Form.Item>
+                      </Form>
+                    </Modal>
+                    <Button
+                      onClick={handleConfirmClick}
+                      type="primary"
+                      style={{ backgroundColor: "green" }}
+                    >
+                      Confirm
+                    </Button>
+                    <DeleteOutlined />
+                  </div>
+                ) : null}
+              </Card>
+            </Col>
           </Col>
-    </Row>
-    </div> 
+        </React.Fragment>
+      ))}
+            </Row>
+          </Col>
+        </Row>
+      </div>
     </MainLayout>
   );
 }

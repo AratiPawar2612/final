@@ -79,7 +79,7 @@ const CustomMenu = () => {
       <Sider theme="light" className="left-panel"  style={{ height: "100vh", backgroundColor: "#FFFFFF" }}
 >
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", backgroundColor: "#F4F4F4" }}>
-          <div style={{ marginLeft: "40px", display: "flex", alignItems: "center", height: "1.5rem", backgroundColor: "#F4F4F4", background: "transparent" }}>
+          <div style={{ display: "flex",flexDirection: "row", justifyContent: "center", height: "1.5rem", backgroundColor: "#F4F4F4", background: "transparent" }}>
             <LogoIcon className="logologin" />
           </div>
           <Menu mode="inline" onClick={handleTopMenuClick} className="custom-menu" defaultSelectedKeys={["home"]} style={{ backgroundColor: "#F4F4F4", boxShadow: "none", border: "none" }}>

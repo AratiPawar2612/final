@@ -65,79 +65,90 @@ export default function AddApplicationDetailsPage() {
       siderClassName={isMobileView ? "" : "leftMenuPanel"}
       siderChildren={!isMobileView && <CustomMenu />}
     >
-     
-        {isMobileView && (
-      <div
-      style={{  
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingLeft:"15px",
-        paddingRight:"15px",
-        paddingTop: "10px",
-        paddingBottom: "15px",
-        backgroundColor: "white",
-        boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
-        width: "100%", // Take full width of the container
-      }}
-    >
-            <>
-              <LogoIcon className="logomenu" />
-              <div>
-                {" "}
-                <CustomMobileMenu />
-              </div>
-            </>
-          </div>
-        )}
-<div style={{ padding: "0 20px", }}>
+      {isMobileView && (
         <div
-          style={{ fontWeight: "bold", fontSize: "1rem", marginLeft: "3rem" }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingLeft: "15px",
+            paddingRight: "15px",
+            paddingTop: "10px",
+            paddingBottom: "15px",
+            backgroundColor: "white",
+            boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
+            width: "100%", // Take full width of the container
+          }}
+        >
+          <>
+            <LogoIcon className="logomenu" />
+            <div>
+              {" "}
+              <CustomMobileMenu />
+            </div>
+          </>
+        </div>
+      )}
+      <div style={{ padding: "0 20px" }}>
+        <div
+          style={
+            isMobileView
+              ? { fontWeight: "bold", fontSize: "1rem", marginLeft: "1rem" }
+              : { fontWeight: "bold", fontSize: "1rem", marginLeft: "3rem" }
+          }
         >
           <ArrowLeftIcon onClick={() => router.back()} />
           Apply for Gyan Darshan
         </div>
-        <div style={{ marginLeft: "4.2rem" }}>
+        <div
+          style={
+            isMobileView ? { marginLeft: "2.8rem" } : { marginLeft: "4.2rem" }
+          }
+        >
           <label className="Descriptionlabel">Add Application details</label>
         </div>
-        <Row justify="center">
-          <Col xs={24} xl={24}>
-            {/* <div className="center-steps">
-          <Steps current={-1} style={{ width: "50%" }} direction="horizontal" labelPlacement='vertical'>
-            <Step title="Add application details" />
-            <Step title="Complete & apply" />
-            <Step title="View status" />
-          </Steps>
-        </div> */}
-            <div className="center-steps">
-              {isMobileView ? (
-                <ViewStatusFirstSvg /> // Use uppercase for component name
-              ) : (
-                <Steps
-                  current={-1}
-                  style={{ width: "50%" }}
-                  labelPlacement="vertical"
-                >
-                  <Steps.Step title="Add application details" />
-                  <Steps.Step title="Complete & apply" />
-                  <Steps.Step title="View status" />
-                </Steps>
-              )}
-            </div>
-          </Col>
-        </Row>
+
+        <div className="center-steps">
+          {isMobileView ? (
+            <ViewStatusFirstSvg /> // Use uppercase for component name
+          ) : (
+            <Steps
+              current={-1}
+              style={{ width: "50%" }}
+              labelPlacement="vertical"
+              responsive={false}
+            >
+              <Steps.Step title="Add application details" />
+              <Steps.Step title="Complete & apply" />
+              <Steps.Step title="View status" />
+            </Steps>
+          )}
+        </div>
 
         <Divider className="divider" />
         <div
-          style={{ fontWeight: "bold", fontSize: "0.8rem", marginLeft: "3rem" }}
+          style={
+            isMobileView
+              ? { fontWeight: "bold", fontSize: "0.8rem", marginLeft: "1rem" }
+              : { fontWeight: "bold", fontSize: "0.8rem", marginLeft: "3rem" }
+          }
         >
           Select Your Type
         </div>
-        <div style={{ fontSize: "0.8rem", marginLeft: "3rem" }}>
+        <div
+          style={
+            isMobileView
+              ? { fontSize: "0.8rem", marginLeft: "1rem" }
+              : { fontSize: "0.8rem", marginLeft: "3rem" }
+          }
+        >
           {" "}
           Please choose one option to proceed.
         </div>
-        <Row gutter={[16, 16]} style={{ marginLeft: "3rem" }}>
+        <Row
+          gutter={[16, 16]}
+          style={isMobileView ? { marginLeft: "0px" } : { marginLeft: "3rem" }}
+        >
           <Col xs={12} sm={24} md={12} lg={12} xl={6}>
             <div
               style={{
@@ -147,7 +158,6 @@ export default function AddApplicationDetailsPage() {
               }}
             >
               <Card
-                
                 style={{
                   flex: 1,
                   marginTop: "2rem",
@@ -188,47 +198,45 @@ export default function AddApplicationDetailsPage() {
                 display: "flex",
                 flexDirection: "column",
                 height: "auto",
-                width:"auto"
+                width: "auto",
               }}
             >
-              <Card
-                 style={{
-                  flex: 1,
-                  marginTop: "2rem",
-                  backgroundColor:
-                    selectedCard === "Family Gyan Darshan"
-                      ? "lightblue"
-                      : "white",
-                }}
-                onClick={() => handleCardClick("Family Gyan Darshan")}
-              >
-               <WithFamilyIcon style={{ fontSize: "1.5rem" }} />
-                <div
-                  style={{
-                    marginTop: "2rem",
-                    fontWeight: "bold",
-                    fontSize: "1.3rem",
-                  }}
-                >
-                  Family Gyan<br/> Darshan
-                </div>
-                <div style={{ marginTop: "2rem" }}>
-                  Select this option for Family Gyan Darshan
-                </div>
-                {selectedCard === "Family Gyan Darshan" && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "0.625rem",
-                      // right: "0.625rem",
-                    }}
-                  >
-                    <CheckICon
-                      style={{ color: "green", fontSize: "1.25rem" }}
-                    />
-                  </div>
-                )}
-              </Card>
+             <Card
+  style={{
+    flex: 1,
+    marginTop: "2rem",
+    backgroundColor:
+      selectedCard === "Family Gyan Darshan" ? "lightblue" : "white",
+  }}
+  onClick={() => handleCardClick("Family Gyan Darshan")}
+>
+  <WithFamilyIcon style={{ fontSize: "1.5rem" }} />
+  <div
+    style={{
+      marginTop: "2rem",
+      fontWeight: "bold",
+      fontSize: "1.3rem",
+    }}
+  >
+    Family Gyan
+    <br /> Darshan
+  </div>
+  <div style={{ marginTop: "2rem" }}>
+    Select this option for Family Gyan Darshan
+  </div>
+  {selectedCard === "Family Gyan Darshan" && (
+    <div
+      style={{
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+      }}
+    >
+      <CheckICon style={{ color: "green", fontSize: "20px" }} />
+    </div>
+  )}
+</Card>
+
             </div>
           </Col>
         </Row>
@@ -252,7 +260,7 @@ export default function AddApplicationDetailsPage() {
             {continueButtonText}
           </Button>
         </div>
-       </div>
+      </div>
     </MainLayout>
   );
 }
