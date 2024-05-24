@@ -38,9 +38,15 @@ import {
   WithFamilySvg,
   CheckSvg,
   MobileMenuSvg,
+  DownloadSvg,
+  ShareSvg
 } from "./svgs";
 
 export const LogoIcon = (props: any) => <Icon component={LogoSvg} {...props} />;
+
+export const DownloadIcon = (props: any) => <Icon component={DownloadSvg} {...props} />;
+
+export const ShareIcon = (props: any) => <Icon component={ShareSvg} {...props} />;
 export const LoginTitleIcon = (props: any) => (
   <Icon component={LoginTitleSvg} {...props} />
 );

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import { useRouter } from "next/router";
+import html2canvas from 'html2canvas';
 import {
   Button,
   Divider,
@@ -11,6 +12,7 @@ import {
   Card,
   Modal,
   Image,
+  DatePicker
 } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
@@ -21,11 +23,15 @@ import {
   ScannerIcon,
   ElipseIcon,
   LogoIcon,
+  DownloadIcon,
+  ShareIcon,
 } from "@/icons/icon";
 import axios from "axios";
 import { FileExclamationTwoTone, CheckOutlined } from "@ant-design/icons";
-import { fetchApplicationData, fetchUserData } from "../api/applicationapi";
+import { fetchApplicationData, fetchUserData ,submitRescheduleForm} from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
+import dayjs from "dayjs";
+import jsPDF from 'jspdf';
 
 const { Meta } = Card;
 
@@ -52,6 +58,10 @@ export default function HomePage() {
   const [applicationid, setApplicationid] = useState("");
   const [isMobileView, setIsMobileView] = useState(false);
   const slicedData = isMobileView ? applicationdata.slice(0, 2) : applicationdata.slice(0, 5);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [startdate, setStartdate] = useState("");
+  const [enddate, setEnddate] = useState("");
+  const [token,setToken]=useState("");
 
 
   useEffect(() => {
@@ -65,12 +75,14 @@ export default function HomePage() {
 
         if (sessionData?.session) {
           const accessToken = sessionData.session.access_token;
+          setToken(accessToken);
           const userDataResponse = await fetchUserData(accessToken);
           setData(userDataResponse);
 
           const applicationData = await fetchApplicationData(accessToken);
    
           setApplicationdata(applicationData);
+          console.log("applicationdata",applicationData);
           setApplicationid(applicationData[0]?.reference_code);
           setStatus(applicationData[0]?.status);
         } else {
@@ -90,7 +102,7 @@ export default function HomePage() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
-      // console.log("size", isMobileView);
+     
     };
 
     handleResize(); 
@@ -106,6 +118,33 @@ export default function HomePage() {
   };
   const handleCancel = () => {
     setVisible(false);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleFormSubmit = async () => {
+    try {
+      await submitRescheduleForm(applicationdata[0]?.id, startdate, enddate, token);
+      alert("Your application has been rescheduled");
+      setIsModalVisible(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error rescheduled application:", error);
+    }
+  };
+  const disabledDate = (current: any, startDate: any, endDate: any) => {
+    return (
+      current &&
+      (current < dayjs().startOf("day") ||
+        (startDate && current < dayjs(startDate).startOf("day")) ||
+        (endDate && current > dayjs(endDate).endOf("day")))
+    );
   };
 
   const handleVerification = async () => {
@@ -709,6 +748,83 @@ export default function HomePage() {
     router.push("/krupadarshan/addappallicationdetails");
   };
 
+
+  const passRef = useRef(null);
+  const handleDownload = () => {
+    const passElement = passRef.current;
+  
+    if (passElement) {
+      html2canvas(passElement).then((canvas: any) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        const imgWidth = 190; // A4 width in mm, adjusted for margins
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const margin = 10; // Margin in mm
+        const pageHeight = 295; // A4 height in mm
+        let heightLeft = imgHeight;
+        let position = margin;
+  
+        pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight - 2 * margin;
+  
+        while (heightLeft >= 0) {
+          pdf.addPage();
+          position -= pageHeight;
+          pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+  
+        pdf.save('gyan_darshan_pass.pdf');
+      });
+    } else {
+      console.error('passRef.current is null.');
+    }
+  };
+  
+  const handleSharePass = () => {
+    const passElement = passRef.current;
+  
+    if (passElement) {
+      html2canvas(passElement).then((canvas) => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const filesArray = [new File([blob], 'gyan_darshan_pass.png', { type: 'image/png' })];
+            
+            if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+              navigator.share({
+                files: filesArray,
+                title: 'Gyan Darshan Pass',
+                text: 'Please find the Gyan Darshan Pass attached.',
+              }).then(() => {
+                console.log('Pass shared successfully.');
+              }).catch((error) => {
+                console.error('Error sharing pass:', error);
+                // Fallback mechanism if sharing fails
+                // Implement your custom share dialog or offer alternative sharing methods here
+                // For example:
+                alert('Sharing failed. You can copy the link to share.');
+              });
+            } else {
+              console.error('Sharing pass not supported.');
+              // Fallback mechanism if sharing is not supported
+              // Implement your custom share dialog or offer alternative sharing methods here
+              // For example:
+              alert('Sharing not supported. You can copy the link to share.');
+            }
+          } else {
+            console.error('Blob is null.');
+          }
+        }, 'image/png');
+      });
+    } else {
+      console.error('passRef.current is null.');
+    }
+  };
+  
+  
+  
+  
+
   return (
     <MainLayout siderClassName={isMobileView ? "" : "leftMenuPanel"} siderChildren={!isMobileView && <CustomMenu />}>
       
@@ -724,8 +840,8 @@ export default function HomePage() {
     paddingBottom: "15px",
     backgroundColor: "white",
     boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
-    width: "100%", // Take full width of the container
-    boxSizing: "border-box", // Include padding in width calculation
+    width: "100%", 
+    boxSizing: "border-box", 
   }}
 >
    
@@ -749,73 +865,211 @@ export default function HomePage() {
           style={{ marginTop: "0.8rem" }}
           justify="space-between"
         >
-          <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-            <Card
+      <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+  <Card
+    style={{
+      width: "auto",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      height: "100%",
+    }}
+  >
+    {status === "ACCEPTED_BY_KHOJI" ? (
+        <div ref={passRef}>
+          <div
+            style={{
+              marginBottom: "1rem",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: "0.8rem",
+            }}
+          >
+            <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>Gyan Darshan Pass</span>
+            <Button
+              type="primary"
               style={{
-                width: "auto",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                height: "100%",
+                backgroundColor: "black",
+                borderRadius: "1rem",
+                width: "6.75rem",
+                height: "1.9375rem",
+                textAlign: "center",
               }}
+              onClick={handleOpenModal}
             >
-              <div
-                style={{
-                  marginBottom: "1rem",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: "0.8rem",
-                }}
-              >
-                <span className="EligibleLabel">{`You're eligible`}</span>
-                <InfoIcon />
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <div
-                  style={{
-                    fontSize: "1.2rem",
-                    fontWeight: "bold",
-                    marginBottom: "0.5rem",
-                  }}
+              Reschedule
+            </Button>
+            <Modal
+                  title="Reschedule Application"
+                  open={isModalVisible}
+                  onCancel={handleCloseModal}
+                  footer={[
+                    <Button key="cancel" onClick={handleCloseModal}>
+                      Cancel
+                    </Button>,
+                    <Button
+                      key="submit"
+                      type="primary"
+                      onClick={handleFormSubmit}
+                    >
+                      Submit
+                    </Button>,
+                  ]}
                 >
-                  Apply for Gyan
-                  <br />
-                  Darshan
-                </div>
-                <div style={{ marginTop: "0.8rem" }}>
-                This option is available for indviduals who have completed Maha Asamani Paramgyan shivir from Tejgyan Foundation. 
-                </div>
+                  <Form layout="vertical" onFinish={handleFormSubmit}>
+                    <Form.Item
+                      label="Preferred Start Date"
+                      name="preferredStartDate"
+                    >
+                      <DatePicker
+                        value={startdate}
+                        onChange={(date) => setStartdate(date)}
+                        format="YYYY-MM-DD"
+                        disabledDate={(current) =>
+                          disabledDate(current, null, startdate)
+                        }
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      label="Preferred End Date"
+                      name="preferredEndDate"
+                    >
+                      <DatePicker
+                        value={enddate}
+                        onChange={(date) => setEnddate(date)}
+                        format="YYYY-MM-DD"
+                        disabledDate={(current) =>
+                          disabledDate(current, null, enddate)
+                        }
+                      />
+                    </Form.Item>
+                  </Form>
+                </Modal>
+          </div>
+          <div
+  style={{
+    marginBottom: "1rem",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center", // Align items vertically
+    justifyContent: "space-between",
+  }}
+>
+  <span style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
+    Your pass is valid till the date of Darshan.<br/>
+    Please carry your pass while coming.
+  </span>
+  <div style={{ display: "flex", gap: "0.5rem" }}> {/* Adjust gap between icons */}
+    <Button icon={<DownloadIcon />} onClick={handleDownload} />
+    <Button icon={<ShareIcon />} onClick={handleSharePass} />
+  </div>
+</div>
+
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <div style={{ }}>
+              <b>Date</b><br/>
+              <label>10/10/2024</label>
+              <div style={{ }}>
+              <b> Reporting Time</b> <br/>
+                <div>10:30</div>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Button
-                  type="primary"
-                  style={{
-                    backgroundColor: "black",
-                    marginTop: "0.8rem",
-                    borderRadius: "1rem",
-                     width: "159.31px",
-                     height: "auto",
-                    textAlign:"center"
-                  }}
-                  onClick={handleGetStarted}
-                  disabled={
-                    applicationdata.length > 0 &&
-                    applicationdata[0].status !== "ACCEPTED_BY_KHOJI"
-                  } // Disable the button if applicationdata is empty
-                >
-                  Get Started
-                </Button>
-                <div style={{ marginTop: "0.8rem" }}>
-                  {" "}
-                  <label>
-                    5 + opportunities  <br />this
-                    month
-                  </label>
-                </div>
-              </div>
-            </Card>
-          </Col>
+            </div>
+            <div style={{ textWrap:"wrap" }}>
+              <b>Address</b><br/>
+              <label>Happy Thoughts Building, Vikrant Complex, Savta Mali Nagar,<br/>Pimpri Colony, Pune, Maharashtra 411017</label>
+            </div>
+            <div style={{ width: "5.5625rem", height: "17", fontSize: "0.75rem", fontWeight: "bold" }}>
+              <ElipseIcon /><br/>
+              <label className="passlabel">
+                {applicationdata && applicationdata.length > 0 ? 
+                  `${applicationdata[0]?.age_counts?.adults !== undefined ? applicationdata[0]?.age_counts?.adults : ''} adults * ${applicationdata[0]?.age_counts?.childrens || 0} child`
+                  :
+                  "0 adults * 0 child"
+                }
+              </label>
+            </div>
+          </div>
+          <Divider orientationMargin={0.05} dashed={true} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
+              Scan the QR code before you enter the hall
+            </span>
+           
+            <ScannerIcon />
+           
+          </div>
+          <div style={{ fontSize: "1rem"}}>
+            Please update your status if you wish to cancel or reschedule your application
+          </div>
+          
+        </div>
+) 
+: (
+      <div>
+        <div
+          style={{
+            marginBottom: "1rem",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: "0.8rem",
+          }}
+        >
+          <span className="EligibleLabel">{`You're eligible`}</span>
+          <InfoIcon />
+        </div>
+        <div style={{ marginBottom: "1rem" }}>
+          <div
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Apply for Gyan Darshan
+          </div>
+          <div style={{ marginTop: "0.8rem" }}>
+            This option is available for individuals who have completed Maha Asamani Paramgyan shivir from Tejgyan Foundation.
+          </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Button
+            type="primary"
+            style={{
+              backgroundColor: "black",
+              marginTop: "0.8rem",
+              borderRadius: "1rem",
+              width: "159.31px",
+              height: "auto",
+              textAlign: "center",
+            }}
+            onClick={handleGetStarted}
+            disabled={
+              applicationdata.length === 0 ||
+              applicationdata[0].status !== "ACCEPTED_BY_KHOJI"
+            } // Disable the button if applicationdata is empty or status is not "ACCEPTED_BY_KHOJI"
+          >
+            Get Started
+          </Button>
+          <div style={{ marginTop: "0.8rem" }}>
+            <label>
+              5 + opportunities <br /> this month
+            </label>
+          </div>
+        </div>
+      </div>
+    )}
+  </Card>
+</Col>
+
+
           <Col xs={24} sm={24} md={12} lg={12} xl={12}>
         
             <div
@@ -882,13 +1136,14 @@ export default function HomePage() {
               textWrap: "wrap",
               width: "auto",
             }}
-            title={index === 0 ? "Your Application ID" : "Past Application ID"}
+            title={index === 0 ? "Current Application " : "Past Application"}
             description={
               index === 0
-                ? `${data?.reference_code} Created on ${dateParts}.`
+                ? ` Application Id: ${data?.reference_code} Created on ${dateParts}.`
                 : (
                   <>
-                    {data?.reference_code} Created on {dateParts}.
+                   Application Id: {data?.reference_code}<br/>
+                    Created on {dateParts}.
                     <br />
                     Your past Darshan appointments will reflect here
                   </>

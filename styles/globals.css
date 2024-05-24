@@ -59,7 +59,6 @@ border: 0.0069rem 0rem 0rem 0rem;
 
 .Descriptionlabel {
   font-size: 1rem !important;
-   font-weight: 700!important;
   line-height: 1.25rem !important;
   letter-spacing: 0.0088rem !important;
   font-family: manrope!important;
@@ -632,23 +631,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   display: flex!important;
   align-items: center!important;
 }
-.customs-steps .ant-steps-item-process > .ant-steps-item-icon {
-  background-color: red!important;
-}
 
-.customs-steps .ant-steps-item-icon {
-  background-color: black!important;
-}
-.steps-card {
-  display: flex!important;
-  align-items: center!important;
-}
-
-.vertical-line {
-  border-left: 0.0625rem solid #000!important;
-  height: 100%!important;
-  margin-left: 0.5rem!important;
-}
 .infolabel {
   font-family: "Manrope"!important;
   font-size: "0.875rem"!important;
@@ -669,6 +652,7 @@ border: 0.0069rem 0rem 0rem 0rem;
 }
 .enabled-card {
   border: 2px solid blue!important; 
+  
 }
 
 .disabled-card {
@@ -681,6 +665,10 @@ border: 0.0069rem 0rem 0rem 0rem;
   margin-left: 10px; /* Adjust the spacing between the circle and the line */
 }
 
+/* Step circles for disabled cards */
+.disabled-card .step-circle {
+  background-color: #414141 !important; /* Set step circle color for disabled cards */
+}
 .step-item.active .step-circle {
   background-color: #F55C38!important; 
 }
@@ -802,4 +790,26 @@ margin-top: "3rem"!important;
   background-Color: "white";
   box-Shadow: "0rem 0rem 0.1062rem 0rem rgba(0, 0, 0, 0.25)";
   width: "100%";
+}
+.passlabel{
+  width:"5.5625rem"!important;
+  height:"1.0625rem"!important;
+  font-Size:"0.75rem"!important;
+
+}
+
+.progress-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ccc; /* Default color for progress dots */
+  margin-right: 8px; /* Adjust spacing between progress dots */
+}
+
+.progress-dot.active {
+  background-color: #F55C38; /* Color for active progress dot */
+}
+
+.progress-dot.completed {
+  background-color: #F55C38; /* Color for completed progress dot */
 }
