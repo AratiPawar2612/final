@@ -390,8 +390,15 @@ export default function ViewStatusPage() {
           >
             <div
               className={`step-item ${
-                status1 === "ACCEPTED_BY_KHOJI" && index <= 2 ? "completed" : ""
+                ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
+                ((status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && index === 1) ||
+                (status1 === "ACCEPTED_BY_KHOJI" && index <= 2) ? "completed" : ""
               }`}
+              style={{
+                backgroundColor: ((status1 === "SUBMITTED" && index === 0) ||
+                  (status1 === "APPROVED_BY_DKD" && index === 1) ||
+                  (status1 === "ACCEPTED_BY_KHOJI" && index === 2)) ? "red" : ""
+              }}
             >
               <div className="step-circle">{index + 1}</div>
             </div>
@@ -403,13 +410,12 @@ export default function ViewStatusPage() {
             title={card.title}
             style={{ marginTop: isMobileView ? "2rem" : "5rem" }}
             className={
-              (status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI" && index === 0) ||
-              (status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI" && index === 1) ||
-              (status1 === "ACCEPTED_BY_KHOJI" && index === 2)
+              ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
+              ((status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && index === 1) ||
+              (status1 === "ACCEPTED_BY_KHOJI" && index <= 2)
                 ? "enabled-card"
                 : "disabled-card"
             }
-            
           >
             {card.content}
             {index === 1 && (status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && (
@@ -489,7 +495,7 @@ export default function ViewStatusPage() {
     </React.Fragment>
   ))}
 </Row>
-
+  
           </Col>
         </Row>
       </div>
