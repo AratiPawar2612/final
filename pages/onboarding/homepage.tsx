@@ -1051,10 +1051,8 @@ export default function HomePage() {
               textAlign: "center",
             }}
             onClick={handleGetStarted}
-            disabled={
-              applicationdata.length === 0 ||
-              applicationdata[0].status !== "ACCEPTED_BY_KHOJI"
-            } // Disable the button if applicationdata is empty or status is not "ACCEPTED_BY_KHOJI"
+            // disabled={!applicationdata || !applicationdata[0] || applicationdata[0].status !== "ACCEPTED_BY_KHOJI"}
+           
           >
             Get Started
           </Button>

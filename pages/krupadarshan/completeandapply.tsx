@@ -66,7 +66,7 @@ export default function CompleteAndApplyPage() {
     const loadMoreData = async () => {
       const sessionresponse = await fetch("/api/getsession");
       const sessionData = await sessionresponse.json();
-      console.log("Session Data:", sessionData?.session?.access_token);
+      // console.log("Session Data:", sessionData?.session?.access_token);
       if (sessionData?.session) {
         const applicationData = await fetchApplicationData(
           sessionData?.session?.access_token
@@ -205,10 +205,10 @@ export default function CompleteAndApplyPage() {
           <label className="Descriptionlabel">complete and apply</label>
         </div>
 
-        <div className={isMobileView ? "center-step" : "center-steps"}>
-          {/* {isMobileView ? (
+        <div style={{display:"flex",justifyContent:"center",marginTop:"1rem"}} className={isMobileView ? "center-step" : "center-steps"}>
+          {isMobileView ? (
             <ViewStatusSecondIcon /> // Use uppercase for component name
-          ) : ( */}
+          ) : (
           <Steps
             current={1}
             style={isMobileView ? { width: "auto" } : { width: "50%" }}
@@ -216,7 +216,7 @@ export default function CompleteAndApplyPage() {
             items={items}
             responsive={false}
           />
-          {/* )}  */}
+           )}  
         </div>
       </div>
       <Divider className="divider" />
@@ -253,6 +253,7 @@ export default function CompleteAndApplyPage() {
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
+                  marginTop:"1rem"
                 }}
               >
                 <Row gutter={[16, 16]} style={{ flex: "1", flexWrap: "wrap" }}>
@@ -285,7 +286,7 @@ export default function CompleteAndApplyPage() {
               <div
                 style={{
                   fontSize: "0.9rem",
-                  marginLeft: "1rem",
+                  marginLeft: "2rem",
                   marginTop: "1rem",
                 }}
               >
@@ -294,7 +295,7 @@ export default function CompleteAndApplyPage() {
               <div
                 style={{
                   marginTop: "1rem",
-                  marginLeft: "1rem",
+                  marginLeft: "2rem",
                   textWrap: "nowrap",
                 }}
               >
@@ -305,7 +306,7 @@ export default function CompleteAndApplyPage() {
               <div
                 style={{
                   fontSize: "0.9rem",
-                  marginLeft: "2rem",
+                  marginLeft: "3rem",
                   marginTop: "1rem",
                 }}
               >
@@ -316,8 +317,8 @@ export default function CompleteAndApplyPage() {
                 style={{
                   width: "100%",
                   height: "auto",
-                  marginLeft: "1rem",
-                  marginTop: "1.5rem",
+                  marginLeft: "3rem",
+                  marginTop: "0.8rem",
                 }}
                 placeholder="Select Purpose"
                 value={purpose}
@@ -327,7 +328,7 @@ export default function CompleteAndApplyPage() {
           </Row>
         </div>
         {addnote && (
-          <div style={{ marginLeft: "1rem" }}>
+          <div style={{ marginLeft: "2rem" }}>
             <div style={{ fontSize: "0.9rem", marginTop: "2rem" }}>
               Note added
             </div>
@@ -348,6 +349,7 @@ export default function CompleteAndApplyPage() {
                 height: "2rem",
                 marginBottom: "2rem",
                 marginTop: "1rem",
+                marginLeft:"0.8rem"
               }}
             >
               Edit

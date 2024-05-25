@@ -81,12 +81,16 @@ export const searchUser = async (token:any, criteria:any) => {
       throw new Error("Please provide search criteria.");
     } else if (criteria.startsWith("khoji_id=")) {
       url = `${baseUrl}iam/users/?${criteria}`;
-    } else if (criteria.startsWith("first_name=")) {
+    } else if (criteria.startsWith("first_name=") && criteria.includes("&last_name=")) {
+      url = `${baseUrl}iam/users/?${criteria}`;
+    } else if (criteria.startsWith("contact_no=")) {
+      url = `${baseUrl}iam/users/?${criteria}`;
+    } else if (criteria.startsWith("email=")) {
       url = `${baseUrl}iam/users/?${criteria}`;
     } else {
       throw new Error("Invalid search criteria.");
     }
-
+    
     const requestOptions = {
       method: "GET",
       headers: {
@@ -123,9 +127,12 @@ export const createParticipant = async (requestData:any, token:any) => {
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
+  else{
+    const data = await response.json();
+    return data;
+  }
 
-  const data = await response.json();
-  return data;
+  
 };
 
 export const submitApplication = async (
@@ -166,7 +173,23 @@ export const submitApplication = async (
 
     // Check if response is OK
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      // Get the status text from the response
+      const statusText = await response.text();
+      // Check for specific error messages
+      if (statusText.includes("User already has an active application")) {
+        alert("User already has an active application");
+      } else if (statusText.includes("Participants must be provided for application")) {
+        alert("Participants must be provided for application");
+      } else if (statusText.includes("Participants cannot be accepted for application")) {
+        alert("Participants cannot be accepted for application");
+      } else if (statusText.includes("Applicant cannot be a participant in their own application")) {
+        alert("Applicant cannot be a participant in their own application");
+      } else if (statusText.includes("User cannot create other users application")) {
+        alert("User cannot create other users application");
+      } else {
+        throw new Error(`Network response was not ok: ${statusText}`);
+      }
+      return false;
     } else {
       // Application submitted successfully
       return true;
@@ -177,6 +200,8 @@ export const submitApplication = async (
     return false;
   }
 };
+
+
 
 export const fetchPurposeOptions = async (userid: any, accessToken: any) => {
   try {

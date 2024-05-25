@@ -36,6 +36,8 @@ import {
 } from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
 import { ViewStatusFirstSvg } from "@/icons/svgs";
+import type { RadioChangeEvent } from 'antd';
+
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -84,6 +86,7 @@ export default function AddPersonalDeatilsPage() {
   console.log("isFamilyKrupaDarshan", isFamilyKrupaDarshan);
   const [isMobileView, setIsMobileView] = useState(false);
   const dayjs = require("dayjs");
+  const [value, setValue] = useState(1);
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
@@ -219,6 +222,10 @@ export default function AddPersonalDeatilsPage() {
     { label: "Other", value: "OTHER" },
   ];
 
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value);
+    setValue(e.target.value);
+  };
   const onFinish = () => {
     form
       .validateFields()
@@ -263,14 +270,37 @@ export default function AddPersonalDeatilsPage() {
   
   const handleSearchClick = async () => {
     try {
-      if (!khojiID && !khojifirstName) {
-        alert("Please Enter Khoji id");
+      console.log("khojiemail", khojiemail);
+      if (!khojiID && !khojifirstName && !khojilastName && !khojimobile && !khojiemail) {
+        alert("Please enter at least one search criteria");
         return;
       }
-  
-      const criteria = khojiID ? `khoji_id=${khojiID}` : `first_name=${khojifirstName}`;
+      
+    
+      let criteria = '';
+    
+      if (khojiID) {
+        criteria += `khoji_id=${khojiID}`;
+      } else {
+        if (khojifirstName) {
+          criteria += `first_name=${khojifirstName}`;
+          if (khojilastName) {
+            criteria += `&last_name=${khojilastName}`;
+          } else {
+            alert("Please enter both first name and last name");
+            return;
+          }
+        }
+        if (khojimobile) {
+          criteria += `&mobile=${khojimobile}`;
+        }
+        if (khojiemail) {
+          criteria += `&email=${khojiemail}`;
+        }
+      }
+    
       const searchResults = await searchUser(token, criteria);
-  
+    console.log("searchResults",searchResults);
       if (searchResults.length > 0) {
         const firstUser = searchResults[0];
         setkhojiuserid(firstUser.user.id);
@@ -284,9 +314,8 @@ export default function AddPersonalDeatilsPage() {
     } catch (error) {
       console.error("Error handling search click:", error);
     }
+    
   };
-  
-
   
   const onclickNextBtn = async () => {
     if (!selectedPurpose || !startdate || !enddate) {
@@ -302,7 +331,7 @@ export default function AddPersonalDeatilsPage() {
         preferred_end_date: enddate,
         khoji_note: addnote,
       };
-
+  
       try {
         const applicationSubmitted = await submitApplication(
           requestBody,
@@ -312,14 +341,52 @@ export default function AddPersonalDeatilsPage() {
         if (applicationSubmitted) {
           alert("Application Submitted successfully");
           router.push("/krupadarshan/completeandapply");
-        } else {
-          console.error("Application submission failed");
+        } else if(isFamilyKrupaDarshan &&selectedUserIds==null) {
+          alert("Participants must be provided for application");
         }
-      } catch (error) {
+      } catch (error: any) { // Specify the type of error explicitly
         console.error("Error submitting application:", error);
+        // Print the response if available
+        if (error.response) {
+          alert( error.response);
+        }
       }
     }
   };
+  
+  
+  // const onclickNextBtn = async () => {
+  //   if (!selectedPurpose || !startdate || !enddate) {
+  //     alert("Please Enter All required fields");
+  //   } else {
+  //     const requestBody = {
+  //       user: userid,
+  //       status: "SUBMITTED",
+  //       have_participants: isFamilyKrupaDarshan,
+  //       participants: isFamilyKrupaDarshan ? selectedUserIds : null,
+  //       purposes: selectedPurpose,
+  //       preferred_start_date: startdate,
+  //       preferred_end_date: enddate,
+  //       khoji_note: addnote,
+  //     };
+
+  //     try {
+  //       const applicationSubmitted = await submitApplication(
+  //         requestBody,
+  //         token
+  //       );
+  //       console.log("applicationSubmitted", applicationSubmitted);
+  //       if (applicationSubmitted) {
+  //         alert("Application Submitted successfully");
+  //         router.push("/krupadarshan/completeandapply");
+  //       } else {
+  //        alert("Participants must be provided for application");  
+  //       }
+  //     } catch (error) {
+  //       console.error("Error submitting application:", error);
+  //     }
+  //   }
+  // };
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -357,30 +424,26 @@ export default function AddPersonalDeatilsPage() {
     if (inputType === "khoji") {
       return (
         <Form form={form}>
-          {/* <Row gutter={16}>
+          <Row gutter={16}>
             <Col span={24}>
            <Form.Item
-              label="Have Khoji ID?"
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              name="rdyesno"
-              initialValue="yes" // Set initial value to "yes"
-              rules={[{ required: true, message: "Please select an option" }]}
+             
+             label="Have Khoji ID?"
+             labelCol={{ span: 24 }}
+             wrapperCol={{ span: 24 }}
+             name="rdyesno"
+             initialValue={1} // Set initial value to 1 (Yes)
+             rules={[{ required: true, message: "Please select an option" }]}
+           
             >
-              <Radio.Group
-                style={{ display: "flex", justifyContent: "space-evenly" }}
-                onChange={handleRadioChange}
-              >
-                <Radio.Button value="yes" style={{ borderRadius: "50%" }}>
-                  Yes
-                </Radio.Button>
-                <Radio.Button value="no" style={{ borderRadius: "50%" }}>
-                  No
-                </Radio.Button>
-              </Radio.Group>
+          <Radio.Group onChange={onChange} value={value}>
+  <Radio value={1}style={{ fontSize: '0.9rem' }}>yes</Radio>
+  <Radio value={2} style={{ fontSize: '0.9rem' ,marginLeft:"5rem"}}>No</Radio>
+</Radio.Group>
+
             </Form.Item>
             </Col>
-          </Row> */}
+          </Row>
           <Row gutter={16}>
             <Col span={24}>
               <Form.Item
@@ -399,11 +462,14 @@ export default function AddPersonalDeatilsPage() {
                     height: "2rem",
                     width: "100%",
                   }}
+                  disabled={value === 2} // Disable input if value is 1 (Yes)
+                  
                 />
               </Form.Item>
             </Col>
           </Row>
           <Divider>Or enter</Divider>
+         
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
@@ -420,6 +486,7 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojifirstName(e.target.value)}
+                  disabled={value === 1} // Disable input if value is 1 (Yes)
                 />
               </Form.Item>
             </Col>
@@ -430,6 +497,7 @@ export default function AddPersonalDeatilsPage() {
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 rules={[{ required: true, message: "Please enter Last Name" }]}
+                
               >
                 <Input
                   style={{
@@ -438,6 +506,7 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojilastName(e.target.value)}
+                  disabled={value === 1} // Disable input if value is 1 (Yes)
                 />
               </Form.Item>
             </Col>
@@ -464,6 +533,7 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojiemail(e.target.value)}
+                  disabled={value === 1} // Disable input if value is 1 (Yes)
                 />
               </Form.Item>
             </Col>
@@ -521,6 +591,7 @@ export default function AddPersonalDeatilsPage() {
                     width: "100%",
                   }}
                   onChange={(e) => setkhojimobile(e.target.value)}
+                  disabled={value === 1} // Disable input if value is 1 (Yes)
                 />
               </Form.Item>
             </Col>
@@ -556,6 +627,7 @@ export default function AddPersonalDeatilsPage() {
               </Form.Item>
             </Col>
           </Row>
+         
           <div
             style={{
               display: "flex",
@@ -797,11 +869,14 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
       onClick={handleCardClick}
     >
       {/* Render card content here */}
-      <div className="userProfileTopSection" />
-      
-      <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-    
+      <div className="userProfileTopSection">
+  {isSelected && <CheckCircleOutlined style={{ color: 'black',marginTop:"1rem",marginLeft:"15rem"}} />}
+</div>
+      <div style={{display:"flex",flexDirection:"row"}}>
+       
         <Avatar className="userProfileImage" src={user.avtar} />
+        
+  
         <div className="userProfileVerifiedBadge">
         
           <label className="userProfileVerifiedBadgeLabel">Verified</label>
@@ -812,7 +887,7 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
         className="displayFlex flexDirectionColumn"
         style={{ textAlign: "center" }}
       >
-        {isSelected && <CheckCircleOutlined style={{ color: 'green' }} />}
+      
         <label className="userNameLabel" style={{ marginRight: "12rem" }}>
           {user?.relation_with?.user?.first_name}{" "}
           {user?.relation_with?.user?.last_name}
@@ -820,23 +895,23 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
              <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: "1rem",marginLeft:"1.5rem", alignItems:"baseline"}}
             >
               <label className="userProfileInfoTitle">Khoji Id</label>
               <label className="userProfileInfoValue">
                 {user?.relation_with?.khoji_id}
               </label>
             </div>
-            <div
+            {/* <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
               <label className="userProfileInfoTitle"></label>
               <label className="userProfileInfoValue"></label>
-            </div>
+            </div> */}
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem", marginLeft: "1rem" }}
+              style={{ marginTop: "1rem", marginLeft: "6rem" }}
             >
               <ScannerIcon />
             </div>
@@ -1145,19 +1220,21 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                         },
                       ]}
                     >
-                      <Select
-                        mode="tags"
-                        style={{ width: "100%", height: "auto" }}
-                        placeholder="Select Purpose"
-                        value={selectedPurpose}
-                        onChange={(value) => setSelectedPurpose(value)}
-                      >
-                        {purposeOptions.map((option) => (
-                          <Option key={option.key} value={option.value}>
-                            {option.label}
-                          </Option>
-                        ))}
-                      </Select>
+                     <Select
+  mode="tags"
+  style={{ width: "100%", height: "auto" }}
+  placeholder="Select Purpose"
+  value={selectedPurpose}
+  onChange={(value) => setSelectedPurpose(value)}
+  allowClear  // Enable clear option
+>
+  {purposeOptions.map((option) => (
+    <Option key={option.key} value={option.value}>
+      {option.label}
+    </Option>
+  ))}
+</Select>
+
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1190,6 +1267,24 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                           }
                         }}
                       />
+                      {/* <DatePicker
+  style={{
+    borderRadius: "2rem",
+    height: "2rem",
+    width: "100%",
+  }}
+  picker="month"
+  format="MMMM YYYY" // Set the format to display the selected month and year
+  disabledDate={(current) =>
+    disabledDate(current, null, enddate)
+  }
+  onChange={(date, dateString) => {
+    if (typeof dateString === "string") {
+      setStartdate(dateString);
+    }
+  }}
+/> */}
+
                     </Form.Item>
                   </Col>
                   <Col span={12}>
@@ -1220,6 +1315,22 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                           }
                         }}
                       />
+                      {/* <DatePicker
+    style={{
+      borderRadius: "2rem",
+      height: "2rem",
+      width: "100%",
+    }}
+    picker="week" // Set picker prop to "week" to enable week selection
+    disabledDate={(current) =>
+      disabledDate(current, startdate, null)
+    }
+    onChange={(date, dateString) => {
+      if (typeof dateString === "string") {
+        setEnddate(dateString);
+      }
+    }}
+  /> */}
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1384,6 +1495,7 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                                     type="link"
                                     style={{
                                       marginRight: 10,
+                                      fontSize:"0.8225rem",
                                       color:
                                         inputType === "khoji"
                                           ? "blue"
@@ -1399,6 +1511,7 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                                     type="link"
                                     style={{
                                       marginRight: 10,
+                                      fontSize:"0.6225rem",
                                       color:
                                         inputType === "guest"
                                           ? "blue"

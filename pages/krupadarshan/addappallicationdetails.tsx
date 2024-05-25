@@ -67,18 +67,19 @@ export default function AddApplicationDetailsPage() {
     >
       {isMobileView && (
         <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingLeft: "15px",
-            paddingRight: "15px",
-            paddingTop: "10px",
-            paddingBottom: "15px",
-            backgroundColor: "white",
-            boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
-            width: "100%", // Take full width of the container
-          }}
+          // style={{
+          //   display: "flex",
+          //   flexDirection: "row",
+          //   justifyContent: "space-between",
+          //   paddingLeft: "15px",
+          //   paddingRight: "15px",
+          //   paddingTop: "10px",
+          //   paddingBottom: "15px",
+          //   backgroundColor: "white",
+          //   boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
+          //   width: "100%", // Take full width of the container
+          // }}
+          className="mobilecontainer"
         >
           <>
             <LogoIcon className="logomenu" />
@@ -245,14 +246,11 @@ export default function AddApplicationDetailsPage() {
           <Button
             type="primary"
             onClick={handleContinueClick}
+            className="continuebutton"
             style={{
-              borderRadius: "2rem",
-              marginLeft: "1rem",
-              width: "100%",
-              maxWidth: "15rem",
-              height: "2rem",
+              
               backgroundColor: buttonColor,
-              marginBottom: "1rem",
+              
             }}
             size={buttonSize}
             disabled={isContinueDisabled}

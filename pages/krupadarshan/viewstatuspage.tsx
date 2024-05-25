@@ -168,26 +168,25 @@ export default function ViewStatusPage() {
     >
       {isMobileView && (
         <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingLeft: "15px",
-            paddingRight: "15px",
-            paddingTop: "10px",
-            paddingBottom: "15px",
-            backgroundColor: "white",
-            boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)",
-            width: "100%",
-          }}
-        >
+        // style={{  
+        //   display: "flex",
+        //   flexDirection: "row",
+        //   justifyContent: "space-between",
+        //   paddingLeft:"15px",
+        //   paddingRight:"15px",
+        //   paddingTop: "10px",
+        //   paddingBottom: "15px",
+        //   backgroundColor: "white",
+        //   boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", 
+        //   width: "100%", 
+        //   boxSizing: "border-box", 
+        // }}
+        className="mobilecontainer"
+      >
           {" "}
           <>
             <LogoIcon className="logomenu" />
-            <div>
-              {" "}
-              <CustomMobileMenu />
-            </div>
+            <div style={{marginTop:"10px"}}> <CustomMobileMenu /></div>
           </>
         </div>
       )}
@@ -215,7 +214,7 @@ export default function ViewStatusPage() {
               <Steps.Step title="Complete & apply" />
               <Steps.Step title="View status" />
             </Steps>
-          )}
+          )} 
         </div>
       </div>
       <Divider className="divider" />
@@ -495,7 +494,7 @@ export default function ViewStatusPage() {
     </React.Fragment>
   ))}
 </Row>
-  
+
           </Col>
         </Row>
       </div>
