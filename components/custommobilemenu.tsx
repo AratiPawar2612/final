@@ -116,8 +116,8 @@ const CustomMobileMenu = () => {
           onClose={toggleDrawer}
           open={showDrawer}
           width="auto"
-          style={{ backgroundColor: "white" }}
-          title={<MobileMenuIcon />}
+           style={{ backgroundColor:"#F4F4F4" }}
+          // title={<MobileMenuIcon />}
         >
           <Menu
             mode="inline"

@@ -15,6 +15,7 @@ import {
   DatePicker,
   Select,
   Radio,
+  Tag,
 } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
@@ -25,18 +26,24 @@ import {
   ScannerIcon,
   LogoIcon,
 } from "@/icons/icon";
-import { PlusOutlined,CheckCircleOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
 import {
   fetchParticipantData,
   fetchPurposeData,
   fetchUserData,
   submitApplication,
   searchUser,
-  createParticipant
+  createParticipant,
 } from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
 import { ViewStatusFirstSvg } from "@/icons/svgs";
-import type { RadioChangeEvent } from 'antd';
+import type { RadioChangeEvent } from "antd";
+import moment, { Moment } from 'moment';
+import dayjs, { Dayjs } from 'dayjs'; // Import Dayjs instead of Moment
 
 
 const { Option } = Select;
@@ -87,6 +94,7 @@ export default function AddPersonalDeatilsPage() {
   const [isMobileView, setIsMobileView] = useState(false);
   const dayjs = require("dayjs");
   const [value, setValue] = useState(1);
+  const defaultSelectedValues = ["Select Purpose"];
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
@@ -142,7 +150,6 @@ export default function AddPersonalDeatilsPage() {
             "participantUserResponseData",
             participantUserResponseData
           );
-         
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -223,7 +230,7 @@ export default function AddPersonalDeatilsPage() {
   ];
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value);
+    console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
   const onFinish = () => {
@@ -237,13 +244,35 @@ export default function AddPersonalDeatilsPage() {
       });
   };
 
+    // Function to determine if a given date belongs to the selected week
+    const isDateInSelectedWeek = (date:any) => {
+      if (!startdate || !enddate) return false;
+      return date >= startdate && date <= enddate;
+    };
+  
+    // Function to render cell in WeekPicker
+    const renderWeekCell = (current:any) => {
+      let className = '';
+  
+      // Check if the current week matches the selected week
+      if (isDateInSelectedWeek(current)) {
+        className = 'ant-picker-cell-selected-week';
+      }
+  
+      return (
+        <div className={className}>
+          {current.format('YYYY-MM-DD')}
+        </div>
+      );
+    };
+
   const handleAddClick = async () => {
     try {
       if (!selectedRelationship) {
         alert("Please fill in all required fields.");
         return;
       }
-  
+
       const requestBody = {
         status: "PUB",
         sort: 1,
@@ -251,9 +280,9 @@ export default function AddPersonalDeatilsPage() {
         relation_with: khojiuserid,
         relation: selectedRelationship,
       };
-  
+
       const participantData = await createParticipant(requestBody, token);
-  
+
       console.log("Response from server:", participantData);
       alert("Participant Added successfully");
       form.resetFields();
@@ -265,20 +294,23 @@ export default function AddPersonalDeatilsPage() {
       console.error("Error adding participant:", error);
     }
   };
-  
 
-  
   const handleSearchClick = async () => {
     try {
       console.log("khojiemail", khojiemail);
-      if (!khojiID && !khojifirstName && !khojilastName && !khojimobile && !khojiemail) {
+      if (
+        !khojiID &&
+        !khojifirstName &&
+        !khojilastName &&
+        !khojimobile &&
+        !khojiemail
+      ) {
         alert("Please enter at least one search criteria");
         return;
       }
-      
-    
-      let criteria = '';
-    
+
+      let criteria = "";
+
       if (khojiID) {
         criteria += `khoji_id=${khojiID}`;
       } else {
@@ -298,9 +330,9 @@ export default function AddPersonalDeatilsPage() {
           criteria += `&email=${khojiemail}`;
         }
       }
-    
+
       const searchResults = await searchUser(token, criteria);
-    console.log("searchResults",searchResults);
+      console.log("searchResults", searchResults);
       if (searchResults.length > 0) {
         const firstUser = searchResults[0];
         setkhojiuserid(firstUser.user.id);
@@ -314,12 +346,12 @@ export default function AddPersonalDeatilsPage() {
     } catch (error) {
       console.error("Error handling search click:", error);
     }
-    
   };
-  
+
   const onclickNextBtn = async () => {
     if (!selectedPurpose || !startdate || !enddate) {
-      alert("Please Enter All required fields");
+      console.log("startdate",startdate)
+      alert("Please Enter All required fields" + startdate);
     } else {
       const requestBody = {
         user: userid,
@@ -331,7 +363,7 @@ export default function AddPersonalDeatilsPage() {
         preferred_end_date: enddate,
         khoji_note: addnote,
       };
-  
+
       try {
         const applicationSubmitted = await submitApplication(
           requestBody,
@@ -341,20 +373,20 @@ export default function AddPersonalDeatilsPage() {
         if (applicationSubmitted) {
           alert("Application Submitted successfully");
           router.push("/krupadarshan/completeandapply");
-        } else if(isFamilyKrupaDarshan &&selectedUserIds==null) {
+        } else if (isFamilyKrupaDarshan && selectedUserIds == null) {
           alert("Participants must be provided for application");
         }
-      } catch (error: any) { // Specify the type of error explicitly
+      } catch (error: any) {
+        // Specify the type of error explicitly
         console.error("Error submitting application:", error);
         // Print the response if available
         if (error.response) {
-          alert( error.response);
+          alert(error.response);
         }
       }
     }
   };
-  
-  
+
   // const onclickNextBtn = async () => {
   //   if (!selectedPurpose || !startdate || !enddate) {
   //     alert("Please Enter All required fields");
@@ -380,7 +412,7 @@ export default function AddPersonalDeatilsPage() {
   //         alert("Application Submitted successfully");
   //         router.push("/krupadarshan/completeandapply");
   //       } else {
-  //        alert("Participants must be provided for application");  
+  //        alert("Participants must be provided for application");
   //       }
   //     } catch (error) {
   //       console.error("Error submitting application:", error);
@@ -426,22 +458,26 @@ export default function AddPersonalDeatilsPage() {
         <Form form={form}>
           <Row gutter={16}>
             <Col span={24}>
-           <Form.Item
-             
-             label="Have Khoji ID?"
-             labelCol={{ span: 24 }}
-             wrapperCol={{ span: 24 }}
-             name="rdyesno"
-             initialValue={1} // Set initial value to 1 (Yes)
-             rules={[{ required: true, message: "Please select an option" }]}
-           
-            >
-          <Radio.Group onChange={onChange} value={value}>
-  <Radio value={1}style={{ fontSize: '0.9rem' }}>yes</Radio>
-  <Radio value={2} style={{ fontSize: '0.9rem' ,marginLeft:"5rem"}}>No</Radio>
-</Radio.Group>
-
-            </Form.Item>
+              <Form.Item
+                label="Have Khoji ID?"
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                name="rdyesno"
+                initialValue={1} // Set initial value to 1 (Yes)
+                rules={[{ required: true, message: "Please select an option" }]}
+              >
+                <Radio.Group onChange={onChange} value={value}>
+                  <Radio value={1} style={{ fontSize: "0.9rem" }}>
+                    yes
+                  </Radio>
+                  <Radio
+                    value={2}
+                    style={{ fontSize: "0.9rem", marginLeft: "5rem" }}
+                  >
+                    No
+                  </Radio>
+                </Radio.Group>
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={16}>
@@ -457,19 +493,14 @@ export default function AddPersonalDeatilsPage() {
                   placeholder="Enter Khoji ID"
                   value={khojiID}
                   onChange={(e) => setKhojiID(e.target.value)}
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   disabled={value === 2} // Disable input if value is 1 (Yes)
-                  
                 />
               </Form.Item>
             </Col>
           </Row>
           <Divider>Or enter</Divider>
-         
+
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item
@@ -497,14 +528,9 @@ export default function AddPersonalDeatilsPage() {
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 rules={[{ required: true, message: "Please enter Last Name" }]}
-                
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   onChange={(e) => setkhojilastName(e.target.value)}
                   disabled={value === 1} // Disable input if value is 1 (Yes)
                 />
@@ -527,11 +553,7 @@ export default function AddPersonalDeatilsPage() {
                 ]}
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   onChange={(e) => setkhojiemail(e.target.value)}
                   disabled={value === 1} // Disable input if value is 1 (Yes)
                 />
@@ -548,9 +570,9 @@ export default function AddPersonalDeatilsPage() {
                 rules={[
                   {
                     type: "email",
-                    message: "Please enter a valid email address",
+                    message: "Please enter a valid  DOB",
                   },
-                  { required: true, message: "Please enter Email ID" },
+                  { required: true, message: "Please enter DOB " },
                 ]}
               >
                 <DatePicker
@@ -585,11 +607,7 @@ export default function AddPersonalDeatilsPage() {
                 ]}
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   onChange={(e) => setkhojimobile(e.target.value)}
                   disabled={value === 1} // Disable input if value is 1 (Yes)
                 />
@@ -608,11 +626,7 @@ export default function AddPersonalDeatilsPage() {
                 ]}
               >
                 <select
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   value={selectedRelationship}
                   onChange={handleSelectChange}
                 >
@@ -627,7 +641,7 @@ export default function AddPersonalDeatilsPage() {
               </Form.Item>
             </Col>
           </Row>
-         
+
           <div
             style={{
               display: "flex",
@@ -678,11 +692,7 @@ export default function AddPersonalDeatilsPage() {
                 wrapperCol={{ span: 24 }}
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   // value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
@@ -696,11 +706,7 @@ export default function AddPersonalDeatilsPage() {
                 wrapperCol={{ span: 24 }}
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   // value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                 />
@@ -714,14 +720,7 @@ export default function AddPersonalDeatilsPage() {
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
               >
-                <DatePicker
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
-                  value={dateOfBirth}
-                />
+                <DatePicker className="inputStyle" value={dateOfBirth} />
               </Form.Item>
             </Col>
           </Row>
@@ -734,11 +733,7 @@ export default function AddPersonalDeatilsPage() {
                 wrapperCol={{ span: 24 }}
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -754,11 +749,7 @@ export default function AddPersonalDeatilsPage() {
                 wrapperCol={{ span: 24 }}
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                 />
@@ -774,26 +765,14 @@ export default function AddPersonalDeatilsPage() {
                 wrapperCol={{ span: 24 }}
               >
                 <Input
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
+                  className="inputStyle"
                   value={guestrel}
                   onChange={(e) => setguestrel(e.target.value)}
                 />
               </Form.Item>
             </Col>
           </Row>
-          <Button
-            type="primary"
-            style={{
-              marginTop: "1rem",
-              backgroundColor: "black",
-              width: "100%",
-              marginBottom: "1rem",
-            }}
-          >
+          <Button type="primary" className="addButton">
             Add
           </Button>
         </Form>
@@ -808,12 +787,17 @@ export default function AddPersonalDeatilsPage() {
                 key={index}
                 xs={12}
                 sm={24}
-                md={12} 
+                md={12}
                 lg={12}
                 xl={12}
                 style={{ marginBottom: "16px", marginLeft: "1rem" }}
               >
-                {buildUserdataCard(user, index, selectedUserIds, setSelectedUserIds)}
+                {buildUserdataCard(
+                  user,
+                  index,
+                  selectedUserIds,
+                  setSelectedUserIds
+                )}
               </Col>
             ))}
           </Row>
@@ -826,76 +810,81 @@ export default function AddPersonalDeatilsPage() {
     return null;
   };
 
-
-
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
-// Function to handle card click
+  function buildUserdataCard(
+    user: any,
+    index: any,
+    selectedUserIds: any,
+    setSelectedUserIds: any
+  ) {
+    const handleCardClick = () => {
+      // Check if the user ID is already selected
+      const isSelected = selectedUserIds.includes(user.id);
 
- 
+      // If selected, remove from the list; otherwise, add to the list
+      if (isSelected) {
+        setSelectedUserIds((prevIds: any) =>
+          prevIds.filter((id: any) => id !== user.id)
+        );
+      } else {
+        setSelectedUserIds((prevIds: any) => [...prevIds, user.id]);
+      }
+    };
 
+    if (!user) {
+      return <div className="userProfilePlaceholderCard" />;
+    }
 
-function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelectedUserIds: any) {
-
-  const handleCardClick = () => {
-    // Check if the user ID is already selected
     const isSelected = selectedUserIds.includes(user.id);
 
-    // If selected, remove from the list; otherwise, add to the list
-    if (isSelected) {
-      setSelectedUserIds((prevIds: any) => prevIds.filter((id: any) => id !== user.id));
-    } else {
-      setSelectedUserIds((prevIds: any) => [...prevIds, user.id]);
-    }
-  };
-
-  if (!user) {
-    return <div className="userProfilePlaceholderCard" />;
-  }
-
-  const isSelected = selectedUserIds.includes(user.id);
-
-  return (
-    <div
-      className={`${index === 1 ? "userProfileRightCard" : "userProfileLeftCard"} ${isSelected ? "selectedCard" : ""}`}
-      key={user.id}
-      style={{
-        width: "100%",
-        marginBottom: "16px",
-        marginTop: "2rem",
-        textAlign: "center",
-        cursor: "pointer", // Add cursor pointer to indicate clickable
-      }}
-      onClick={handleCardClick}
-    >
-      {/* Render card content here */}
-      <div className="userProfileTopSection">
-  {isSelected && <CheckCircleOutlined style={{ color: 'black',marginTop:"1rem",marginLeft:"15rem"}} />}
-</div>
-      <div style={{display:"flex",flexDirection:"row"}}>
-       
-        <Avatar className="userProfileImage" src={user.avtar} />
-        
-  
-        <div className="userProfileVerifiedBadge">
-        
-          <label className="userProfileVerifiedBadgeLabel">Verified</label>
-          <VerifiedIcon />
-        </div>
-      </div>
+    return (
       <div
-        className="displayFlex flexDirectionColumn"
-        style={{ textAlign: "center" }}
+        className={`${
+          index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
+        } ${isSelected ? "selectedCard" : ""}`}
+        key={user.id}
+        style={{
+          width: "100%",
+          marginBottom: "16px",
+          marginTop: "2rem",
+          textAlign: "center",
+          cursor: "pointer", // Add cursor pointer to indicate clickable
+        }}
+        onClick={handleCardClick}
       >
-      
-        <label className="userNameLabel" style={{ marginRight: "12rem" }}>
-          {user?.relation_with?.user?.first_name}{" "}
-          {user?.relation_with?.user?.last_name}
-        </label>
-         <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-             <div
+        {/* Render card content here */}
+        <div className="userProfileTopSection">
+          {isSelected && (
+            <CheckCircleOutlined
+              style={{ color: "black", marginTop: "1rem", marginLeft: "15rem" }}
+            />
+          )}
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Avatar className="userProfileImage" src={user.avtar} />
+
+          <div className="userProfileVerifiedBadge">
+            <label className="userProfileVerifiedBadgeLabel">Verified</label>
+            <VerifiedIcon />
+          </div>
+        </div>
+        <div
+          className="displayFlex flexDirectionColumn"
+          style={{ textAlign: "center" }}
+        >
+          <label className="userNameLabel" style={{ marginRight: "12rem" }}>
+            {user?.relation_with?.user?.first_name}{" "}
+            {user?.relation_with?.user?.last_name}
+          </label>
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+            <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem",marginLeft:"1.5rem", alignItems:"baseline"}}
+              style={{
+                marginTop: "1rem",
+                marginLeft: "1.5rem",
+                alignItems: "baseline",
+              }}
             >
               <label className="userProfileInfoTitle">Khoji Id</label>
               <label className="userProfileInfoValue">
@@ -945,19 +934,10 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
               </label>
             </div>
           </div>
-        
         </div>
       </div>
-    
-      
-      
-    
-  );
-}
-
-  
-  
-  
+    );
+  }
 
   function buildUserCard(user: any, index: any) {
     return user ? (
@@ -1054,20 +1034,7 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
       siderChildren={!isMobileView && <CustomMenu />}
     >
       {isMobileView && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingLeft: "15px",
-            paddingRight: "15px",
-            paddingTop: "10px",
-            paddingBottom: "15px",
-            backgroundColor: "white",
-            boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.30)", // Shadow effect
-            width: "100%", // Take full width of the container
-          }}
-        >
+        <div className="flexContainer">
           <>
             <LogoIcon className="logomenu" />
             <div>
@@ -1082,10 +1049,10 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
           style={isMobileView ? { marginLeft: "1rem" } : { marginLeft: "3rem" }}
         >
           <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-            <ArrowLeftIcon onClick={() => router.back()} />
+            {/* <ArrowLeftIcon onClick={() => router.back()} /> */}
             Apply for Gyan Darshan
           </div>
-          <div style={{ marginLeft: "1.2rem" }}>
+          <div>
             <label className="Descriptionlabel">Add Application details</label>
           </div>
           <Row justify="center">
@@ -1220,7 +1187,7 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                         },
                       ]}
                     >
-                     <Select
+                      {/* <Select
   mode="tags"
   style={{ width: "100%", height: "auto" }}
   placeholder="Select Purpose"
@@ -1233,8 +1200,21 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
       {option.label}
     </Option>
   ))}
-</Select>
-
+</Select> */}
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: "100%" }}
+                        placeholder="Select Purpose"
+                        value={selectedPurpose}
+                        onChange={(value) => setSelectedPurpose(value)}
+                      >
+                        {purposeOptions.map((option) => (
+                          <Option key={option.key} value={option.value}>
+                            {option.label}
+                          </Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1284,7 +1264,6 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
     }
   }}
 /> */}
-
                     </Form.Item>
                   </Col>
                   <Col span={12}>
@@ -1334,6 +1313,130 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                     </Form.Item>
                   </Col>
                 </Row>
+
+                {/* <Col span={12}>
+                  <Form.Item
+                    label="Select preferred date range"
+                    name={["week"]}
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select a preferred week!",
+                      },
+                    ]}
+                  > */}
+                    {/* <DatePicker
+                      style={{
+                        borderRadius: "2rem",
+                        height: "2rem",
+                        width: "100%",
+                      }}
+                      picker="week"
+                      format="YYYY-wo"
+                      onChange={(date, dateString) => {
+                        console.log("Received dateString:", dateString); // Add logging to check the format of dateString
+
+                        // Check if dateString is defined and has the expected format
+                        if (typeof dateString === "string") {
+                          // Extract year and week number using regular expression
+                          const match = dateString.match(
+                            /^(\d{4})-(\d{1,2})(?:st|nd|rd|th)?$/
+                          );
+                          if (match) {
+                            const year = match[1];
+                            const weekNumber = parseInt(match[2], 10); // Extract numeric part of the week string
+                            const startDateOfWeek = moment()
+                              .isoWeekYear(Number(year))
+                              .isoWeek(weekNumber)
+                              .startOf("week")
+                              .format("YYYY-MM-DD");
+                            const endDateOfWeek = moment()
+                              .isoWeekYear(Number(year))
+                              .isoWeek(weekNumber)
+                              .endOf("week")
+                              .format("YYYY-MM-DD");
+
+                            // Update both start and end dates
+                            setStartdate(startDateOfWeek);
+                            setEnddate(endDateOfWeek);
+                          } else {
+                            console.error(
+                              "Invalid dateString format:",
+                              dateString
+                            );
+                          }
+                        }
+                      }}
+                    /> */}
+
+{/* 
+<DatePicker
+  style={{
+    borderRadius: "2rem",
+    height: "2rem",
+    width: "100%",
+  }}
+  picker="week"
+  format="YYYY-MM-DD"
+  disabledDate={(current: Dayjs) => {
+    const today = dayjs();
+    const startOfCurrentWeek = dayjs().startOf('week');
+    
+    // Disable current week and past weeks
+    if (current.isBefore(today, 'day') || current.isBefore(startOfCurrentWeek, 'day')) {
+      return true;
+    }
+    return false;
+  }}
+  onChange={(date, dateString) => {
+    console.log("Received dateString:", dateString); // Add logging to check the format of dateString
+
+    // Check if dateString is defined and has the expected format
+    if (typeof dateString === "string") {
+      // Extract year, month, and day using regular expression
+      const match = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        const day = parseInt(match[3], 10);
+        let startDateOfWeek, endDateOfWeek;
+
+        // Determine the start and end dates of the week based on the selected day
+        if (day <= 7) {
+          // First week: Start from the 1st to the 7th
+          startDateOfWeek = moment().year(year).month(month - 1).date(1).format("YYYY-MM-DD");
+          endDateOfWeek = moment().year(year).month(month - 1).date(7).format("YYYY-MM-DD");
+        } else if (day <= 14) {
+          // Second week: Start from the 8th to the 14th
+          startDateOfWeek = moment().year(year).month(month - 1).date(8).format("YYYY-MM-DD");
+          endDateOfWeek = moment().year(year).month(month - 1).date(14).format("YYYY-MM-DD");
+        } else if (day <= 21) {
+          // Third week: Start from the 15th to the 21st
+          startDateOfWeek = moment().year(year).month(month - 1).date(15).format("YYYY-MM-DD");
+          endDateOfWeek = moment().year(year).month(month - 1).date(21).format("YYYY-MM-DD");
+        } else {
+          // Last week: Start from the 22nd to the end of the month
+          startDateOfWeek = moment().year(year).month(month - 1).date(22).format("YYYY-MM-DD");
+          endDateOfWeek = moment().year(year).month(month - 1).endOf('month').format("YYYY-MM-DD");
+        }
+
+        // Update both start and end dates
+        setStartdate(startDateOfWeek);
+        setEnddate(endDateOfWeek);
+      } else {
+        console.error("Invalid dateString format:", dateString);
+      }
+    }
+  }}
+/> */}
+
+
+  
+                  {/* </Form.Item>
+                </Col> */}
+
                 <Row gutter={16}>
                   <Col span={24}>
                     <Form.Item
@@ -1435,28 +1538,13 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                         xl={12}
                         style={{ marginBottom: "16px" }}
                       >
-                        <div
-                      
-                        >
+                        <div>
                           <Button
-                           style={isMobileView ? {
-                            borderRadius: "1rem",
-                           backgroundColor: "#1E1E1E",
-                           alignItems:"center",
-                           color: "white",
-                           marginTop: "2rem", 
-                           marginLeft:"3rem"
-                          } 
-                           : 
-                           { marginTop: "1rem",
-                           borderRadius: "1rem",
-                           backgroundColor: "#1E1E1E",
-                           color: "white",
-                           width: "100%",
-                           marginLeft:"6rem"
-                            
-                           }}
-                            
+                            className={
+                              isMobileView
+                                ? "mobileViewStyle"
+                                : "nonMobileViewStyle"
+                            }
                             onClick={() => handleInputTypeChange("View all")}
                           >
                             View all
@@ -1495,7 +1583,7 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                                     type="link"
                                     style={{
                                       marginRight: 10,
-                                      fontSize:"0.8225rem",
+                                      fontSize: "0.8225rem",
                                       color:
                                         inputType === "khoji"
                                           ? "blue"
@@ -1511,7 +1599,7 @@ function buildUserdataCard(user: any, index: any, selectedUserIds: any, setSelec
                                     type="link"
                                     style={{
                                       marginRight: 10,
-                                      fontSize:"0.6225rem",
+                                      fontSize: "0.6225rem",
                                       color:
                                         inputType === "guest"
                                           ? "blue"

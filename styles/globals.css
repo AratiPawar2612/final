@@ -664,6 +664,10 @@ border: 0.0069rem 0rem 0rem 0rem;
   margin-left: 10px; /* Adjust the spacing between the circle and the line */
 }
 
+.custom-step .ant-steps-item-icon > .ant-steps-icon {
+  background-color: red; /* Change dot color to red */
+}
+
 .step-item.active .step-circle {
   background-color: #F55C38!important; 
 }
@@ -792,37 +796,151 @@ margin-top: "3rem"!important;
   font-Size:"0.75rem"!important;
 
 }
-.continuebutton {
-  border-radius: 1rem;
-  margin-left: 1rem;
-  width: 100%;
-  max-width: 15rem;
-  height: 1rem;
-  margin-bottom: 1rem;
-}
 .mobilecontainer{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 15px;
-  background-color: white;
-  box-shadow: 0px 0px 1.7px 0px rgba(0, 0, 0, 0.25);
-  width: 100%;
+  display: flex!important;
+  flex-direction: row!important;
+  justify-content: space-between!important;
+  padding-left: 15px!important;
+  padding-right: 15px!important;
+  padding-top: 10px!important;
+  padding-bottom: 15px!important;
+  background-color: white!important;
+  box-shadow: 0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)!important;
+  width: 100%!important;
 }
 .Historycontainer {
-  margin-top: 2rem;
-  width: 165px;
-  height: 195px;
-  position: absolute;
-  top: 696px;
-  left: 259px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  border-radius: 16px 0px 0px 0px;
-  border-top: 1px solid transparent;
-  justify-content: space-between;
+  margin-top: 2rem!important;
+  width: 165px!important;
+  height: 195px!important;
+  position: absolute!important;
+  top: 696px!important;
+  left: 259px!important;
+  display: flex!important;
+  flex-direction: column!important;
+  gap: 8px!important;
+  border-radius: 16px 0px 0px 0px!important;
+  border-top: 1px solid transparent!important;
+  justify-content: space-between!important;
 }
+.step-description {
+  display: flex!important;
+  align-items: flex-start!important;
+}
+
+.step-dot {
+  width: 10px!important;
+  height: 10px!important;
+  background-color: red!important;
+  margin-right: 10px!important;
+}
+
+.description-box {
+  border: 1px solid #ccc!important;
+  padding: 1rem!important;
+  flex: 1!important;
+}
+.flexContainer {
+  display: flex!important;
+  flex-direction: row!important;
+  justify-content: space-between!important;
+  padding-left: 15px!important;
+  padding-right: 15px!important;
+  padding-top: 10px!important;
+  padding-bottom: 15px!important;
+  background-color: white!important;
+  box-shadow: 0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)!important;
+  width: 100%!important;
+  box-sizing: border-box!important; 
+}
+
+
+
+.description-box h3 {
+  margin-bottom: 0.5rem!important;
+}
+
+.editButton {
+  border-radius: 2rem!important;
+  width: 100%!important;
+  height: 2rem!important;
+  margin-top: 1rem!important;
+  margin-left: 0.8rem!important;
+  margin-bottom: 2rem!important;
+}
+.saveApplyButton {
+  border-radius: 2rem!important;
+  width: 100%!important;
+  height: 2rem!important;
+  margin-top: 1rem!important;
+  background-color: black !important;
+}
+
+.cardContainer {
+  flex: 1!important;
+  margin-top: 2rem!important;
+}
+
+.lightBlueBackground {
+  background-color: lightblue!important;
+}
+
+.whiteBackground {
+  background-color: white!important;
+}
+.addButton {
+  margin-top: 1rem!important;
+  background-color: black!important;
+  width: 100%!important;
+  margin-bottom: 1rem!important;
+}
+.inputStyle {
+  border-radius: 2rem !important;
+  height: 2rem !important;
+  width: 100% !important;
+}
+
+.mobileViewStyle {
+  border-radius: 1rem!important;
+  background-color: black!important;
+  align-items: center!important;
+  color: white!important;
+  margin-top: 2rem!important;
+  margin-left: 3rem!important;
+}
+
+.nonMobileViewStyle {
+  margin-top: 1rem!important;
+  border-radius: 1rem!important;
+  background-color: black!important;
+  color: white!important;
+  width: 100%!important;
+  margin-left: 6rem!important;
+}
+.customIcon {
+  margin-left: 40px !important;
+  display: flex!important;
+  align-items: center!important;
+  height: 4rem!important;
+  background: transparent!important;
+}
+
+.customProfile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10rem;
+  background-color: #F4F4F4;
+}
+/* styles.css */
+.customMobileNotification {
+  width: 360px;
+  height: 80vh;
+  margin-left: 7rem;
+  padding: 1.25rem;
+  overflow-y: auto; /* Use camelCase for CSS properties in JavaScript */
+}
+/* YourComponent.css */
+.highlighted-week {
+  background-color: #f0f0f0; /* Example background color */
+}
+

@@ -70,8 +70,8 @@ export default function ViewStatusPage() {
             const firstApplication = applicationData[0];
             setAppliid(firstApplication?.id);
             setReferenceCode(firstApplication?.reference_code);
-            setAdults(firstApplication?.age_counts?.adults);
-            setChildrens(firstApplication?.age_counts?.childrens);
+            setAdults(firstApplication?.adults);
+            setChildrens(firstApplication?.childrens);
             console.log("applicationdata", firstApplication);
   
             const participantresp = firstApplication?.participants;
@@ -191,12 +191,12 @@ export default function ViewStatusPage() {
         </div>
       )}
 
-      <div>
+      <div className="marginLeft1rem"> 
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-          <ArrowLeftIcon onClick={() => router.back()} />
+          {/* <ArrowLeftIcon onClick={() => router.back()} /> */}
           Apply for Gyan Darshan
         </div>
-        <div style={{ marginLeft: "1.2rem" }}>
+        <div>
           <label className="Descriptionlabel">View Status</label>
         </div>
 
@@ -250,7 +250,7 @@ export default function ViewStatusPage() {
               >
                 <div>
                   <div style={{ fontWeight: "bold", marginTop: "2rem" }}>
-                    Application History
+                    Application ID
                   </div>
                   <label>{referenceCode}</label>
 
@@ -377,123 +377,121 @@ export default function ViewStatusPage() {
                 style={{ textWrap: "nowrap" }}
               >{`Here's the status of your Gyan Darshan application`}</label>
             </div>
+
+
+
             <Row gutter={[6, 28]}>
-  {cardData.map((card, index) => (
-    <React.Fragment key={index}>
-      <Col span={24} style={{ display: "flex", alignItems: "flex-start", marginBottom: "1rem" }}>
-        {/* Step and Line Column */}
-        <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-          <div
-            className="custom"
-            style={{ marginTop: isMobileView ? "3rem" : "7rem", borderRight: "1px solid #e8e8e8", paddingRight: "1rem" }}
-          >
+      {cardData.map((card, index) => (
+        <Col key={index} span={24} style={{ display: "flex", alignItems: "flex-start", marginBottom: "1rem" }}>
+          {/* Step and Line Column */}
+          <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
             <div
-              className={`step-item ${
-                ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
-                ((status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && index === 1) ||
-                (status1 === "ACCEPTED_BY_KHOJI" && index <= 2) ? "completed" : ""
-              }`}
-              style={{
-                backgroundColor: ((status1 === "SUBMITTED" && index === 0) ||
-                  (status1 === "APPROVED_BY_DKD" && index === 1) ||
-                  (status1 === "ACCEPTED_BY_KHOJI" && index === 2)) ? "red" : ""
-              }}
+              className="custom"
+              style={{ marginTop: isMobileView ? "3rem" : "7rem", borderRight: "1px solid #e8e8e8", paddingRight: "1rem" }}
             >
-              <div className="step-circle">{index + 1}</div>
+              <div
+                className={`step-item ${((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
+                  ((status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && index === 1) ||
+                  (status1 === "ACCEPTED_BY_KHOJI" && index <= 2) ? "completed" : ""}`}
+                style={{ backgroundColor: ((status1 === "SUBMITTED" && index === 0) ||
+                  (status1 === "APPROVED_BY_DKD" && index === 1) ||
+                  (status1 === "ACCEPTED_BY_KHOJI" && index === 2)) ? "red" : "" }}
+              >
+                {/* Removed index + 1 from here */}
+                <div className="step-circle"></div>
+              </div>
             </div>
           </div>
-        </div>
-        {/* Card Column */}
-        <Col xs={24} sm={24} md={24} lg={12} xl={12} style={{ marginLeft: "1rem" }}>
-          <Card
-            title={card.title}
-            style={{ marginTop: isMobileView ? "2rem" : "5rem" }}
-            className={
-              ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
-              ((status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && index === 1) ||
-              (status1 === "ACCEPTED_BY_KHOJI" && index <= 2)
-                ? "enabled-card"
-                : "disabled-card"
-            }
-          >
-            {card.content}
-            {index === 1 && (status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && (
-              <div
-                style={{
-                  marginTop: "1rem",
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <Button
-                  style={{ marginRight: "1rem" }}
-                  type="default"
-                  onClick={handleOpenModal}
+          {/* Card Column */}
+          <Col xs={20} sm={24} md={24} lg={12} xl={12}>
+            <Card
+              title={card.title}
+              style={{ marginTop: isMobileView ? "2rem" : "5rem" }}
+              className={`${
+                ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
+                ((status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && index === 1) ||
+                (status1 === "ACCEPTED_BY_KHOJI" && index <= 2)
+                  ? "enabled-card"
+                  : "disabled-card"
+              }`}
+            >
+              {card.content}
+              {index === 1 && (status1 === "APPROVED_BY_DKD" || status1 === "RESCHEDULED_BY_KHOJI") && (
+                <div
+                  style={{
+                    marginTop: "1rem",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
                 >
-                  Reschedule
-                </Button>
-                <Modal
-                  title="Reschedule Application"
-                  open={isModalVisible}
-                  onCancel={handleCloseModal}
-                  footer={[
-                    <Button key="cancel" onClick={handleCloseModal}>
-                      Cancel
-                    </Button>,
-                    <Button
-                      key="submit"
-                      type="primary"
-                      onClick={handleFormSubmit}
-                    >
-                      Submit
-                    </Button>,
-                  ]}
-                >
-                  <Form layout="vertical" onFinish={handleFormSubmit}>
-                    <Form.Item
-                      label="Preferred Start Date"
-                      name="preferredStartDate"
-                    >
-                      <DatePicker
-                        value={startdate}
-                        onChange={(date) => setStartdate(date)}
-                        format="YYYY-MM-DD"
-                        disabledDate={(current) =>
-                          disabledDate(current, null, startdate)
-                        }
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      label="Preferred End Date"
-                      name="preferredEndDate"
-                    >
-                      <DatePicker
-                        value={enddate}
-                        onChange={(date) => setEnddate(date)}
-                        format="YYYY-MM-DD"
-                        disabledDate={(current) =>
-                          disabledDate(current, null, enddate)
-                        }
-                      />
-                    </Form.Item>
-                  </Form>
-                </Modal>
-                <Button
-                  onClick={handleConfirmClick}
-                  type="primary"
-                  style={{ backgroundColor: "green" }}
-                >
-                  Confirm
-                </Button>
-                <DeleteOutlined />
-              </div>
-            )}
-          </Card>
+                  <Button
+                    style={{ marginRight: "1rem" }}
+                    type="default"
+                    onClick={handleOpenModal}
+                  >
+                    Reschedule
+                  </Button>
+                  <Modal
+                    title="Reschedule Application"
+                    open={isModalVisible}
+                    onCancel={handleCloseModal}
+                    footer={[
+                      <Button key="cancel" onClick={handleCloseModal}>
+                        Cancel
+                      </Button>,
+                      <Button
+                        key="submit"
+                        type="primary"
+                        onClick={handleFormSubmit}
+                      >
+                        Submit
+                      </Button>,
+                    ]}
+                  >
+                    <Form layout="vertical" onFinish={handleFormSubmit}>
+                      <Form.Item
+                        label="Preferred Start Date"
+                        name="preferredStartDate"
+                      >
+                        <DatePicker
+                          value={startdate}
+                          onChange={(date) => setStartdate(date)}
+                          format="YYYY-MM-DD"
+                          disabledDate={(current) =>
+                            disabledDate(current, null, startdate)
+                          }
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        label="Preferred End Date"
+                        name="preferredEndDate"
+                      >
+                        <DatePicker
+                          value={enddate}
+                          onChange={(date) => setEnddate(date)}
+                          format="YYYY-MM-DD"
+                          disabledDate={(current) =>
+                            disabledDate(current, null, enddate)
+                          }
+                        />
+                      </Form.Item>
+                    </Form>
+                  </Modal>
+                  <Button
+                    onClick={handleConfirmClick}
+                    type="primary"
+                    style={{ backgroundColor: "green" }}
+                  >
+                    Confirm
+                  </Button>
+                  <DeleteOutlined />
+                </div>
+              )}
+            </Card>
+          </Col>
         </Col>
-      </Col>
-    </React.Fragment>
-  ))}
-</Row>
+      ))}
+    </Row>
 
           </Col>
         </Row>

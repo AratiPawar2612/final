@@ -32,6 +32,8 @@ import { fetchApplicationData, fetchUserData ,submitRescheduleForm} from "../api
 import CustomMobileMenu from "@/components/custommobilemenu";
 import dayjs from "dayjs";
 import jsPDF from 'jspdf';
+import moment from 'moment';
+
 
 const { Meta } = Card;
 
@@ -749,7 +751,7 @@ export default function HomePage() {
   };
 
 
-  const passRef = useRef(null);
+  const passRef = useRef<HTMLDivElement>(null);
   const handleDownload = () => {
     const passElement = passRef.current;
   
@@ -781,47 +783,49 @@ export default function HomePage() {
     }
   };
   
-  const handleSharePass = () => {
+  const handleSharePass = async () => {
     const passElement = passRef.current;
   
     if (passElement) {
-      html2canvas(passElement).then((canvas) => {
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const filesArray = [new File([blob], 'gyan_darshan_pass.png', { type: 'image/png' })];
-            
-            if (navigator.canShare && navigator.canShare({ files: filesArray })) {
-              navigator.share({
-                files: filesArray,
-                title: 'Gyan Darshan Pass',
-                text: 'Please find the Gyan Darshan Pass attached.',
-              }).then(() => {
-                console.log('Pass shared successfully.');
-              }).catch((error) => {
-                console.error('Error sharing pass:', error);
-                // Fallback mechanism if sharing fails
-                // Implement your custom share dialog or offer alternative sharing methods here
-                // For example:
-                alert('Sharing failed. You can copy the link to share.');
-              });
+        // Add padding to pass element
+        passElement.style.padding = '10px'; // Adjust the padding value as needed
+
+        try {
+            const canvas = await html2canvas(passElement);
+            const dataUrl = canvas.toDataURL('image/png');
+
+            // Generate a blob from the data URL
+            const blob = await fetch(dataUrl).then(res => res.blob());
+
+            // Create a URL for the blob
+            const url = URL.createObjectURL(blob);
+
+            // Prompt the user to copy the link
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        alert('Pass URL copied to clipboard. You can now paste and share it manually.');
+                    })
+                    .catch(error => {
+                        console.error('Error copying URL to clipboard:', error);
+                        alert('Error copying URL to clipboard. Please try again.');
+                    });
             } else {
-              console.error('Sharing pass not supported.');
-              // Fallback mechanism if sharing is not supported
-              // Implement your custom share dialog or offer alternative sharing methods here
-              // For example:
-              alert('Sharing not supported. You can copy the link to share.');
+                console.error('Clipboard API not supported.');
+                alert('Clipboard API not supported. You can manually copy the URL.');
             }
-          } else {
-            console.error('Blob is null.');
-          }
-        }, 'image/png');
-      });
+        } catch (error) {
+            console.error('Error capturing pass:', error);
+            alert('Error capturing pass. Please try again.');
+        } finally {
+            // Remove padding from pass element after capturing
+           
+        }
     } else {
-      console.error('passRef.current is null.');
+        console.error('passRef.current is null.');
     }
-  };
-  
-  
+};
+
   
   
 
@@ -830,19 +834,7 @@ export default function HomePage() {
       
    {isMobileView && (
   <div
-  style={{  
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingLeft:"15px",
-    paddingRight:"15px",
-    paddingTop: "10px",
-    paddingBottom: "15px",
-    backgroundColor: "white",
-    boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.25)", // Shadow effect
-    width: "100%", 
-    boxSizing: "border-box", 
-  }}
+  className="flexContainer"
 >
    
     <>
@@ -962,31 +954,32 @@ export default function HomePage() {
   </span>
   <div style={{ display: "flex", gap: "0.5rem" }}> {/* Adjust gap between icons */}
     <Button icon={<DownloadIcon />} onClick={handleDownload} />
-    <Button icon={<ShareIcon />} onClick={handleSharePass} />
+    {/* <Button icon={<ShareIcon />} onClick={handleSharePass} /> */}
   </div>
 </div>
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <div className="FlexDirectionRowSpacebetween">
             <div style={{ }}>
               <b>Date</b><br/>
-              <label>10/10/2024</label>
-              <div style={{ }}>
-              <b> Reporting Time</b> <br/>
+              <label>{applicationdata[0]?.event?.start_date && moment(applicationdata[0]?.event?.start_date).format('DD.MM.YYYY')}</label>
+             <div style={{ }}>
+              <b> Reporting Time</b> <br/>  
                 <div>10:30</div>
               </div>
             </div>
-            <div style={{ textWrap:"wrap" }}>
+            <div style={{ textWrap:"wrap" ,marginLeft:"10px"}}>
               <b>Address</b><br/>
               <label>Happy Thoughts Building, Vikrant Complex, Savta Mali Nagar,<br/>Pimpri Colony, Pune, Maharashtra 411017</label>
             </div>
-            <div style={{ width: "5.5625rem", height: "17", fontSize: "0.75rem", fontWeight: "bold" }}>
+            <div style={{ width: "5.5625rem", height: "17", fontSize: "0.75rem", fontWeight: "bold",marginLeft:"10px" }}>
               <ElipseIcon /><br/>
               <label className="passlabel">
                 {applicationdata && applicationdata.length > 0 ? 
-                  `${applicationdata[0]?.age_counts?.adults !== undefined ? applicationdata[0]?.age_counts?.adults : ''} adults * ${applicationdata[0]?.age_counts?.childrens || 0} child`
+                  `${applicationdata[0]?.adults !== undefined ? applicationdata[0]?.adults : ''} adults * ${applicationdata[0]?.childrens || 0} child`
                   :
                   "0 adults * 0 child"
                 }
+          
               </label>
             </div>
           </div>
@@ -1036,7 +1029,7 @@ export default function HomePage() {
             Apply for Gyan Darshan
           </div>
           <div style={{ marginTop: "0.8rem" }}>
-            This option is available for individuals who have completed Maha Asamani Paramgyan shivir from Tejgyan Foundation.
+            This option is available for individuals who have completed MahaAasmani Paramgyan shivir from Tejgyan Foundation.
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>

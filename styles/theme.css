@@ -155,6 +155,7 @@ body {
   }
 }
 
+
 /* For larger screens */
 @media screen and (min-width: 1025px) and (max-width: 1440px) {
   body {
@@ -191,4 +192,30 @@ body {
   body {
     font-size: 1.125rem;
   }
+}
+
+.FlexDirectionRowSpacebetween {
+  display: flex !important;
+  flex-direction: row !important; 
+  justify-content: space-between !important;
+}
+.marginLeft3rem {
+  margin-left: 3rem!important;
+}
+.marginLeft2rem {
+  margin-left: 2rem!important;
+}
+.marginLeft1rem {
+  margin-left: 1rem!important;
+}
+.marginTop3rem {
+  margin-top: 1rem!important;
+}
+
+.marginTop2rem {
+  margin-top: 1rem!important;
+}
+
+.marginTop1rem {
+  margin-top: 1rem!important;
 }

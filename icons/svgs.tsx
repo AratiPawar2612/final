@@ -344,14 +344,14 @@ export const KhojiProfileSvg = (props: any) => (
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
     <path
       d="M5.29067 10.3093C3.56978 11.4613 3.56978 13.3386 5.29067 14.4835C7.24622 15.7919 10.4533 15.7919 12.4089 14.4835C14.1298 13.3315 14.1298 11.4541 12.4089 10.3093C10.4604 9.00792 7.25333 9.00792 5.29067 10.3093Z"
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
   </svg>
 );
@@ -368,14 +368,14 @@ export const MessagesSvg = (props: any) => (
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
     <path
       d="M7.63379 10.6399L10.1796 8.08704"
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
   </svg>
 );
@@ -394,7 +394,7 @@ export const SavedSvg = (props: any) => (
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
   </svg>
 );
@@ -411,14 +411,14 @@ export const SettingsSvg = (props: any) => (
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
     <path
       d="M8.97806 10.8666C10.1563 10.8666 11.1114 9.91152 11.1114 8.73331C11.1114 7.5551 10.1563 6.59998 8.97806 6.59998C7.79985 6.59998 6.84473 7.5551 6.84473 8.73331C6.84473 9.91152 7.79985 10.8666 8.97806 10.8666Z"
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
   </svg>
 );
@@ -457,14 +457,14 @@ export const LogoutSvg = (props: any) => (
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
     <path
       d="M5.13379 9.06668H15.0893L12.956 6.93335M12.956 11.2L15.0893 9.06668"
       stroke="currentColor"
       strokeWidth="1.06667"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
   </svg>
 );
@@ -721,21 +721,21 @@ export const ArrowLeftSvg = (props: any) => (
       stroke="#0F172A"
       strokeWidth="1.42222"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
     <path
       d="M6.72607 14.689L11.4668 19.4297"
       stroke="#0F172A"
       strokeWidth="1.42222"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
     <path
       d="M6.72607 14.6891L11.4668 9.94836"
       stroke="#0F172A"
       strokeWidth="1.42222"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-linejoin="round"
     />
   </svg>
 );
@@ -772,12 +772,14 @@ export const UserAvatarSvg = (props: any) => (
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}>
+    strokeLinejoin="round" // Change from 'stroke-linejoin' to 'strokeLinejoin'
+    {...props}
+  >
     <circle cx="12" cy="7" r="4" />
     <path d="M2 15s1.5-2 4-2h12c2.5 0 4 2 4 2" />
   </svg>
 );
+
 
 export const InfoSvg = (props: any) => (
   <svg

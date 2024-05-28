@@ -173,18 +173,7 @@ export default function CompleteAndApplyPage() {
     >
       {isMobileView && (
         <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingLeft: "15px",
-            paddingRight: "15px",
-            paddingTop: "10px",
-            paddingBottom: "15px",
-            backgroundColor: "white",
-            boxShadow: "0px 0px 1.7px 0px rgba(0, 0, 0, 0.30)",
-            width: "100%",
-          }}
+          className="flexContainer"
         >
           <>
             <LogoIcon className="logomenu" />
@@ -196,12 +185,12 @@ export default function CompleteAndApplyPage() {
         </div>
       )}
 
-      <div style={{ marginLeft: "3rem" }}>
+      <div  className="marginLeft3rem">
         <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-          <ArrowLeftIcon onClick={() => router.back()} />
+          {/* <ArrowLeftIcon onClick={() => router.back()} /> */}
           Apply for Gyan Darshan
         </div>
-        <div style={{ marginLeft: "1.2rem" }}>
+        <div >
           <label className="Descriptionlabel">complete and apply</label>
         </div>
 
@@ -249,12 +238,10 @@ export default function CompleteAndApplyPage() {
             </div>
             <Row gutter={16}>
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop:"1rem"
-                }}
+              className="FlexDirectionRowSpacebetween marginTop1rem"
+                // style={{
+                //   marginTop:"1rem"
+                // }}
               >
                 <Row gutter={[16, 16]} style={{ flex: "1", flexWrap: "wrap" }}>
                   {data.map((user: any, index: any) => (
@@ -284,18 +271,17 @@ export default function CompleteAndApplyPage() {
           <Row gutter={[16, 16]}>
             <Col span={8}>
               <div
+              className="marginLeft2rem marginTop1rem"
                 style={{
                   fontSize: "0.9rem",
-                  marginLeft: "2rem",
-                  marginTop: "1rem",
                 }}
               >
                 Preferred Date
               </div>
               <div
+               className="marginLeft2rem marginTop1rem"
                 style={{
-                  marginTop: "1rem",
-                  marginLeft: "2rem",
+                 
                   textWrap: "nowrap",
                 }}
               >
@@ -304,21 +290,19 @@ export default function CompleteAndApplyPage() {
             </Col>
             <Col span={12}>
               <div
+               className="marginLeft3rem marginTop1rem"
                 style={{
                   fontSize: "0.9rem",
-                  marginLeft: "3rem",
-                  marginTop: "1rem",
                 }}
               >
                 Purpose of Darshan
               </div>
               <Select
                 mode="tags"
+                className="marginLeft3rem marginTop1rem"
                 style={{
                   width: "100%",
                   height: "auto",
-                  marginLeft: "3rem",
-                  marginTop: "0.8rem",
                 }}
                 placeholder="Select Purpose"
                 value={purpose}
@@ -343,14 +327,8 @@ export default function CompleteAndApplyPage() {
         <Row gutter={[16, 16]}>
           <Col xs={12} sm={12} md={8} lg={6}>
             <Button
-              style={{
-                borderRadius: "2rem",
-                width: "100%",
-                height: "2rem",
-                marginBottom: "2rem",
-                marginTop: "1rem",
-                marginLeft:"0.8rem"
-              }}
+             className="editButton"
+             disabled
             >
               Edit
             </Button>
@@ -358,13 +336,7 @@ export default function CompleteAndApplyPage() {
           <Col xs={12} sm={12} md={8} lg={6}>
             <Button
               type="primary"
-              style={{
-                borderRadius: "2rem",
-                width: "100%",
-                height: "2rem",
-                backgroundColor: "black",
-                marginTop: "1rem",
-              }}
+             className="saveApplyButton"
               onClick={onclicksaveandapplybtn}
             >
               Save and apply
