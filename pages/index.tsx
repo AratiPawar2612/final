@@ -1,9 +1,9 @@
 import useSafeReplace from "@/components/useSafeReplace";
 import { Button, Col, Flex, Row } from "antd";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, useSession,signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from "@/icons/icon";
-import MainLayout from "@/components/mainlayout";
+
 
 export default function Index() {
   const { data: session, status } = useSession();
@@ -12,11 +12,12 @@ export default function Index() {
   const gapRem = "3.125rem";
   const [isMobileView, setIsMobileView] = useState(false);
 
-  const handleSessionExpired = () => {
-    // Implement how to handle an expired session
-    // Replace the following line with your actual handling logic
-    window.location.href = "/"; // Redirect to login page
+  const  handleSessionExpired = async () => {
+    
+    await signOut();
   };
+
+ 
 
   useEffect(() => {
     const isSessionValid = (session:any) => {
