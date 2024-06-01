@@ -546,11 +546,11 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
   function buildUserCard(user: any, index: any) {
     return user ? (
       <div
-        className={`${
-          index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
-        }`}
-        key={user.id}
-      >
+      className={`${
+        index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
+      } userProfileContainer`} // Add userProfileContainer class
+      key={user.id}
+    >
         <div className="userProfileTopSection" />
         <div></div>
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
