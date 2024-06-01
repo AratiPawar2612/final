@@ -18,24 +18,27 @@ body {
 
 /* Adjust the layout for small screens */
 @media screen and (max-width: 767px) {
-  .body {
-    font-display: swap !important;
-    font-weight: 400 !important;
-    font-size: 1rem !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background-color: #f4f4f4 !important;
+  body {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 90%;
   }
   .topPart {
-    padding: 0px; /* Add padding to the topPart */
-  }
-  .loginTitle {
-    font-size: 20px; /* Adjust the font size for smaller screens */
+    width: "100vw" !important;
+    background-color: #a6d4db !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 2rem !important;
   }
   .bottomPart {
-    padding: 20px; /* Add padding to the bottomPart */
+    background-color: #F4F4F4;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
+ 
   .loginRightPanelTitle,
   .loginRightPanelSubtitle {
     text-align: center; /* Center align the text */
@@ -110,7 +113,7 @@ body {
     margin-top: "12rem" !important;
   }
   .topPart {
-    width: "auto" !important;
+    width: "100vw" !important;
     background-color: #a6d4db !important;
     display: flex !important;
     justify-content: center !important;
@@ -118,7 +121,7 @@ body {
     padding: 2rem !important;
   }
   .bottomPart {
-    background-color: #ffffff !important;
+    background-color: #F4F4F4;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
@@ -152,6 +155,14 @@ body {
     letter-spacing: 0.0544rem!important;
     text-align: left!important;
     color: #0f172a !important;
+  }
+  .topPart {
+    width: "100vw" !important;
+    background-color: #a6d4db !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 2rem !important;
   }
 }
 

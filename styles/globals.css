@@ -298,7 +298,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   width: 4rem !important;
   border-radius: 2rem !important;
   margin-left: 1.125rem !important;
-  margin-top: 1.4375rem !important;
+  margin-top: 4.4375rem !important;
 }
 
 .userProfileVerifiedBadge {
@@ -306,7 +306,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   flex-direction: row !important;
   align-items: center !important;
   margin-left: 8rem !important;
-  margin-top: 4.5rem !important;
+  margin-top: 6.5rem !important;
 }
 
 .userProfileVerifiedBadgeLabel {
@@ -320,10 +320,10 @@ border: 0.0069rem 0rem 0rem 0rem;
 .userProfileLeftCard {
   display: flex !important;
   flex-direction: column !important;
-  height:  10.375rem !important;
+  height:  15.375rem !important;
   border-radius: 0.4375rem !important;
   position: relative !important;
-  background: #f9f9f9 !important;
+  background: #f9f9f9b0 !important;
   margin-bottom: 0.75rem !important;
   width: 17.3125rem !important;
 }
@@ -331,7 +331,7 @@ border: 0.0069rem 0rem 0rem 0rem;
 .userProfileRightCard {
   display: flex !important;
   flex-direction: column !important;
-  height:10.375rem !important;
+  height:15.375rem !important;
   border-radius: 0.4375rem !important;
   position: relative !important;
   background: #f9f9f9 !important;
@@ -357,7 +357,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   top: 0rem !important;
   left: 0rem !important;
   right: 0rem !important;
-  height: 4.125rem !important;
+  height: 6.125rem !important;
   background: #fdd8d8 !important;
   border-radius: 0.4375rem 0.4375rem 0rem 0rem !important;
 }
@@ -552,7 +552,7 @@ border: 0.0069rem 0rem 0rem 0rem;
 
 .bottomPart {
   flex: 1;
-  background-color: #ffffff!important;
+  background-color: #F4F4F4;
   display: flex!important;
   flex-direction: column!important;
   align-items: center!important;
@@ -651,7 +651,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   text-align: left!important;
 }
 .enabled-card {
-  border: 2px solid blue!important; 
+  border: 2px solid green!important; 
 }
 
 .disabled-card {
@@ -942,5 +942,15 @@ margin-top: "3rem"!important;
 /* YourComponent.css */
 .highlighted-week {
   background-color: #f0f0f0; /* Example background color */
+}
+
+.custom-message {
+  position: fixed;
+  bottom: 20px !important;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.highlighted-week td {
+  background-color: lightgreen;
 }
 

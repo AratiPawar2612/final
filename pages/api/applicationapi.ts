@@ -1,9 +1,8 @@
-
+import { message } from "antd";
 
 const baseUrl = "https://hterp.tejgyan.org/django-app/";
 // const baseUrl = "http://192.168.1.247:8000/";
 const eventUrl = `${baseUrl}event/`;
-
 
 export const fetchUserData = async (accessToken: any) => {
   const userApiUrl = `${baseUrl}iam/users/me/`;
@@ -74,14 +73,17 @@ export const fetchParticipantData = async (accessToken: string) => {
   return responseData;
 };
 
-export const searchUser = async (token:any, criteria:any) => {
+export const searchUser = async (token: any, criteria: any) => {
   try {
     let url = "";
     if (!criteria) {
       throw new Error("Please provide search criteria.");
     } else if (criteria.startsWith("khoji_id=")) {
       url = `${baseUrl}iam/users/?${criteria}`;
-    } else if (criteria.startsWith("first_name=") && criteria.includes("&last_name=")) {
+    } else if (
+      criteria.startsWith("first_name=") &&
+      criteria.includes("&last_name=")
+    ) {
       url = `${baseUrl}iam/users/?${criteria}`;
     } else if (criteria.startsWith("contact_no=")) {
       url = `${baseUrl}iam/users/?${criteria}`;
@@ -90,7 +92,7 @@ export const searchUser = async (token:any, criteria:any) => {
     } else {
       throw new Error("Invalid search criteria.");
     }
-    
+
     const requestOptions = {
       method: "GET",
       headers: {
@@ -111,9 +113,7 @@ export const searchUser = async (token:any, criteria:any) => {
   }
 };
 
-
-
-export const createParticipant = async (requestData:any, token:any) => {
+export const createParticipant = async (requestData: any, token: any) => {
   const requestOptions = {
     method: "POST",
     headers: {
@@ -125,24 +125,32 @@ export const createParticipant = async (requestData:any, token:any) => {
 
   const response = await fetch(`${eventUrl}participants/`, requestOptions);
   if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  else{
+    const statusText = await response.text();
+    const additionalMessages = [
+      "User cannot have a relation with themselves",
+      "User can have only one relation with another user.",
+    ];
+  
+    additionalMessages.forEach(searchTerm => {
+      if (statusText.includes(searchTerm)) {
+        message.error(searchTerm);
+      } else {
+        console.error(`${searchTerm}: Message not found`);
+      }
+    });
+  
+    return false;
+  } else {
     const data = await response.json();
     return data;
   }
-
-  
 };
 
 export const submitApplication = async (
   requestBody: Record<string, any>,
   token: string
 ) => {
-  // Create FormData object
   const formData = new FormData();
-
-  // Convert request body to FormData
   Object.entries(requestBody).forEach(([key, value]) => {
     if (value === null || value === undefined) {
       formData.append(key, "");
@@ -155,7 +163,6 @@ export const submitApplication = async (
     }
   });
 
-  // Construct request options
   const requestOptions = {
     method: "POST",
     headers: {
@@ -165,43 +172,39 @@ export const submitApplication = async (
   };
 
   try {
-    // Send POST request
     const response = await fetch(
       `${baseUrl}event/applications/`,
       requestOptions
     );
 
-    // Check if response is OK
+    
     if (!response.ok) {
-      // Get the status text from the response
       const statusText = await response.text();
-      // Check for specific error messages
-      if (statusText.includes("User already has an active application")) {
-        alert("User already has an active application");
-      } else if (statusText.includes("Participants must be provided for application")) {
-        alert("Participants must be provided for application");
-      } else if (statusText.includes("Participants cannot be accepted for application")) {
-        alert("Participants cannot be accepted for application");
-      } else if (statusText.includes("Applicant cannot be a participant in their own application")) {
-        alert("Applicant cannot be a participant in their own application");
-      } else if (statusText.includes("User cannot create other users application")) {
-        alert("User cannot create other users application");
-      } else {
-        throw new Error(`Network response was not ok: ${statusText}`);
-      }
+      const additionalMessages = [
+        "Participants must be provided for application",
+        "Participants cannot be accepted for application",
+        "Applicant cannot be a participant in their own application",
+        "User cannot create other users application",
+        "User already has an active application"
+      ];
+    
+      additionalMessages.forEach(searchTerm => {
+        if (statusText.includes(searchTerm)) {
+          message.error(searchTerm);
+        } else {
+          console.error(`${searchTerm}: Message not found`);
+        }
+      });
+    
       return false;
     } else {
-      // Application submitted successfully
       return true;
     }
   } catch (error) {
-    // Handle fetch error
     console.error("There was a problem with your fetch operation:", error);
     return false;
   }
 };
-
-
 
 export const fetchPurposeOptions = async (userid: any, accessToken: any) => {
   try {
@@ -238,7 +241,11 @@ export const fetchPurposeOptions = async (userid: any, accessToken: any) => {
   }
 };
 
-export const updateApplicationStatus = async (applicationId:any, newStatus:any, token:any) => {
+export const confirmApplicationStatus = async (
+  applicationId: any,
+  newStatus: any,
+  token: any
+) => {
   try {
     const apiUrl = `${eventUrl}applications/${applicationId}/`;
     const response = await fetch(apiUrl, {
@@ -251,9 +258,11 @@ export const updateApplicationStatus = async (applicationId:any, newStatus:any, 
     });
 
     if (!response.ok) {
-      throw new Error("Failed to update application status");
+      const statusText = await response.text();
+      message.error(statusText);
+      return false;
     } else {
-      const responseData = await response.json();
+      const responseData = await response.clone().json(); // Clone and consume JSON once
       console.log("Updated application:", responseData);
       return responseData;
     }
@@ -263,7 +272,12 @@ export const updateApplicationStatus = async (applicationId:any, newStatus:any, 
   }
 };
 
-export const submitRescheduleForm = async (applicationId:any, startDate:any, endDate:any, token:any) => {
+export const submitRescheduleForm = async (
+  applicationId: any,
+  startDate: any,
+  endDate: any,
+  token: any
+) => {
   try {
     const apiUrl = `${eventUrl}applications/${applicationId}/reschedule/`;
     const response = await fetch(apiUrl, {
@@ -279,7 +293,12 @@ export const submitRescheduleForm = async (applicationId:any, startDate:any, end
     });
 
     if (!response.ok) {
-      throw new Error("Failed to update application status");
+      // Get the status text from the response
+      const statusText = await response.text();
+
+      // showErrorMessage(statusText);
+      message.error(statusText);
+      return false;
     } else {
       const responseData = await response.json();
       console.log("Updated application:", responseData);
@@ -291,7 +310,34 @@ export const submitRescheduleForm = async (applicationId:any, startDate:any, end
   }
 };
 
+export const updateApplicationStatus = async (
+  applicationId: any,
+  newStatus: any,
+  token: any
+) => {
+  try {
+    const apiUrl = `${eventUrl}applications/update_status/`;
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
 
+    const statusText = await response.text();
 
-
-
+    if (!response.ok) {
+      alert(statusText);
+      return false;
+    } else {
+      const responseData = await response.json();
+      console.log("Updated application:", responseData);
+      return responseData;
+    }
+  } catch (error) {
+    console.error("Error updating application status:", error);
+    throw error;
+  }
+};

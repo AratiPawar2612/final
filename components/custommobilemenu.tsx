@@ -202,13 +202,13 @@ const CustomMobileMenu = () => {
         onCancel={handleNotificationModalClose}
         footer={null}
         className="notification-modal"
-        style={{
-          width: "360px",
-          height: "80vh",
-          marginLeft: "7rem",
-          padding: "1.25rem",
-          overflowY: "auto",
-        }}
+        // style={{
+        //   width: "360px",
+        //   height: "80vh",
+        //   marginLeft: "7rem",
+        //   padding: "1.25rem",
+        //   overflowY: "auto",
+        // }}
       >
         <ul
           style={{

@@ -12,7 +12,8 @@ import {
   Card,
   Modal,
   Image,
-  DatePicker
+  DatePicker,
+  message
 } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
@@ -30,9 +31,11 @@ import axios from "axios";
 import { FileExclamationTwoTone, CheckOutlined } from "@ant-design/icons";
 import { fetchApplicationData, fetchUserData ,submitRescheduleForm} from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
-import dayjs from "dayjs";
 import jsPDF from 'jspdf';
 import moment from 'moment';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { QRCode, Space } from 'antd';
+import dayjs, { Dayjs } from 'dayjs'; // Import Dayjs instead of Moment
 
 
 const { Meta } = Card;
@@ -69,28 +72,43 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const now = new Date();
         const response = await fetch("/api/getsession");
         const sessionData = await response.json();
-        const capitalizedName = sessionData?.session?.user?.name.replace(/(^|\s)\S/g, (match:any) => match.toUpperCase());
-       
+        console.log("session", sessionData);
+        const capitalizedName = sessionData?.session?.user?.name.replace(/(^|\s)\S/g, (match: any) => match.toUpperCase());
         setUserName(capitalizedName);
-
+  
+        const decodedToken = jwt.decode(sessionData?.session?.access_token) as JwtPayload;
+        let expirationTime: Date | null = null;
+  
+        if (decodedToken !== null && typeof decodedToken.exp === 'number') {
+          expirationTime = new Date(decodedToken.exp * 1000);
+          console.log("Token expiration time:", expirationTime);
+  
+          // if (expirationTime < now) {
+          //   console.log("Session has expired. Redirecting to Login page.");
+          //   router.push("/");
+          //   return;
+          // }
+        }
+       // if (sessionData?.session && expirationTime && expirationTime >= now) {
         if (sessionData?.session) {
           const accessToken = sessionData.session.access_token;
           setToken(accessToken);
           const userDataResponse = await fetchUserData(accessToken);
           setData(userDataResponse);
-
+  
           const applicationData = await fetchApplicationData(accessToken);
-   
           setApplicationdata(applicationData);
-          console.log("applicationdata",applicationData);
+          console.log("applicationdata", applicationData);
           setApplicationid(applicationData[0]?.reference_code);
           setStatus(applicationData[0]?.status);
         } else {
           console.log("User is not authenticated. Redirecting to Login page.");
           router.push("/");
         }
+  
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error);
@@ -100,6 +118,7 @@ export default function HomePage() {
     };
     fetchData();
   }, [router]);
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -115,6 +134,14 @@ export default function HomePage() {
     };
   }, [isMobileView]);
 
+
+
+  const [hoveredWeek, setHoveredWeek] = useState<number | undefined>(undefined);
+
+  const highlightWeek = (weekNumber: number) => {
+    return hoveredWeek === weekNumber ? "highlighted-week" : "";
+  };
+
   const showModal = () => {
     setVisible(true);
   };
@@ -129,17 +156,34 @@ export default function HomePage() {
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };
-
   const handleFormSubmit = async () => {
     try {
-      await submitRescheduleForm(applicationdata[0]?.id, startdate, enddate, token);
-      alert("Your application has been rescheduled");
-      setIsModalVisible(false);
-      window.location.reload();
-    } catch (error) {
-      console.error("Error rescheduled application:", error);
+      if(data?.reschedule_count<3)
+        {
+          const res = await submitRescheduleForm(
+            data?.id,
+            startdate,
+            enddate,
+            token
+          );
+          if (res) {
+            //message.success("Your application has been rescheduled");
+            
+            message.success("Your application has been rescheduled");
+            setIsModalVisible(false);
+            window.location.reload();
+          } 
+        }
+        else{
+message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
+
+        }
+         } catch (error) {
+      console.error("Error rescheduling application:", error);
     }
   };
+
+  
   const disabledDate = (current: any, startDate: any, endDate: any) => {
     return (
       current &&
@@ -508,6 +552,7 @@ export default function HomePage() {
         key={user.id}
       >
         <div className="userProfileTopSection" />
+        <div></div>
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
           <Avatar className="userProfileImage" src={user.avtar} />
 
@@ -542,7 +587,8 @@ export default function HomePage() {
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
-              <ScannerIcon />
+              {/* <ScannerIcon /> */}
+              <QRCode  value={applicationdata[0]?.user?.id} size={100} />
             </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
@@ -783,48 +829,6 @@ export default function HomePage() {
     }
   };
   
-  const handleSharePass = async () => {
-    const passElement = passRef.current;
-  
-    if (passElement) {
-        // Add padding to pass element
-        passElement.style.padding = '10px'; // Adjust the padding value as needed
-
-        try {
-            const canvas = await html2canvas(passElement);
-            const dataUrl = canvas.toDataURL('image/png');
-
-            // Generate a blob from the data URL
-            const blob = await fetch(dataUrl).then(res => res.blob());
-
-            // Create a URL for the blob
-            const url = URL.createObjectURL(blob);
-
-            // Prompt the user to copy the link
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(url)
-                    .then(() => {
-                        alert('Pass URL copied to clipboard. You can now paste and share it manually.');
-                    })
-                    .catch(error => {
-                        console.error('Error copying URL to clipboard:', error);
-                        alert('Error copying URL to clipboard. Please try again.');
-                    });
-            } else {
-                console.error('Clipboard API not supported.');
-                alert('Clipboard API not supported. You can manually copy the URL.');
-            }
-        } catch (error) {
-            console.error('Error capturing pass:', error);
-            alert('Error capturing pass. Please try again.');
-        } finally {
-            // Remove padding from pass element after capturing
-           
-        }
-    } else {
-        console.error('passRef.current is null.');
-    }
-};
 
   
   
@@ -910,7 +914,7 @@ export default function HomePage() {
                   ]}
                 >
                   <Form layout="vertical" onFinish={handleFormSubmit}>
-                    <Form.Item
+                    {/* <Form.Item
                       label="Preferred Start Date"
                       name="preferredStartDate"
                     >
@@ -935,7 +939,126 @@ export default function HomePage() {
                           disabledDate(current, null, enddate)
                         }
                       />
-                    </Form.Item>
+                    </Form.Item> */}
+                     <Form.Item
+                    label="Select preferred date range"
+                    name={["week"]}
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please select a preferred week!",
+                      },
+                    ]}
+                  >
+   <div>
+      <DatePicker
+        style={{
+          borderRadius: "2rem",
+          height: "2rem",
+          width: "100%",
+        }}
+        format="YYYY-MM-DD"
+        disabledDate={(current: Dayjs) => {
+          const today = dayjs();
+          const startOfCurrentMonth = dayjs().startOf("month");
+          const endOfFirstWeek = startOfCurrentMonth.add(7, "day");
+
+          // Disable the current week (first 7 days of the month)
+          if (
+            current.isBefore(today, "day") ||
+            current.isBefore(endOfFirstWeek, "day")
+          ) {
+            return true;
+          }
+          return false;
+        }}
+        suffixIcon={
+          startdate &&
+          enddate && (
+            <div>
+              <b>
+                Start Date: {startdate} To End Date: {enddate}
+              </b>
+            </div>
+          )
+        }
+        onChange={(date, dateString) => {
+          console.log("Received dateString:", dateString);
+
+          // Check if dateString is defined and has the expected format
+          if (typeof dateString === "string") {
+            const match = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+            if (match) {
+              const year = parseInt(match[1], 10);
+              const month = parseInt(match[2], 10);
+              const day = parseInt(match[3], 10);
+              let startDateOfWeek, endDateOfWeek;
+
+              // Determine the start and end dates of the week based on the selected day
+              if (day <= 7) {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(1)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(7)
+                  .format("YYYY-MM-DD");
+              } else if (day <= 14) {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(8)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(14)
+                  .format("YYYY-MM-DD");
+              } else if (day <= 21) {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(15)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(21)
+                  .format("YYYY-MM-DD");
+              } else {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(22)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .endOf("month")
+                  .format("YYYY-MM-DD");
+              }
+
+              // Update state with start and end dates
+              setStartdate(startDateOfWeek);
+              setEnddate(endDateOfWeek);
+            } else {
+              console.error("Invalid dateString format:", dateString);
+            }
+          }
+        }}
+      />
+     <div className="marginTop1rem"> Selected Week: {startdate} To {enddate}
+              </div>
+    </div>
+
+
+
+</Form.Item>
                   </Form>
                 </Modal>
           </div>
@@ -969,7 +1092,7 @@ export default function HomePage() {
             </div>
             <div style={{ textWrap:"wrap" ,marginLeft:"10px"}}>
               <b>Address</b><br/>
-              <label>Happy Thoughts Building, Vikrant Complex, Savta Mali Nagar,<br/>Pimpri Colony, Pune, Maharashtra 411017</label>
+              <label>Happy Thoughts Building, Vikrant Complex,<br/> Savta Mali Nagar,Pimpri Colony, Pune,<br/> Maharashtra 411017</label>
             </div>
             <div style={{ width: "5.5625rem", height: "17", fontSize: "0.75rem", fontWeight: "bold",marginLeft:"10px" }}>
               <ElipseIcon /><br/>
@@ -991,16 +1114,17 @@ export default function HomePage() {
               justifyContent: "space-between",
             }}
           >
-            <span style={{ fontSize: "1rem", fontWeight: "bold" }}>
-              Scan the QR code before you enter the hall
-            </span>
-           
-            <ScannerIcon />
+            <span style={{ whiteSpace: "wrap" }}>
+  <b style={{ fontSize: "1rem" }}>Scan the QR code before you enter the hall</b>
+  <br />
+  <span style={{ fontSize: "1rem" }}>Please update your status if you wish to cancel or reschedule your application</span>
+</span>
+
+            <QRCode value={`${applicationdata[0]?.user?.id}-${applicationdata[0]?.event?.id}`} size={130} />
+
            
           </div>
-          <div style={{ fontSize: "1rem"}}>
-            Please update your status if you wish to cancel or reschedule your application
-          </div>
+         
           
         </div>
 ) 

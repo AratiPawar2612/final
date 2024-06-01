@@ -3,6 +3,8 @@ import { Button, Col, Flex, Row } from "antd";
 import { signIn, useSession,signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { GoogleIcon, AppleIcon, InfoIcon, LoginIcon } from "@/icons/icon";
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import Router, { useRouter } from "next/router";
 
 
 export default function Index() {
@@ -11,34 +13,42 @@ export default function Index() {
   const { safeReplace } = useSafeReplace();
   const gapRem = "3.125rem";
   const [isMobileView, setIsMobileView] = useState(false);
-
-  const  handleSessionExpired = async () => {
-    
+  const [expirationTime, setExpirationTime] = useState(null);
+  const router=useRouter();
+  const handleSignOut = async () => {
     await signOut();
   };
-
- 
-
   useEffect(() => {
-    const isSessionValid = (session:any) => {
-      return session && !isSessionExpired(session);
+    console.log("Session data:", session);
+    const fetchData = async () => {
+        const now = new Date(); // Move declaration inside useEffect
+        const response = await fetch("/api/getsession");
+        const sessionData = await response.json();
+        console.log("Session:", sessionData);
+
+        setIsSessionLoading(status === "loading");
+
+        const decodedToken = jwt.decode(sessionData?.session?.access_token) as JwtPayload;
+        if (decodedToken !== null && typeof decodedToken.exp === 'number') {
+            const expirationTime = new Date(decodedToken.exp * 1000);
+            console.log("Token expiration time:", expirationTime);
+            
+            // if (status === "authenticated" && session && expirationTime >= now) {
+              if (status === "authenticated" && session) {
+              console.log("on homepage")
+              router.push("/onboarding/homepage");
+          } else {
+            router.push("/");
+              console.log("User remains on the same page");
+              // You can add code here to handle the case where the user remains on the same page
+          }
+        }
+
+        
     };
 
-    const isSessionExpired = (session:any) => {
-      return session.expiryTime < Date.now();
-    };
-
-    setIsSessionLoading(status === "loading");
-    if (status === "authenticated" && session && safeReplace) {
-      if (isSessionValid(session)) {
-        console.log("Redirected to homepage");
-        safeReplace("/onboarding/homepage");
-      } else {
-        console.log("Session has expired");
-        handleSessionExpired();
-      }
-    }
-  }, [status, session, safeReplace, setIsSessionLoading]);
+    fetchData();
+}, [status, session, router,setIsSessionLoading]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,7 +74,7 @@ export default function Index() {
 
   return (
 
-      <div>
+      <div >
         {isSessionLoading ? (
           <div>Loading...</div>
         ) : status === "unauthenticated" ? (
@@ -83,7 +93,7 @@ export default function Index() {
                         }}
                       >
                         <LoginIcon className="logo" />
-                        <div className="loginTitle" style={{ justifyContent: "center" }}>
+                        <div className="loginTitle" style={{ alignItems: "center" }}>
                           Welcome to
                           <br />
                           Tejgyan Global Foundation

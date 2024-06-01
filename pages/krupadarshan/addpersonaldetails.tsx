@@ -44,6 +44,8 @@ import { ViewStatusFirstSvg } from "@/icons/svgs";
 import type { RadioChangeEvent } from "antd";
 import moment, { Moment } from 'moment';
 import dayjs, { Dayjs } from 'dayjs'; // Import Dayjs instead of Moment
+import { message } from 'antd';
+import { QRCode, Space } from 'antd';
 
 
 const { Option } = Select;
@@ -244,32 +246,12 @@ export default function AddPersonalDeatilsPage() {
       });
   };
 
-    // Function to determine if a given date belongs to the selected week
-    const isDateInSelectedWeek = (date:any) => {
-      if (!startdate || !enddate) return false;
-      return date >= startdate && date <= enddate;
-    };
-  
-    // Function to render cell in WeekPicker
-    const renderWeekCell = (current:any) => {
-      let className = '';
-  
-      // Check if the current week matches the selected week
-      if (isDateInSelectedWeek(current)) {
-        className = 'ant-picker-cell-selected-week';
-      }
-  
-      return (
-        <div className={className}>
-          {current.format('YYYY-MM-DD')}
-        </div>
-      );
-    };
+   
 
   const handleAddClick = async () => {
     try {
       if (!selectedRelationship) {
-        alert("Please fill in all required fields.");
+        message.warning("Please fill in all required fields.");
         return;
       }
 
@@ -283,13 +265,24 @@ export default function AddPersonalDeatilsPage() {
 
       const participantData = await createParticipant(requestBody, token);
 
-      console.log("Response from server:", participantData);
-      alert("Participant Added successfully");
-      form.resetFields();
-      setShowSearchButton(true);
-      setShowAddButton(false);
-      window.location.reload();
-      setErrorMessage("");
+
+if(participantData)
+  {
+  
+    console.log("Response from server:", participantData);
+    message.success('Participant Added successfully');
+    form.resetFields();
+    setShowSearchButton(true);
+    setShowAddButton(false);
+    window.location.reload();
+    setErrorMessage("");
+  }
+  else{
+    form.resetFields();
+    setShowSearchButton(true);
+    setShowAddButton(false);
+  }
+    
     } catch (error) {
       console.error("Error adding participant:", error);
     }
@@ -305,7 +298,7 @@ export default function AddPersonalDeatilsPage() {
         !khojimobile &&
         !khojiemail
       ) {
-        alert("Please enter at least one search criteria");
+        message.warning("Please enter at least one search criteria");
         return;
       }
 
@@ -319,7 +312,7 @@ export default function AddPersonalDeatilsPage() {
           if (khojilastName) {
             criteria += `&last_name=${khojilastName}`;
           } else {
-            alert("Please enter both first name and last name");
+            message.warning("Please enter both first name and last name");
             return;
           }
         }
@@ -341,7 +334,7 @@ export default function AddPersonalDeatilsPage() {
         setShowSearchButton(false);
         setShowAddButton(true);
       } else {
-        alert("No data found");
+        message.warning("No data found");
       }
     } catch (error) {
       console.error("Error handling search click:", error);
@@ -351,7 +344,7 @@ export default function AddPersonalDeatilsPage() {
   const onclickNextBtn = async () => {
     if (!selectedPurpose || !startdate || !enddate) {
       console.log("startdate",startdate)
-      alert("Please Enter All required fields" + startdate);
+      message.warning("Please Enter All required fields" + startdate);
     } else {
       const requestBody = {
         user: userid,
@@ -371,11 +364,9 @@ export default function AddPersonalDeatilsPage() {
         );
         console.log("applicationSubmitted", applicationSubmitted);
         if (applicationSubmitted) {
-          alert("Application Submitted successfully");
+          message.success("Application Request sent");
           router.push("/krupadarshan/completeandapply");
-        } else if (isFamilyKrupaDarshan && selectedUserIds == null) {
-          alert("Participants must be provided for application");
-        }
+        } 
       } catch (error: any) {
         // Specify the type of error explicitly
         console.error("Error submitting application:", error);
@@ -902,7 +893,8 @@ export default function AddPersonalDeatilsPage() {
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem", marginLeft: "6rem" }}
             >
-              <ScannerIcon />
+              {/* <ScannerIcon /> */}
+              {/* <QRCode value={user?.user?.id} size={100} /> */}
             </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
@@ -981,7 +973,8 @@ export default function AddPersonalDeatilsPage() {
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
-              <ScannerIcon />
+              {/* <ScannerIcon /> */}
+              <QRCode value={user?.user?.id} size={100} />
             </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
@@ -1220,7 +1213,7 @@ export default function AddPersonalDeatilsPage() {
                 </Row>
                 <Row gutter={16}>
                   <Col span={12}>
-                    <Form.Item
+                    {/* <Form.Item
                       label="Select preferred date range"
                       name={["startdate"]}
                       labelCol={{ span: 24 }}
@@ -1231,8 +1224,8 @@ export default function AddPersonalDeatilsPage() {
                           message: "Please select preferred start date!",
                         },
                       ]}
-                    >
-                      <DatePicker
+                    > */}
+                      {/* <DatePicker
                         style={{
                           borderRadius: "2rem",
                           height: "2rem",
@@ -1246,7 +1239,7 @@ export default function AddPersonalDeatilsPage() {
                             setStartdate(dateString);
                           }
                         }}
-                      />
+                      /> */}
                       {/* <DatePicker
   style={{
     borderRadius: "2rem",
@@ -1264,10 +1257,10 @@ export default function AddPersonalDeatilsPage() {
     }
   }}
 /> */}
-                    </Form.Item>
+                    {/* </Form.Item> */}
                   </Col>
                   <Col span={12}>
-                    <Form.Item
+                    {/* <Form.Item
                       label="    "
                       name={["enddate"]}
                       labelCol={{ span: 24 }}
@@ -1293,7 +1286,7 @@ export default function AddPersonalDeatilsPage() {
                             setEnddate(dateString);
                           }
                         }}
-                      />
+                      /> */}
                       {/* <DatePicker
     style={{
       borderRadius: "2rem",
@@ -1310,13 +1303,13 @@ export default function AddPersonalDeatilsPage() {
       }
     }}
   /> */}
-                    </Form.Item>
+                    {/* </Form.Item> */}
                   </Col>
                 </Row>
 
-                {/* <Col span={12}>
+                <Col span={24}>
                   <Form.Item
-                    label="Select preferred date range"
+                    label="Select preferred Week"
                     name={["week"]}
                     labelCol={{ span: 24 }}
                     wrapperCol={{ span: 24 }}
@@ -1326,7 +1319,7 @@ export default function AddPersonalDeatilsPage() {
                         message: "Please select a preferred week!",
                       },
                     ]}
-                  > */}
+                  >
                     {/* <DatePicker
                       style={{
                         borderRadius: "2rem",
@@ -1371,71 +1364,115 @@ export default function AddPersonalDeatilsPage() {
                       }}
                     /> */}
 
-{/* 
-<DatePicker
-  style={{
-    borderRadius: "2rem",
-    height: "2rem",
-    width: "100%",
-  }}
-  picker="week"
-  format="YYYY-MM-DD"
-  disabledDate={(current: Dayjs) => {
-    const today = dayjs();
-    const startOfCurrentWeek = dayjs().startOf('week');
-    
-    // Disable current week and past weeks
-    if (current.isBefore(today, 'day') || current.isBefore(startOfCurrentWeek, 'day')) {
-      return true;
-    }
-    return false;
-  }}
-  onChange={(date, dateString) => {
-    console.log("Received dateString:", dateString); // Add logging to check the format of dateString
 
-    // Check if dateString is defined and has the expected format
-    if (typeof dateString === "string") {
-      // Extract year, month, and day using regular expression
-      const match = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-      if (match) {
-        const year = parseInt(match[1], 10);
-        const month = parseInt(match[2], 10);
-        const day = parseInt(match[3], 10);
-        let startDateOfWeek, endDateOfWeek;
+<div>
+      <DatePicker
+        style={{
+          borderRadius: "2rem",
+          height: "2rem",
+          width: "100%",
+        }}
+        format="YYYY-MM-DD"
+        placeholder="select week"
+        disabledDate={(current: Dayjs) => {
+          const today = dayjs();
+          const startOfCurrentMonth = dayjs().startOf("month");
+          const endOfFirstWeek = startOfCurrentMonth.add(7, "day");
 
-        // Determine the start and end dates of the week based on the selected day
-        if (day <= 7) {
-          // First week: Start from the 1st to the 7th
-          startDateOfWeek = moment().year(year).month(month - 1).date(1).format("YYYY-MM-DD");
-          endDateOfWeek = moment().year(year).month(month - 1).date(7).format("YYYY-MM-DD");
-        } else if (day <= 14) {
-          // Second week: Start from the 8th to the 14th
-          startDateOfWeek = moment().year(year).month(month - 1).date(8).format("YYYY-MM-DD");
-          endDateOfWeek = moment().year(year).month(month - 1).date(14).format("YYYY-MM-DD");
-        } else if (day <= 21) {
-          // Third week: Start from the 15th to the 21st
-          startDateOfWeek = moment().year(year).month(month - 1).date(15).format("YYYY-MM-DD");
-          endDateOfWeek = moment().year(year).month(month - 1).date(21).format("YYYY-MM-DD");
-        } else {
-          // Last week: Start from the 22nd to the end of the month
-          startDateOfWeek = moment().year(year).month(month - 1).date(22).format("YYYY-MM-DD");
-          endDateOfWeek = moment().year(year).month(month - 1).endOf('month').format("YYYY-MM-DD");
+          // Disable the current week (first 7 days of the month)
+          if (
+            current.isBefore(today, "day") ||
+            current.isBefore(endOfFirstWeek, "day")
+          ) {
+            return true;
+          }
+          return false;
+        }}
+        suffixIcon={
+          startdate &&
+          enddate && (
+            <div style={{fontSize:"0.625rem",fontWeight:"bolder"}}>
+              
+                Start Date: {startdate} To End Date: {enddate}
+              
+            </div>
+          )
         }
+        onChange={(date, dateString) => {
+          console.log("Received dateString:", dateString);
 
-        // Update both start and end dates
-        setStartdate(startDateOfWeek);
-        setEnddate(endDateOfWeek);
-      } else {
-        console.error("Invalid dateString format:", dateString);
-      }
-    }
-  }}
-/> */}
+          // Check if dateString is defined and has the expected format
+          if (typeof dateString === "string") {
+            const match = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+            if (match) {
+              const year = parseInt(match[1], 10);
+              const month = parseInt(match[2], 10);
+              const day = parseInt(match[3], 10);
+              let startDateOfWeek, endDateOfWeek;
 
+              // Determine the start and end dates of the week based on the selected day
+              if (day <= 7) {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(1)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(7)
+                  .format("YYYY-MM-DD");
+              } else if (day <= 14) {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(8)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(14)
+                  .format("YYYY-MM-DD");
+              } else if (day <= 21) {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(15)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(21)
+                  .format("YYYY-MM-DD");
+              } else {
+                startDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .date(22)
+                  .format("YYYY-MM-DD");
+                endDateOfWeek = dayjs()
+                  .year(year)
+                  .month(month - 1)
+                  .endOf("month")
+                  .format("YYYY-MM-DD");
+              }
+
+              // Update state with start and end dates
+              setStartdate(startDateOfWeek);
+              setEnddate(endDateOfWeek);
+            } else {
+              console.error("Invalid dateString format:", dateString);
+            }
+          }
+        }}
+      />
+    
+    </div>
+ 
 
   
-                  {/* </Form.Item>
-                </Col> */}
+                  </Form.Item>
+                </Col>
 
                 <Row gutter={16}>
                   <Col span={24}>

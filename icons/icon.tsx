@@ -39,10 +39,14 @@ import {
   CheckSvg,
   MobileMenuSvg,
   DownloadSvg,
-  ShareSvg
+  ShareSvg,
+  DeleteSvg
 } from "./svgs";
 
 export const LogoIcon = (props: any) => <Icon component={LogoSvg} {...props} />;
+
+export const DeleteIcon = (props: any) => <Icon component={DeleteSvg} {...props} />;
+
 
 export const DownloadIcon = (props: any) => <Icon component={DownloadSvg} {...props} />;
 
