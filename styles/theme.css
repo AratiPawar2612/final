@@ -167,43 +167,6 @@ body {
 }
 
 
-/* For larger screens */
-@media screen and (min-width: 1025px) and (max-width: 1440px) {
-  body {
-    margin: 0 auto;
-    padding: 0 1.25rem;
-    max-width: 90rem;
-  }
-} 
-
-/* For extra-large screens */
-@media screen and (min-width: 1441px) {
-  html,
-  body {
-    font-size: 1.5rem !important;
-    background-color: #f4f4f4 !important;
-  }
-}
-/* Styles for screens wider than 1920px */
-@media (min-width: 1921px) {
-  body {
-    font-size: 1.5rem;
-  }
-}
-
-/* Styles for screens between 1441px and 1920px */
-@media (max-width: 1920px) and (min-width: 1441px) {
-  body {
-    font-size: 1.25rem;
-  }
-}
-
-/* Styles for screens between 1281px and 1440px */
-@media (max-width: 1440px) and (min-width: 1281px) {
-  body {
-    font-size: 1.125rem;
-  }
-}
 
 .FlexDirectionRowSpacebetween {
   display: flex !important;
