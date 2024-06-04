@@ -1052,7 +1052,7 @@ if(participantData)
             <Col xs={24} xl={24}>
               <div className="center-steps">
                 {isMobileView ? (
-                  <ViewStatusFirstSvg /> // Use uppercase for component name
+                  <ViewStatusFirstSvg /> 
                 ) : (
                   <Steps
                     current={-1}
@@ -1468,10 +1468,7 @@ if(participantData)
       />
     
     </div>
- 
-
-  
-                  </Form.Item>
+       </Form.Item>
                 </Col>
 
                 <Row gutter={16}>

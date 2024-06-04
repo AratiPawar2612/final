@@ -244,7 +244,7 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
         }}
       >
         {status1 === "SUBMITTED" &&
-          "Congratulations! Your application has been submitted successfully"}
+          "Congratulations! Your application has been saved successfully"}
         {status1 === "APPROVED_BY_DKD" &&
           "Congratulations! Your application has been event assigned"}
         {status1 === "ACCEPTED_BY_KHOJI" &&

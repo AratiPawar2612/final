@@ -30,8 +30,8 @@ export default function Index() {
             const expirationTime = new Date(decodedToken.exp * 1000);
             console.log("Token expiration time:", expirationTime);
             
-            if (status === "authenticated" && session && expirationTime >= now) {
-             // if (status === "authenticated" && session && sa) {
+           // if (status === "authenticated" && session && expirationTime >= now) {
+              if (status === "authenticated" && session ) {
               console.log("on homepage")
               router.push("/onboarding/homepage");
           } else {

@@ -17,10 +17,10 @@
   text-align: center !important;
 }
 
-.ant-layout-sider {
-  height: 100vh !important; /* Ensure full viewport height */
+/* .ant-layout-sider {
+  height: 100vh !important;
   background-color:#F4F4F4 !important; /* Set background color to white */
-}
+/* } */ */
 .continueWithGoogleButton,
 .continueWithAppleButton {
   margin-bottom: 0.625rem!important;
