@@ -13,15 +13,12 @@ export default function Index() {
   const { safeReplace } = useSafeReplace();
   const gapRem = "3.125rem";
   const [isMobileView, setIsMobileView] = useState(false);
-  const [expirationTime, setExpirationTime] = useState(null);
   const router=useRouter();
-  const handleSignOut = async () => {
-    await signOut();
-  };
+ 
   useEffect(() => {
     console.log("Session data:", session);
     const fetchData = async () => {
-        const now = new Date(); // Move declaration inside useEffect
+        const now = new Date();
         const response = await fetch("/api/getsession");
         const sessionData = await response.json();
         console.log("Session:", sessionData);
@@ -33,14 +30,13 @@ export default function Index() {
             const expirationTime = new Date(decodedToken.exp * 1000);
             console.log("Token expiration time:", expirationTime);
             
-            // if (status === "authenticated" && session && expirationTime >= now) {
-              if (status === "authenticated" && session) {
+            if (status === "authenticated" && session && expirationTime >= now) {
+             // if (status === "authenticated" && session && sa) {
               console.log("on homepage")
               router.push("/onboarding/homepage");
           } else {
-            router.push("/");
               console.log("User remains on the same page");
-              // You can add code here to handle the case where the user remains on the same page
+             
           }
         }
 

@@ -158,18 +158,21 @@ export default function HomePage() {
   };
   const handleFormSubmit = async () => {
     try {
-      if(data?.reschedule_count<3)
+      const reschedulecount=applicationdata?.[0]?.reschedule_count;
+      console.log("reschedulecount",applicationdata?.[0]?.reschedule_count);
+      console.log("apllicationdate",applicationdata);
+      if(applicationdata?.[0]?.reschedule_count < 3)
         {
           const res = await submitRescheduleForm(
-            data?.id,
+            applicationdata?.[0]?.id,
             startdate,
             enddate,
             token
           );
           if (res) {
             //message.success("Your application has been rescheduled");
-            
             message.success("Your application has been rescheduled");
+            
             setIsModalVisible(false);
             window.location.reload();
           } 
@@ -546,11 +549,12 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
   function buildUserCard(user: any, index: any) {
     return user ? (
       <div
-      className={`${
-        index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
-      } userProfileContainer`} // Add userProfileContainer class
-      key={user.id}
-    >
+        className={`${
+          index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
+        }`}
+        style={{width:"20rem",height:"20rem"}}
+        key={user.id}
+      >
         <div className="userProfileTopSection" />
         <div></div>
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
@@ -585,10 +589,10 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem", marginLeft: "1rem" }}
+              // style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
               {/* <ScannerIcon /> */}
-              <QRCode  value={applicationdata[0]?.user?.id} size={100} />
+              <QRCode  value={applicationdata[0]?.user?.id} size={80} />
             </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
@@ -1288,6 +1292,7 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
 </div>
 
 </Col>
+
 
 
         </Row>

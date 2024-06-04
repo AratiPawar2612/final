@@ -124,8 +124,10 @@ export const createParticipant = async (requestData: any, token: any) => {
   };
 
   const response = await fetch(`${eventUrl}participants/`, requestOptions);
+
+  
   if (!response.ok) {
-    const statusText = await response.text();
+     const statusText = await response.text();
     const additionalMessages = [
       "User cannot have a relation with themselves",
       "User can have only one relation with another user.",
@@ -138,9 +140,12 @@ export const createParticipant = async (requestData: any, token: any) => {
         console.error(`${searchTerm}: Message not found`);
       }
     });
+    
+    // alert(statusText)
   
     return false;
-  } else {
+  } 
+  else {
     const data = await response.json();
     return data;
   }
