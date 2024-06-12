@@ -732,9 +732,7 @@ border: 0.0069rem 0rem 0rem 0rem;
 }
 
 
-/* .custom-step .ant-steps-item-icon > .ant-steps-icon {
-  background-color: red; /* Change dot color to red */
-/* } */ */
+
 
 .step-item.active .step-circle {
   background-color: #F55C38!important; 
