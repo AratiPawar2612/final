@@ -18,13 +18,13 @@ import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
 import {
   fetchApplicationData,
-  confirmApplicationStatus,
   submitRescheduleForm,
   updateApplicationStatus,
 } from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
 import { ViewStatusThirdSvg } from "@/icons/svgs";
 import moment, { Moment } from "moment";
+import StepComponent from "@/components/customstep";
 import dayjs, { Dayjs } from "dayjs";
 
 export default function ViewStatusPage() {
@@ -69,6 +69,8 @@ export default function ViewStatusPage() {
             const firstApplication = applicationData[0];
             console.log("applicationdata", firstApplication);
             setData(firstApplication);
+            setStatus(firstApplication?.status);
+            console.log("firstApplication",firstApplication?.status)
             const participantresp = firstApplication?.participants;
             console.log("participant", participantresp);
             if (participantresp.length > 0) {
@@ -76,7 +78,7 @@ export default function ViewStatusPage() {
               console.log("participantresp", participantresp);
             }
 
-            setStatus(firstApplication?.status);
+           
           } else {
             console.error("No application data found");
           }
@@ -101,11 +103,13 @@ export default function ViewStatusPage() {
 
   const handleActionClick = async () => {
     try {
-      const res = await confirmApplicationStatus(data?.id, "ACCEPTED_BY_KHOJI", token);
+      alert("applicationId"+data?.id +""+ "ACCEPTED_BY_KHOJI"+""+ token);
+      const res = await updateApplicationStatus(data?.id, "ACCEPTED_BY_KHOJI", token);
       if (res) {
-        alert("Your application is confirmed");
-        window.location.reload();
-        router.push("/onboarding/homepage");
+        message.success("Your application is confirmed");
+     
+ window.location.reload();
+
       }
     } catch (error) {
       console.error("Error updating application status:", error);
@@ -115,10 +119,16 @@ export default function ViewStatusPage() {
   const handleDeletAction = async () => {
     try {
       const res = await updateApplicationStatus(data?.id, "CANCELLED", token);
+     
       if (res) {
-        alert("Your application is cancelled");
+alert(res.status)
+        message.success("Your application is cancelled");
+        window.location.reload();
       }
-      router.push("/onboarding/homepage");
+      else{
+        message.error("Your application is not cancelled");
+      }
+  
     } catch (error) {
       console.error("Error updating application status:", error);
     }
@@ -136,7 +146,7 @@ export default function ViewStatusPage() {
           );
           if (res) {
             //message.success("Your application has been rescheduled");
-            alert("Your application has been rescheduled");
+            message.success("Your application has been rescheduled");
             setIsModalVisible(false);
             window.location.reload();
           } 
@@ -184,9 +194,15 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
 
     {
       title: <strong>Event Confirmed</strong>,
-      content:
-        "Congratulations! Your application has been confirmed by the admin.",
-    },
+      content: (
+        <>
+          Congratulations! Your application has been confirmed by the admin. <br />
+          Go Home to download your Gyandarshan Pass
+        </>
+      )
+    }
+    
+    
   ];
 
   return (
@@ -217,20 +233,10 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
         </div>
 
         <div className="center-steps">
-          {isMobileView ? (
-            <ViewStatusThirdSvg />
-          ) : (
-            <Steps
-              current={2}
-              style={{ width: "50%" }}
-              labelPlacement="vertical"
-              responsive={false} // or responsive={false}
-            >
-              <Steps.Step title="Add application details" />
-              <Steps.Step title="Complete & apply" />
-              <Steps.Step title="View status" />
-            </Steps>
-          )}
+         
+            
+            <StepComponent currentStep={3} />
+        
         </div>
       </div>
       <Divider className="divider" />
@@ -395,264 +401,266 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
             </div>
 
             <Row gutter={[6, 28]}>
-            {cardData.map((card, index) => (
-  <Col key={index} span={24} style={{ display: "flex" }}>
-    {/* Step and Line Column */}
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-      }}
-    >
-      <div
-        className="custom"
-        style={{
-          marginTop: isMobileView ? "3rem" : "7rem",
-          borderRight: "1px solid #e8e8e8",
-          paddingRight: "1rem",
-        }}
-      >
-        <div
-          className={`step-item ${
-            ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
-            (status1 === "APPROVED_BY_DKD" && index === 1) ||
-            (status1 === "ACCEPTED_BY_KHOJI" && index <= 2)
-              ? "completed"
-              : ""
-          }`}
-          style={{
-            backgroundColor:
-              (((status1 === "SUBMITTED" && index === 0) ||
-              (status1 === "APPROVED_BY_DKD" && index === 1) ||
-              (status1 === "ACCEPTED_BY_KHOJI" && index === 2)) &&
-           //   ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||(status1 === "APPROVED_BY_DKD" && index === 1) ||
-              (status1 === "ACCEPTED_BY_KHOJI" && index === 2))
-                ? "red"
-                : "",
-          }}
-        >
-          <div className="step-circle"></div>
-        </div>
-      </div>
-    </div>
-    {/* Card Column */}
-    <Col xs={20} sm={24} md={24} lg={12} xl={12}>
-      <Card
-        title={card.title}
-        style={{ marginTop: isMobileView ? "2rem" : "5rem" }}
-        className={`${
-          ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
-          (status1 === "APPROVED_BY_DKD" && index === 1) ||
-          (status1 === "ACCEPTED_BY_KHOJI" && index <= 2)
-            ? "enabled-card"
-            : "disabled-card"
-        }`}
-      >
-        {card.content}
-        {index === 0 &&
-          (status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: "1rem",
-              }}
-            >
-              <Button type="default" disabled>
-                Edit
-              </Button>
-              <DeleteIcon onClick={() => handleDeletAction()} />
-            </div>
-          )}
-           {index === 2 &&
-          (status1 === "ACCEPTED_BY_KHOJI") && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-               justifyContent:"flex-end",
-                marginTop: "1rem",
-              }}
-            >
-              <DeleteIcon onClick={() => handleDeletAction()} />
-            </div>
-          )}
-        {index === 1 && status1 === "APPROVED_BY_DKD" && (
+      {cardData.map((card, index) => (
+        <Col key={index} span={24} style={{ display: "flex" }}>
+          {/* Step and Line Column */}
           <div
             style={{
-              marginTop: "1rem",
               display: "flex",
               flexDirection: "row",
-              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <div>
-              <Button
-                style={{ marginRight: "1rem" }}
-                type="default"
-                onClick={handleOpenModal}
+            <div
+              className="custom"
+              style={{
+                marginTop: isMobileView ? "3rem" : "7rem",
+                borderRight: "1px solid #e8e8e8",
+                paddingRight: "1rem",
+              }}
+            >
+              <div
+                className={`step-item ${
+                  ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
+                  (status1 === "APPROVED_BY_DKD" && index === 1) ||
+                  (status1 === "ACCEPTED_BY_KHOJI" && index <= 2)
+                    ? "completed"
+                    : ""
+                }`}
+                style={{
+                  backgroundColor:
+                    (((status1 === "SUBMITTED" && index === 0) ||
+                      (status1 === "APPROVED_BY_DKD" && index === 1) ||
+                      (status1 === "ACCEPTED_BY_KHOJI" && index === 2)) &&
+                      (status1 === "ACCEPTED_BY_KHOJI" && index === 2))
+                      ? "red"
+                      : "",
+                }}
               >
-                Reschedule
-              </Button>
+                <div className="step-circle"/>
+              </div>
+            </div>
+          </div>
+          {/* Card Column */}
+          <Col xs={20} sm={24} md={24} lg={12} xl={12}>
+  <Card
+    title={card.title}
+    style={{
+      marginTop: isMobileView ? "2rem" : "5rem",
+      
+    }}
+    className={`${
+      ((status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && index === 0) ||
+      (status1 === "APPROVED_BY_DKD" && index === 1) ||
+      (status1 === "ACCEPTED_BY_KHOJI" && index <= 2)
+        ? "enabled-card"
+        : "disabled-card"
+    }`}
+  >
+    {card.content && <p style={{ paddingTop: "0" }}>{card.content}</p>}
+    {index === 0 &&
+      (status1 === "SUBMITTED" || status1 === "RESCHEDULED_BY_KHOJI") && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            // marginTop: "1rem",
+          }}
+        >
+          <Button type="default" disabled>
+            Edit
+          </Button>
+          <DeleteIcon onClick={() => handleDeletAction()} />
+        </div>
+      )}
+    {index === 2 &&
+      (status1 === "ACCEPTED_BY_KHOJI") && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            // marginTop: "1rem",
+          }}
+        >
+          <DeleteIcon onClick={() => handleDeletAction()} />
+        </div>
+      )}
+    {index === 1 && status1 === "APPROVED_BY_DKD" && (
+      <div
+        style={{
+          marginTop: "1rem",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>
+          <Button
+            style={{ marginRight: "1rem" }}
+            type="default"
+            onClick={handleOpenModal}
+          >
+            Reschedule
+          </Button>
 
-              <Modal
-                title="Reschedule Application"
-                open={isModalVisible}
-                onCancel={handleCloseModal}
-                footer={[
-                  <Button key="cancel" onClick={handleCloseModal}>
-                    Cancel
-                  </Button>,
-                  <Button
-                    key="submit"
-                    type="primary"
-                    onClick={handleFormSubmit}
-                  >
-                    Submit
-                  </Button>,
+          <Modal
+            title="Reschedule Application"
+            open={isModalVisible}
+            onCancel={handleCloseModal}
+            footer={[
+              <Button key="cancel" onClick={handleCloseModal}>
+                Cancel
+              </Button>,
+              <Button
+                key="submit"
+                type="primary"
+                onClick={handleFormSubmit}
+              >
+                Submit
+              </Button>,
+            ]}
+          >
+            <Form
+              layout="vertical"
+              onFinish={handleFormSubmit}
+            >
+              <Form.Item
+                label="Select preferred Week"
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "Please select a preferred week!",
+                  },
                 ]}
               >
-                <Form
-                  layout="vertical"
-                  onFinish={handleFormSubmit}
-                >
-                  <Form.Item
-                    label="Select preferred Week"
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    rules={[
-                      {
-                        required: true,
-                        message:
-                          "Please select a preferred week!",
-                      },
-                    ]}
-                  >
-                    <div>
-      <DatePicker
-        style={{
-          borderRadius: "2rem",
-          height: "2rem",
-          width: "100%",
-        }}
-        format="YYYY-MM-DD"
-        disabledDate={(current: Dayjs) => {
-          const today = dayjs();
-          const startOfCurrentMonth = dayjs().startOf("month");
-          const endOfFirstWeek = startOfCurrentMonth.add(7, "day");
+                <div>
+                  <DatePicker
+                    style={{
+                      borderRadius: "2rem",
+                      height: "2rem",
+                      width: "100%",
+                    }}
+                    format="YYYY-MM-DD"
+                    disabledDate={(current) => {
+                      const today = dayjs();
+                      const startOfCurrentMonth = dayjs().startOf("month");
+                      const endOfFirstWeek = startOfCurrentMonth.add(7, "day");
 
-          // Disable the current week (first 7 days of the month)
-          if (
-            current.isBefore(today, "day") ||
-            current.isBefore(endOfFirstWeek, "day")
-          ) {
-            return true;
-          }
-          return false;
-        }}
-        suffixIcon={
-          startdate &&
-          enddate && (
-            <div>
-              <b>
-                Start Date: {startdate} To End Date: {enddate}
-              </b>
-            </div>
-          )
-        }
-        onChange={(date, dateString) => {
-          console.log("Received dateString:", dateString);
+                      // Disable the current week (first 7 days of the month)
+                      if (
+                        current.isBefore(today, "day") ||
+                        current.isBefore(endOfFirstWeek, "day")
+                      ) {
+                        return true;
+                      }
+                      return false;
+                    }}
+                    suffixIcon={
+                      startdate &&
+                      enddate && (
+                        <div>
+                          <b>
+                            Start Date: {startdate} To End Date: {enddate}
+                          </b>
+                        </div>
+                      )
+                    }
+                    onChange={(date, dateString) => {
+                      console.log("Received dateString:", dateString);
 
-          // Check if dateString is defined and has the expected format
-          if (typeof dateString === "string") {
-            const match = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-            if (match) {
-              const year = parseInt(match[1], 10);
-              const month = parseInt(match[2], 10);
-              const day = parseInt(match[3], 10);
-              let startDateOfWeek, endDateOfWeek;
+                      // Check if dateString is defined and has the expected format
+                      if (typeof dateString === "string") {
+                        const match = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+                        if (match) {
+                          const year = parseInt(match[1], 10);
+                          const month = parseInt(match[2], 10);
+                          const day = parseInt(match[3], 10);
+                          let startDateOfWeek, endDateOfWeek;
 
-              // Determine the start and end dates of the week based on the selected day
-              if (day <= 7) {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(1)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(7)
-                  .format("YYYY-MM-DD");
-              } else if (day <= 14) {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(8)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(14)
-                  .format("YYYY-MM-DD");
-              } else if (day <= 21) {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(15)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(21)
-                  .format("YYYY-MM-DD");
-              } else {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(22)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .endOf("month")
-                  .format("YYYY-MM-DD");
-              }
+                          // Determine the start and end dates of the week based on the selected day
+                          if (day <= 7) {
+                            startDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .date(1)
+                              .format("YYYY-MM-DD");
+                            endDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .date(7)
+                              .format("YYYY-MM-DD");
+                          } else if (day <= 14) {
+                            startDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .date(8)
+                              .format("YYYY-MM-DD");
+                            endDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .date(14)
+                              .format("YYYY-MM-DD");
+                          } else if (day <= 21) {
+                            startDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .date(15)
+                              .format("YYYY-MM-DD");
+                            endDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .date(21)
+                              .format("YYYY-MM-DD");
+                          } else {
+                            startDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .date(22)
+                              .format("YYYY-MM-DD");
+                            endDateOfWeek = dayjs()
+                              .year(year)
+                              .month(month - 1)
+                              .endOf("month")
+                              .format("YYYY-MM-DD");
+                          }
 
-              // Update state with start and end dates
-              setStartdate(startDateOfWeek);
-              setEnddate(endDateOfWeek);
-            } else {
-              console.error("Invalid dateString format:", dateString);
-            }
-          }
-        }}
-      />
-     <div className="marginTop1rem"> Selected Week: {startdate} To {enddate}
-              </div>
-    </div>
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Button
-                onClick={() => handleActionClick()}
-                type="primary"
-                style={{ backgroundColor: "green" }}
-              >
-                Confirm
-              </Button>
-            </div>
-            <DeleteIcon onClick={() => handleDeletAction()} />
-          </div>
-        )}
-      </Card>
-    </Col>
-  </Col>
-))}
+                          // Update state with start and end dates
+                          setStartdate(startDateOfWeek);
+                          setEnddate(endDateOfWeek);
+                        } else {
+                          console.error("Invalid dateString format:", dateString);
+                        }
+                      }
+                    }}
+                  />
+                  <div className="marginTop1rem"> Selected Week: {startdate} To {enddate}
+                  </div>
+                </div>
+              </Form.Item>
+            </Form>
+          </Modal>
+          <Button
+            onClick={() => handleActionClick()}
+            type="primary"
+            style={{ backgroundColor: "green" }}
+          >
+            Confirm
+          </Button>
+        </div>
+        <DeleteIcon onClick={() => handleDeletAction()} />
+      </div>
+    )}
+  </Card>
+</Col>
 
-            </Row>
+        </Col>
+      ))}
+    </Row>
           </Col>
         </Row>
       </div>

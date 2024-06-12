@@ -10,6 +10,7 @@ import {
   WithFamilyIcon,
   YourSelfIcon,
 } from "@/icons/icon";
+import StepComponent from "@/components/customstep";
 
 import CustomMobileMenu from "@/components/custommobilemenu";
 import { ViewStatusFirstSvg } from "@/icons/svgs";
@@ -39,6 +40,8 @@ export default function AddApplicationDetailsPage() {
       window.removeEventListener("resize", handleResize); // Cleanup on component unmount
     };
   }, []);
+
+
 
   const handleCardClick = (cardName: string) => {
     setButtonColor("black");
@@ -99,20 +102,8 @@ export default function AddApplicationDetailsPage() {
         </div>
 
         <div className="center-steps">
-          {isMobileView ? (
-            <ViewStatusFirstSvg /> // Use uppercase for component name
-          ) : (
-            <Steps
-              current={-1}
-              style={{ width: "50%" }}
-              labelPlacement="vertical"
-              responsive={false}
-            >
-              <Steps.Step title="Add application details" />
-              <Steps.Step title="Complete & apply" />
-              <Steps.Step title="View status" />
-            </Steps>
-          )}
+          
+          <StepComponent currentStep={-1} />
         </div>
 
         <Divider className="divider" />
@@ -137,17 +128,17 @@ export default function AddApplicationDetailsPage() {
         </div>
         <Row gutter={[16, 16]} style={isMobileView ? { marginLeft: "0px" } : { marginLeft: "3rem" }}>
   <Col xs={12} sm={24} md={12} lg={12} xl={6}>
-    <div  className="marginTop3rem" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div >
       <Card
          className={`cardContainer ${selectedCard === "Darshan For Yourself" ? "lightBlueBackground" : "whiteBackground"}`}
   
         onClick={() => handleCardClick("Darshan For Yourself")}
       >
         <YourSelfIcon style={{ fontSize: "1.5rem" }} />
-        <div style={{ marginTop: "2rem", fontWeight: "bold", fontSize: "1.3rem" }}>
+        <div style={{fontWeight: "bold", fontSize: "1.3rem" ,marginTop:"2.5rem"}}>
           Darshan For<br /> Yourself
         </div>
-        <div style={{ marginTop: "2rem" }}>
+        <div>
           Select this option for Gyandarshan with yourself
         </div>
         {selectedCard === "Darshan For Yourself" && (
@@ -159,17 +150,17 @@ export default function AddApplicationDetailsPage() {
     </div>
   </Col>
   <Col xs={12} sm={24} md={12} lg={12} xl={6}>
-    <div  className="marginTop3rem" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div>
       <Card
         className={`cardContainer ${selectedCard === "Family Gyan Darshan" ? "lightBlueBackground" : "whiteBackground"}`}
   
         onClick={() => handleCardClick("Family Gyan Darshan")}
       >
         <WithFamilyIcon style={{ fontSize: "1.5rem" }} />
-        <div style={{ marginTop: "2rem", fontWeight: "bold", fontSize: "1.3rem" }}>
+        <div style={{fontWeight: "bold", fontSize: "1.3rem" ,marginTop:"2.5rem"}}>
           Family Gyan<br /> Darshan
         </div>
-        <div style={{ marginTop: "2rem" }}>
+        <div >
           Select this option for Gyandarshan with your Family
         </div>
         {selectedCard === "Family Gyan Darshan" && (

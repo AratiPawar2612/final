@@ -294,11 +294,11 @@ border: 0.0069rem 0rem 0rem 0rem;
 }
 
 .userProfileImage {
-  height: 4rem !important;
-  width: 4rem !important;
+  height: 3.9906rem !important;
+  width: 3.9906rem !important;
   border-radius: 2rem !important;
   margin-left: 1.125rem !important;
-  margin-top: 4.4375rem !important;
+  margin-top: 3.6375rem !important;
 }
 
 .userProfileVerifiedBadge {
@@ -327,18 +327,31 @@ border: 0.0069rem 0rem 0rem 0rem;
   margin-bottom: 0.75rem !important;
   width: 20.3125rem !important;
 }
-
-.userProfileRightCard {
-  display: flex !important;
-  flex-direction: column !important;
-  height:15.375rem !important;
+.userProfileCard {
+  height:  18.575rem !important;
   border-radius: 0.4375rem !important;
   position: relative !important;
-  background: #f9f9f9 !important;
-  width: 20.3125rem !important;
+  /* background: #f9f9f9b0 !important; */
+  background: #E5E5E5 !important;
   margin-bottom: 0.75rem !important;
-  margin-left: 0.75rem !important;
+  width: 20.3125rem !important;
 }
+.userProfile{
+  display: flex !important;
+  flex-direction: column !important;
+  height:  16.375rem !important;
+  border-radius: 0.4375rem !important;
+  position: relative !important;
+  background: #E5E5E5 !important;
+  margin-bottom: 0.75rem !important;
+  width: 15.3125rem !important;
+  text-wrap: nowrap;
+  text-align:center;
+  margin-bottom: 1rem!important;
+
+}
+
+
 
 .userProfilePlaceholderCard {
   width: 17.3125rem !important;
@@ -357,7 +370,7 @@ border: 0.0069rem 0rem 0rem 0rem;
   top: 0rem !important;
   left: 0rem !important;
   right: 0rem !important;
-  height:7.125rem !important;
+  height:6.125rem !important;
   background: #fdd8d8 !important;
   border-radius: 0.4375rem 0.4375rem 0rem 0rem !important;
 }
@@ -379,18 +392,20 @@ border: 0.0069rem 0rem 0rem 0rem;
 
 .userProfileInfoTitle {
   font-size: 0.5 375rem !important;
-  font-weight: 700 !important;
+  font-weight: bold !important;
   line-height: 0.6875rem !important;
   letter-spacing: 0.0088rem !important;
-  color: #64748b !important;
+  color: #334155 !important;
+  font-family: "Manrope"!important;
 }
 
 .userProfileInfoValue {
-  font-size: 0.4375rem !important;
+  font-size: 0.5375rem !important;
   font-weight: 400 !important;
   line-height: 0.6875rem !important;
-  letter-spacing: 0.0088rem !important;
+  letter-spacing: 0.0188rem !important;
   color: #64748b !important;
+  margin-top: 10px;
 }
 .circularProgressDiv {
   display: flex !important;
@@ -610,9 +625,66 @@ border: 0.0069rem 0rem 0rem 0rem;
   display: flex!important;
   justify-content: center!important;
   margin-top: 1.25rem!important;
+  font-size: 1px!important;
  
 }
 
+.ant-steps-item-finish .ant-steps-item-icon {
+  background-color: #199226 !important;
+
+ 
+}
+
+
+
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: white !important;
+  font-size:0.8rem; /* Adjust the font size to increase the height and width */
+}
+
+
+
+
+
+.ant-steps-item-process .ant-steps-item-icon {
+  background-color: white !important;
+  border-color: black !important;
+
+
+}
+
+.ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon {
+  color:black !important;
+ 
+}
+
+ .ant-steps-item-title {
+  color: #475569 !important;
+ 
+}
+
+
+.ant-steps-item-wait .ant-steps-item-icon {
+  background-color: white !important;
+  border-color: gray !important;
+  
+}
+
+.ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon {
+  color: gray !important;
+}
+.ant-steps-item-process .ant-steps-item-tail::after {
+  background-color: black !important;
+  height: 3px!important;
+}
+.ant-steps-item-finish .ant-steps-item-tail::after {
+  background-color: #199226 !important;
+  height: 3px!important;
+}
+.ant-steps-item-wait .ant-steps-item-tail::after {
+  background-color:  gray !important;
+  height: 3px!important;
+}
 
 
 
@@ -658,15 +730,11 @@ border: 0.0069rem 0rem 0rem 0rem;
   opacity: 0.5!important; 
   pointer-events: none!important; 
 }
-.step-item.vertical-line {
-  border-left: 2px solid #000; /* Adjust the color and thickness as needed */
-  height: 50px; /* Adjust the height of the line as needed */
-  margin-left: 10px; /* Adjust the spacing between the circle and the line */
-}
 
-.custom-step .ant-steps-item-icon > .ant-steps-icon {
+
+/* .custom-step .ant-steps-item-icon > .ant-steps-icon {
   background-color: red; /* Change dot color to red */
-}
+/* } */ */
 
 .step-item.active .step-circle {
   background-color: #F55C38!important; 
@@ -791,9 +859,9 @@ margin-top: "3rem"!important;
   width: "100%";
 }
 .passlabel{
-  width:"5.5625rem"!important;
-  height:"1.0625rem"!important;
+  
   font-Size:"0.75rem"!important;
+  background-color: "#334155"!important;
 
 }
 .mobilecontainer{
@@ -822,23 +890,9 @@ margin-top: "3rem"!important;
   border-top: 1px solid transparent!important;
   justify-content: space-between!important;
 }
-.step-description {
-  display: flex!important;
-  align-items: flex-start!important;
-}
 
-.step-dot {
-  width: 10px!important;
-  height: 10px!important;
-  background-color: red!important;
-  margin-right: 10px!important;
-}
 
-.description-box {
-  border: 1px solid #ccc!important;
-  padding: 1rem!important;
-  flex: 1!important;
-}
+
 .flexContainer {
   display: flex!important;
   flex-direction: row!important;
@@ -855,9 +909,7 @@ margin-top: "3rem"!important;
 
 
 
-.description-box h3 {
-  margin-bottom: 0.5rem!important;
-}
+
 
 .editButton {
   border-radius: 2rem!important;
@@ -873,6 +925,7 @@ margin-top: "3rem"!important;
   height: 2rem!important;
   margin-top: 1rem!important;
   background-color: black !important;
+  margin-left: 1rem!important;
 }
 
 .cardContainer {
@@ -950,9 +1003,7 @@ margin-top: "3rem"!important;
   left: 50%;
   transform: translateX(-50%);
 }
-.highlighted-week td {
-  background-color: lightgreen;
-}
+
 .profile-card {
   display: flex;
   align-items: center;
@@ -962,32 +1013,86 @@ margin-top: "3rem"!important;
   width: 300px;
 }
 
-.profile-picture {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-right: 20px;
-}
 
-.profile-info {
-  flex-grow: 1;
-}
+
 
 .name {
   font-size: 1.5em;
   margin: 0;
 }
 
-.bio, .location {
-  margin: 5px 0;
+
+
+.historycontainer {
+  margin-top: 2rem;
+  width: 165px;
+  height: 195px;
+  top: 696px;
+  left: 259px;
+  gap: 8px;
+  border-radius: 16px 0px 0px 0px;
+  border-top: 1px solid transparent;
+  justify-content: space-between;
 }
 
-.profile-link {
-  text-decoration: none;
-  color: blue;
+.dividerStyle{
+  border-Color: '#222222';
+  border-Width: '2px';
+  border-Style: 'solid';
+  font-Weight: 'bold';
+  color: 'black';
+};
+
+.customButton {
+  background-color: black!important;
+  border-radius: 1rem!important;
+  width: 6.75rem!important;
+  height: 1.9375rem!important;
+  text-align: center!important;
+  box-shadow: none!important;
 }
 
+/* Ensures the clear button is always visible when there are selected values */
+.ant-select-clear {
+  display: block !important;
+}
 
+.ant-select-selection-item {
+  display: inline-block;
+  padding-right: 24px; /* Adjust padding to make space for the clear button */
+}
 
+.ant-select-clear-icon {
+  display: inline-block;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #999;
+}
+
+.ant-select-clear-icon:hover {
+  color: #333;
+}
+
+.userProfileCardWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: -2rem; /* Adjust as needed to overlap */
+}
+.purpose-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.purpose-label {
+  margin-right: 10px; /* Adjust as needed */
+  margin-bottom: 10px; /* Adjust as needed */
+  padding: 5px 10px;
+  border-radius: 20px;
+  background-color: lightgray; /* Change the background color as needed */
+}
 
 

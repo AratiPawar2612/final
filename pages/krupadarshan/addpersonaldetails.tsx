@@ -19,6 +19,7 @@ import {
 } from "antd";
 import MainLayout from "@/components/mainlayout";
 import CustomMenu from "@/components/custommenu";
+import StepComponent from "@/components/customstep";
 import axios from "axios";
 import {
   VerifiedIcon,
@@ -82,9 +83,7 @@ export default function AddPersonalDeatilsPage() {
   const [purposeOptions, setPurposeOptions] = useState<any[]>([]); // Define purposeOptions state
   const [selectedPurpose, setSelectedPurpose] = useState<any[]>([]); // Define state for selected purpose
   const [participantuserid, setParticipantUserid] = useState<any[]>([]); // Define state for selected purpose
-  const [showSearchButton, setShowSearchButton] = useState(true);
   const [showNextButton, setNextButton] = useState(true);
-  const [showAddButton, setShowAddButton] = useState(false);
   const { isFamilyKrupaDarshan } = router.query;
   const [errorMessage, setErrorMessage] = useState("");
   const [searchdata, setsearchdata] = useState([]);
@@ -96,7 +95,7 @@ export default function AddPersonalDeatilsPage() {
   const [isMobileView, setIsMobileView] = useState(false);
   const dayjs = require("dayjs");
   const [value, setValue] = useState(1);
-  const defaultSelectedValues = ["Select Purpose"];
+ 
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
@@ -162,6 +161,10 @@ export default function AddPersonalDeatilsPage() {
   }, []);
 
   const [selectedRelationship, setSelectedRelationship] = useState("");
+  const dropdownAlign = {
+    points: ['bl', 'tl'], // Align the bottom-left corner of the dropdown with the top-left corner of the trigger
+    offset: [0, 4], // Offset the dropdown by 4 pixels vertically
+  };
   const disabledDate = (current: any, startDate: any, endDate: any) => {
     // Disable dates before today
     if (current && current < dayjs().startOf("day")) {
@@ -272,15 +275,11 @@ if(participantData)
     console.log("Response from server:", participantData);
     message.success('Participant Added successfully');
     form.resetFields();
-    setShowSearchButton(true);
-    setShowAddButton(false);
     window.location.reload();
     setErrorMessage("");
   }
   else{
     form.resetFields();
-    setShowSearchButton(true);
-    setShowAddButton(false);
   }
     
     } catch (error) {
@@ -288,41 +287,49 @@ if(participantData)
     }
   };
 
-  const handleSearchClick = async () => {
+  const handleSearchClick = async (e:any) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); 
     try {
-      console.log("khojiemail", khojiemail);
-      if (
-        !khojiID &&
-        !khojifirstName &&
-        !khojilastName &&
-        !khojimobile &&
-        !khojiemail
-      ) {
-        message.warning("Please enter at least one search criteria");
-        return;
-      }
-
-      let criteria = "";
-
+      let criteria = '';
+  
+      // Update state based on the input field
       if (khojiID) {
-        criteria += `khoji_id=${khojiID}`;
-      } else {
-        if (khojifirstName) {
-          criteria += `first_name=${khojifirstName}`;
+          // if (khojiID.length !== 8) {
+          //     console.log("Khoji ID must be 8 digits long");
+          //     // Optionally, you can display a message to the user here
+          //     return;
+          // }
+          setKhojiID(khojiID); // Update Khoji ID state
+          criteria += `khoji_id=${khojiID}`;
+      } else if (khojifirstName) {
+          setkhojifirstName(khojifirstName);
+          // Check if last name is also entered
           if (khojilastName) {
-            criteria += `&last_name=${khojilastName}`;
-          } else {
-            message.warning("Please enter both first name and last name");
-            return;
+              criteria += `last_name=${khojilastName}&`;
           }
-        }
-        if (khojimobile) {
-          criteria += `&mobile=${khojimobile}`;
-        }
-        if (khojiemail) {
-          criteria += `&email=${khojiemail}`;
-        }
+          criteria += `first_name=${khojifirstName}`;
+      } else if (khojilastName) {
+          setkhojilastName(khojilastName);
+          // Check if first name is also entered
+          if (khojifirstName) {
+              criteria += `first_name=${khojifirstName}&`;
+          }
+          criteria += `last_name=${khojilastName}`;
+      } else if (khojimobile) {
+          if (khojimobile .length!== 10 ) {
+              console.log("Mobile number must be 10 digits long and contain only numbers");
+              // Optionally, you can display a message to the user here
+              return;
+          }
+          setkhojimobile(khojimobile);
+          criteria += `contact_no=${khojimobile}`;
+      } else if (khojiemail) {
+          setkhojiemail(khojiemail);
+          criteria += `email=${khojiemail}`;
       }
+    
+     
 
       const searchResults = await searchUser(token, criteria);
       console.log("searchResults", searchResults);
@@ -331,14 +338,13 @@ if(participantData)
         setkhojiuserid(firstUser.user.id);
         setsearchdata(firstUser);
         form.setFieldsValue(firstUser);
-        setShowSearchButton(false);
-        setShowAddButton(true);
       } else {
         message.warning("No data found");
       }
     } catch (error) {
       console.error("Error handling search click:", error);
     }
+  }
   };
 
   const onclickNextBtn = async () => {
@@ -346,7 +352,7 @@ if(participantData)
       console.log("startdate",startdate)
       message.warning("Please Enter All required fields" + startdate);
     } else {
-      const requestBody = {
+      const requestBody: Record<string, any> = {
         user: userid,
         status: "SUBMITTED",
         have_participants: isFamilyKrupaDarshan,
@@ -354,8 +360,13 @@ if(participantData)
         purposes: selectedPurpose,
         preferred_start_date: startdate,
         preferred_end_date: enddate,
-        khoji_note: addnote,
       };
+      
+      // Conditionally add khoji_note
+      if (!addnote==null) {
+        requestBody.khoji_note = addnote;
+      }
+      
 
       try {
         const applicationSubmitted = await submitApplication(
@@ -364,7 +375,7 @@ if(participantData)
         );
         console.log("applicationSubmitted", applicationSubmitted);
         if (applicationSubmitted) {
-          message.success("Application Request sent");
+          message.success("Congratulations! Your application has been saved successfully");
           router.push("/krupadarshan/completeandapply");
         } 
       } catch (error: any) {
@@ -378,39 +389,8 @@ if(participantData)
     }
   };
 
-  // const onclickNextBtn = async () => {
-  //   if (!selectedPurpose || !startdate || !enddate) {
-  //     alert("Please Enter All required fields");
-  //   } else {
-  //     const requestBody = {
-  //       user: userid,
-  //       status: "SUBMITTED",
-  //       have_participants: isFamilyKrupaDarshan,
-  //       participants: isFamilyKrupaDarshan ? selectedUserIds : null,
-  //       purposes: selectedPurpose,
-  //       preferred_start_date: startdate,
-  //       preferred_end_date: enddate,
-  //       khoji_note: addnote,
-  //     };
-
-  //     try {
-  //       const applicationSubmitted = await submitApplication(
-  //         requestBody,
-  //         token
-  //       );
-  //       console.log("applicationSubmitted", applicationSubmitted);
-  //       if (applicationSubmitted) {
-  //         alert("Application Submitted successfully");
-  //         router.push("/krupadarshan/completeandapply");
-  //       } else {
-  //        alert("Participants must be provided for application");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error submitting application:", error);
-  //     }
-  //   }
-  // };
-
+  
+  
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -435,6 +415,7 @@ if(participantData)
     }
   };
 
+
   const handleInputTypeChange = (type: string) => {
     if (type === "View all") {
       setInputType(type);
@@ -443,6 +424,65 @@ if(participantData)
       setInputType(type);
     }
   };
+
+  const [open, setOpen] = useState(false);
+
+
+
+  const handleInputChange = (e: any) => {
+    const { dataset, value } = e.target;
+    const name = dataset.name;
+    console.log("Name:", name); 
+    let criteria = '';
+  
+    // Update state based on the input field
+    if (name === 'khojiID') {
+        if (value.length !== 8) {
+            console.log("Khoji ID must be 8 digits long");
+            // Optionally, you can display a message to the user here
+            return;
+        }
+        setKhojiID(value); // Update Khoji ID state
+        criteria += `khoji_id=${value}`;
+    } else if (name === 'first_name') {
+        setkhojifirstName(value);
+        // Check if last name is also entered
+        if (khojilastName) {
+            criteria += `last_name=${khojilastName}&`;
+        }
+        criteria += `first_name=${value}`;
+    } else if (name === 'last_name') {
+        setkhojilastName(value);
+        // Check if first name is also entered
+        if (khojifirstName) {
+            criteria += `first_name=${khojifirstName}&`;
+        }
+        criteria += `last_name=${value}`;
+    } else if (name === 'contact_no') {
+        if (value.length !== 10 || isNaN(value)) {
+            console.log("Mobile number must be 10 digits long and contain only numbers");
+            // Optionally, you can display a message to the user here
+            return;
+        }
+        setkhojimobile(value);
+        criteria += `contact_no=${value}`;
+    } else if (name === 'email') {
+        setkhojiemail(value);
+        criteria += `email=${value}`;
+    }
+  
+    // Check if the input value is not empty
+    const hasValue = value.trim() !== '';
+    if (hasValue) {
+        console.log("criteria", criteria);
+        handleSearchClick(criteria);
+    } else {
+        console.log("Input value is empty");
+        // Optionally, you can display a message to the user here
+    }
+};
+  
+
   const renderInputComponent = () => {
     if (inputType === "khoji") {
       return (
@@ -454,12 +494,12 @@ if(participantData)
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 name="rdyesno"
-                initialValue={1} // Set initial value to 1 (Yes)
+                initialValue={1} 
                 rules={[{ required: true, message: "Please select an option" }]}
               >
                 <Radio.Group onChange={onChange} value={value}>
                   <Radio value={1} style={{ fontSize: "0.9rem" }}>
-                    yes
+                    Yes
                   </Radio>
                   <Radio
                     value={2}
@@ -480,13 +520,15 @@ if(participantData)
                 name="khojiID"
                 rules={[{ required: true, message: "Please enter Khoji ID" }]}
               >
-                <Input
-                  placeholder="Enter Khoji ID"
-                  value={khojiID}
-                  onChange={(e) => setKhojiID(e.target.value)}
-                  className="inputStyle"
-                  disabled={value === 2} // Disable input if value is 1 (Yes)
-                />
+  <Input
+   placeholder="Enter Khoji ID"
+   value={khojiID}
+   onChange={(e) => setKhojiID(e.target.value)}
+   className="inputStyle"
+   disabled={value === 2}
+   data-name="khojiID"
+   onKeyPress={handleSearchClick}
+/>
               </Form.Item>
             </Col>
           </Row>
@@ -497,6 +539,7 @@ if(participantData)
               <Form.Item
                 label="First Name"
                 name={["user", "first_name"]}
+               
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 rules={[{ required: true, message: "Please enter First Name" }]}
@@ -507,8 +550,11 @@ if(participantData)
                     height: "2rem",
                     width: "100%",
                   }}
+                  value={khojifirstName}
                   onChange={(e) => setkhojifirstName(e.target.value)}
-                  disabled={value === 1} // Disable input if value is 1 (Yes)
+                  data-name="first_name"
+                  disabled={value === 1}
+                  onKeyPress={handleSearchClick} // Disable input if value is 1 (Yes)
                 />
               </Form.Item>
             </Col>
@@ -522,8 +568,11 @@ if(participantData)
               >
                 <Input
                   className="inputStyle"
+                  value={khojilastName}
                   onChange={(e) => setkhojilastName(e.target.value)}
+                  data-name="last_name"
                   disabled={value === 1} // Disable input if value is 1 (Yes)
+                  onKeyPress={handleSearchClick}
                 />
               </Form.Item>
             </Col>
@@ -547,40 +596,13 @@ if(participantData)
                   className="inputStyle"
                   onChange={(e) => setkhojiemail(e.target.value)}
                   disabled={value === 1} // Disable input if value is 1 (Yes)
+                  data-name="email"
+                  onKeyPress={handleSearchClick}
                 />
               </Form.Item>
             </Col>
           </Row>
-          {/* <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="DOB"
-                name="dob"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                rules={[
-                  {
-                    type: "email",
-                    message: "Please enter a valid  DOB",
-                  },
-                  { required: true, message: "Please enter DOB " },
-                ]}
-              >
-                <DatePicker
-                  style={{
-                    borderRadius: "2rem",
-                    height: "2rem",
-                    width: "100%",
-                  }}
-                  picker="date"
-                  onChange={(value) => setkhojiDobValue(value.toDate())} // Convert Dayjs value to Date
-                  disabled={
-                    form.getFieldValue("rdyesno") !== "yes"
-                  }
-                />
-              </Form.Item>
-            </Col>
-          </Row> */}
+         
 
           <Row gutter={16}>
             <Col span={24}>
@@ -601,6 +623,8 @@ if(participantData)
                   className="inputStyle"
                   onChange={(e) => setkhojimobile(e.target.value)}
                   disabled={value === 1} // Disable input if value is 1 (Yes)
+                  data-name="contact_no"
+                  onKeyPress={handleSearchClick}
                 />
               </Form.Item>
             </Col>
@@ -634,27 +658,9 @@ if(participantData)
           </Row>
 
           <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
+            
           >
-            {showSearchButton && (
-              <Button
-                type="primary"
-                style={{
-                  marginTop: "1rem",
-                  backgroundColor: "black",
-                  width: "100%",
-                  marginBottom: "1rem",
-                }}
-                onClick={handleSearchClick}
-              >
-                Search
-              </Button>
-            )}
-            {showAddButton && (
+            
               <Button
                 type="primary"
                 style={{
@@ -667,7 +673,7 @@ if(participantData)
               >
                 Add
               </Button>
-            )}
+          
           </div>
         </Form>
       );
@@ -810,9 +816,8 @@ if(participantData)
     setSelectedUserIds: any
   ) {
     const handleCardClick = () => {
-      // Check if the user ID is already selected
       const isSelected = selectedUserIds.includes(user.id);
-
+  
       // If selected, remove from the list; otherwise, add to the list
       if (isSelected) {
         setSelectedUserIds((prevIds: any) =>
@@ -822,120 +827,134 @@ if(participantData)
         setSelectedUserIds((prevIds: any) => [...prevIds, user.id]);
       }
     };
-
+  
     if (!user) {
       return <div className="userProfilePlaceholderCard" />;
     }
-
+  
     const isSelected = selectedUserIds.includes(user.id);
-
+  
     return (
-      <div
-        className={`${
-          index === 1 ? "userProfileRightCard" : "userProfileLeftCard"
-        } ${isSelected ? "selectedCard" : ""}`}
-        key={user.id}
-        style={{
-          width: "100%",
-          marginBottom: "16px",
-          marginTop: "2rem",
-          textAlign: "center",
-          cursor: "pointer", // Add cursor pointer to indicate clickable
-        }}
-        onClick={handleCardClick}
-      >
-        {/* Render card content here */}
-        <div className="userProfileTopSection">
-          {isSelected && (
-            <CheckCircleOutlined
-              style={{ color: "black", marginTop: "1rem", marginLeft: "15rem" }}
-            />
-          )}
-        </div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Avatar className="userProfileImage" src={user.avtar} />
-
-          <div className="userProfileVerifiedBadge">
-            <label className="userProfileVerifiedBadgeLabel">Verified</label>
-            <VerifiedIcon />
-          </div>
-        </div>
+      <div className="userProfileContainer" key={user.id}>
         <div
-          className="displayFlex flexDirectionColumn"
-          style={{ textAlign: "center" }}
+          className={`${
+            index === 1 ? "userProfile" : "userProfile"
+          } ${isSelected ? "selectedCard" : ""}`}
+          onClick={handleCardClick}
         >
-          <label className="userNameLabel" style={{ marginRight: "12rem" }}>
-            {user?.relation_with?.user?.first_name}{" "}
-            {user?.relation_with?.user?.last_name}
-          </label>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{
-                marginTop: "1rem",
-                marginLeft: "1.5rem",
-                alignItems: "baseline",
-              }}
-            >
-              <label className="userProfileInfoTitle">Khoji Id</label>
-              <label className="userProfileInfoValue">
-                {user?.relation_with?.khoji_id}
-              </label>
-            </div>
-            {/* <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle"></label>
-              <label className="userProfileInfoValue"></label>
-            </div> */}
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem", marginLeft: "6rem" }}
-            >
-              {/* <ScannerIcon /> */}
-              {/* <QRCode value={user?.user?.id} size={100} /> */}
+          <div className="userProfileTopSection">
+            {isSelected && (
+              <CheckCircleOutlined
+                style={{ color: "black", marginTop: "1rem", marginLeft: "12rem" }}
+              />
+            )}
+          </div>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Avatar className="userProfileImage" src={user.avtar} />
+  
+            <div className="userProfileVerifiedBadge">
+              <label className="userProfileVerifiedBadgeLabel">Verified</label>
+              <VerifiedIcon />
             </div>
           </div>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+          <div
+            className="displayFlex flexDirectionColumn"
+            style={{ textAlign: "center" }}
+          >
+            <label
+              className="userProfileInfoTitle marginTop1rem"
+              style={{ marginRight: "9rem" }}
             >
-              <label className="userProfileInfoTitle">Tejsthan</label>
-              <label className="userProfileInfoValue">
-                {user?.relation_with?.current_tejsthan?.name}
-              </label>
+              {user?.relation_with?.user?.first_name &&
+                user?.relation_with?.user?.last_name &&
+                [
+                  user?.relation_with?.user?.first_name,
+                  user?.relation_with?.user?.last_name
+                ]
+                  .reduce(
+                    (acc, name) =>
+                      acc +
+                      " " +
+                      name
+                        .split(" ")
+                        .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+                        .join(" "),
+                    ""
+                  )
+                  .trim()}
+            </label>
+            <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+              <div
+                className="displayFlex flexDirectionColumn flex1"
+                style={{
+                  marginTop: "1rem",
+                  marginLeft: "1.5rem",
+                  alignItems: "baseline"
+                }}
+              >
+                <label className="userProfileInfoTitle">Khoji Id</label>
+                <label className="userProfileInfoValue">
+                  {user?.relation_with?.khoji_id}
+                </label>
+              </div>
+              <div
+                className="displayFlex flexDirectionColumn flex1"
+                style={{ marginTop: "1rem" }}
+              >
+                <label className="userProfileInfoTitle"></label>
+                <label className="userProfileInfoValue"></label>
+              </div>
+              <div
+                className="displayFlex flexDirectionColumn flex1"
+                style={{ marginTop: "1rem", marginLeft: "6rem" }}
+              >
+                <QRCode value={user?.user?.id} size={100} />
+              </div>
             </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle">Shivir level</label>
-              <label className="userProfileInfoValue">
-                {user?.relation_with?.shivir_name}
-              </label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle">DOB</label>
-              <label className="userProfileInfoValue">
-                {user.relation_with?.dob}
-              </label>
+            <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+              <div
+                className="displayFlex flexDirectionColumn flex1"
+                style={{ marginTop: "1rem" }}
+              >
+                <label className="userProfileInfoTitle">Tejsthan</label>
+                <label className="userProfileInfoValue">
+                  {user?.relation_with?.current_tejsthan?.name}
+                </label>
+              </div>
+              <div
+                className="displayFlex flexDirectionColumn flex1"
+                style={{ marginTop: "1rem" }}
+              >
+                <label className="userProfileInfoTitle">Shivir level</label>
+                <label className="userProfileInfoValue">
+                  {user?.relation_with?.shivir_name}
+                </label>
+              </div>
+              <div
+                className="displayFlex flexDirectionColumn flex1"
+                style={{ marginTop: "1rem" }}
+              >
+                <label className="userProfileInfoTitle">DOB</label>
+                <label className="userProfileInfoValue">
+                  {user.relation_with?.dob}
+                </label>
+              </div>
             </div>
           </div>
         </div>
       </div>
     );
   }
+  
+
+
+
 
   function buildUserCard(user: any, index: any) {
     return user ? (
       <div
         className={`${
-          index === 1 ? "userProfileRightCard" : "userProfileLeftCards"
+          index === 1 ? "userProfileLeftCards" : "userProfileLeftCards"
         }`}
         key={user.id}
       >
@@ -951,7 +970,7 @@ if(participantData)
           className="displayFlex flexDirectionColumn"
           style={{ textAlign: "center" }}
         >
-          <label className="userNameLabel" style={{ marginRight: "12rem" }}>
+          <label className="userProfileInfoTitle" style={{ marginRight: "10rem",textWrap:"nowrap"}}>
             {user?.user?.first_name} {user?.user?.last_name}
           </label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
@@ -971,16 +990,16 @@ if(participantData)
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem", marginLeft: "1rem" }}
+              style={{ marginLeft: "1rem" }}
             >
-              {/* <ScannerIcon /> */}
               <QRCode value={user?.user?.id} size={100} />
             </div>
           </div>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16" 
+          >
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+              
             >
               <label className="userProfileInfoTitle">Tejsthan</label>
               <label className="userProfileInfoValue">
@@ -988,15 +1007,15 @@ if(participantData)
               </label>
             </div>
             <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+              className="displayFlex flexDirectionColumn flex1 marginTop16"
+             
             >
               <label className="userProfileInfoTitle">Shivir level</label>
               <label className="userProfileInfoValue">{user.shivir_name}</label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
+             
             >
               <label className="userProfileInfoTitle">DOB</label>
               <label className="userProfileInfoValue">{user.dob}</label>
@@ -1050,21 +1069,9 @@ if(participantData)
           </div>
           <Row justify="center">
             <Col xs={24} xl={24}>
-              <div className="center-steps">
-                {isMobileView ? (
-                  <ViewStatusFirstSvg /> 
-                ) : (
-                  <Steps
-                    current={-1}
-                    style={{ width: "50%" }}
-                    labelPlacement="vertical"
-                    responsive={false}
-                  >
-                    <Steps.Step title="Add application details" />
-                    <Steps.Step title="Complete & apply" />
-                    <Steps.Step title="View status" />
-                  </Steps>
-                )}
+            <div style={{display:"flex",justifyContent:"center",marginTop:"1rem"}}  >
+                  <StepComponent currentStep={-1} />
+                
               </div>
             </Col>
           </Row>
@@ -1180,34 +1187,26 @@ if(participantData)
                         },
                       ]}
                     >
-                      {/* <Select
-  mode="tags"
-  style={{ width: "100%", height: "auto" }}
-  placeholder="Select Purpose"
-  value={selectedPurpose}
-  onChange={(value) => setSelectedPurpose(value)}
-  allowClear  // Enable clear option
->
-  {purposeOptions.map((option) => (
-    <Option key={option.key} value={option.value}>
-      {option.label}
-    </Option>
-  ))}
-</Select> */}
-                      <Select
-                        mode="multiple"
-                        allowClear
-                        style={{ width: "100%" }}
-                        placeholder="Select Purpose"
-                        value={selectedPurpose}
-                        onChange={(value) => setSelectedPurpose(value)}
-                      >
-                        {purposeOptions.map((option) => (
-                          <Option key={option.key} value={option.value}>
-                            {option.label}
-                          </Option>
-                        ))}
-                      </Select>
+                   
+                    <Select
+                            mode="multiple"
+                            style={{ width: "100%" }}
+                            placeholder="Select Purpose"
+                            value={selectedPurpose}
+                            onChange={(value) => setSelectedPurpose(value)}
+                            showSearch={false}
+                           
+                    
+                          >
+                          {purposeOptions.map((option) => (
+                            <Option key={option.key} value={option.value}>
+                              {option.label}
+                            </Option>
+                          ))}
+                        </Select>
+                   
+                          
+                     
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1541,12 +1540,7 @@ if(participantData)
                 >
                   {isFamilyKrupaDarshan === "true" && (
                     <div
-                      style={{
-                        width: "13rem",
-                        height: "20rem",
-                        // overflow: "auto",
-                        marginLeft: "2rem",
-                      }}
+                     
                     >
                       <Card onClick={showModal} className="addfamilymembercard">
                         <div
@@ -1610,44 +1604,34 @@ if(participantData)
                               alignItems: "center",
                             }}
                           >
-                            <div style={{ marginBottom: 16 }}>
-                              {inputType !== "View all" && (
-                                <>
-                                  <Button
-                                    type="link"
-                                    style={{
-                                      marginRight: 10,
-                                      fontSize: "0.8225rem",
-                                      color:
-                                        inputType === "khoji"
-                                          ? "blue"
-                                          : "black",
-                                    }}
-                                    onClick={() =>
-                                      handleInputTypeChange("khoji")
-                                    }
-                                  >
-                                    Khoji
-                                  </Button>
-                                  <Button
-                                    type="link"
-                                    style={{
-                                      marginRight: 10,
-                                      fontSize: "0.6225rem",
-                                      color:
-                                        inputType === "guest"
-                                          ? "blue"
-                                          : "black",
-                                    }}
-                                    onClick={() =>
-                                      handleInputTypeChange("guest")
-                                    }
-                                  >
-                                    Guest Khoji
-                                  </Button>
-                                </>
-                              )}
-                            </div>
+                         <div style={{ marginBottom: 16 }}>
+  {inputType !== "View all" && (
+    <>
+      <Button
+        type="link"
+        style={{
+          marginRight: 10,
+          fontSize: "0.8225rem", // Explicitly set the font size
+          color: inputType === "khoji" ? "blue" : "black",
+        }}
+        onClick={() => handleInputTypeChange("khoji")}
+      >
+        Khoji
+      </Button>
+      <Button
+        type="link"
+        style={{
+          fontSize: "0.8225rem", // Explicitly set the font size
+          color: inputType === "guest" ? "blue" : "black",
+        }}
+        onClick={() => handleInputTypeChange("guest")}
+      >
+        Guest Khoji
+      </Button>
+    </>
+  )}
+</div>
+
                             {renderInputComponent()}
                           </div>
                         </div>

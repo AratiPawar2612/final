@@ -6,202 +6,97 @@ body {
   width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
-  background-color: #f4f4f4 !important;
 }
 
 .mainContentWrapper {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  background-color: #f4f4f4 !important;
+  background-color: #fff !important;
 }
 
-/* Adjust the layout for small screens */
-@media screen and (max-width: 767px) {
-  body {
-    margin: 0 auto;
-    padding: 0 20px;
-    max-width: 90%;
-  }
-  .topPart {
-    width: "100vw" !important;
-    background-color: #a6d4db !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding: 2rem !important;
-  }
-  .bottomPart {
-    background-color: #F4F4F4;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
- 
-  .loginRightPanelTitle,
-  .loginRightPanelSubtitle {
-    text-align: center; /* Center align the text */
-  }
-  .buttonsContainer {
-    margin-top: 20px; /* Add margin to the buttons container */
-  }
-  .loginTitle {
-    width: auto !important;
-    font-family: Manrope !important;
-    font-size: 3rem !important;
-    text-align: center !important;
-    color: #0f172a !important;
-  }
-  .loginTitle {
-    width: auto !important;
-    font-family: Manrope !important;
-    font-size: 1rem !important;
-    text-align: center !important;
-    color: #0f172a !important;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  body {
-    margin: 0 auto;
-    padding: 0 20px;
-    max-width: 100%;
-  }
-
-  .my-custom-steps {
-    display: flex;
-    justify-content: space-between;
-    width: 16.5rem;
-    height: 2.58rem;
-    top: 11.4375rem;
-    left: 3rem;
-  }
-
-  /* Styling for individual steps (optional) */
-  .my-custom-steps .step {
-    width: calc((100% / 3) - 10px);
-    height: 100%;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-
-  .viewstatusLabel {
-    text-align: left;
-  }
-  .loginTitle {
-    width: auto !important;
-    font-family: Manrope !important;
-    font-size: 2rem !important;
-    text-align: center !important;
-    color: #0f172a !important;
-  }
-  .logo,
-  .logo > svg {
-    width: 5.3125rem !important;
-    height: 4.75rem !important;
-    justify-items: "center" !important;
-  }
-  .logologin,
-  .logo > svg {
-    width: 4.6875rem !important;
-    height: 4.7525rem !important;
-    border: 0.0119rem 0rem 0rem 0rem !important;
-  }
-  .divider {
-    margin-top: "12rem" !important;
-  }
-  .topPart {
-    width: "100vw" !important;
-    background-color: #a6d4db !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding: 2rem !important;
-  }
-  .bottomPart {
-    background-color: #F4F4F4;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-  .center-steps {
-    display: flex !important;
-    flex-direction: row !important;
-  }
-  .addfamilymembercard {
-    width: "60%" !important;
-    height: "15.375rem" !important;
-    justify-content: "center" !important;
-  }
-}
-
-/* For medium-sized screens */
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  body {
-    margin: 0 auto;
-    padding: 0 20px;
-    max-width: 90%;
-  }
-  .loginTitle {
-    width:auto!important;
-    height: 6rem!important;
-    font-family: Manrope!important;
-    font-size: 2rem!important;
-    font-weight: 700!important;
-    line-height: 2.5rem!important;
-    letter-spacing: 0.0544rem!important;
-    text-align: left!important;
-    color: #0f172a !important;
-  }
-  .topPart {
-    width: "100vw" !important;
-    background-color: #a6d4db !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    padding: 2rem !important;
-  }
-}
-
-
-/* For larger screens */
-@media screen and (min-width: 1025px) and (max-width: 1440px) {
-  body {
-    margin: 0 auto;
-    padding: 0 1.25rem;
-    max-width: 90rem;
-  }
-} 
-
-/* For extra-large screens */
-@media screen and (min-width: 1441px) {
+/* Media Queries for Breakpoints */
+@media screen and (max-width: 320px) {
   html,
   body {
-    font-size: 1.5rem !important;
-    background-color: #f4f4f4 !important;
+    font-size: 0.75rem !important; /* Smaller font size for very small screens */
   }
-}
-/* Styles for screens wider than 1920px */
-@media (min-width: 1921px) {
-  body {
-    font-size: 1.5rem;
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
   }
 }
 
-/* Styles for screens between 1441px and 1920px */
-@media (max-width: 1920px) and (min-width: 1441px) {
+@media screen and (min-width: 321px) and (max-width: 768px) {
+  html,
   body {
-    font-size: 1.25rem;
+    font-size: 0.875rem !important; /* Slightly larger font size for small screens */
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 24px);
+    max-width: calc(100% - 24px);
   }
 }
 
-/* Styles for screens between 1281px and 1440px */
-@media (max-width: 1440px) and (min-width: 1281px) {
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  html,
   body {
-    font-size: 1.125rem;
+    font-size: 1rem !important; /* Standard font size for tablets */
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 32px);
+    max-width: calc(100% - 32px);
+  }
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1280px) {
+  html,
+  body {
+    font-size: 1.125rem !important; /* Slightly larger font size for small laptops */
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 32px);
+    max-width: calc(100% - 32px);
+  }
+}
+
+@media screen and (min-width: 1281px) and (max-width: 1440px) {
+  html,
+  body {
+    font-size: 1.25rem !important; /* Larger font size for medium desktops */
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 32px);
+    max-width: calc(100% - 32px);
+  }
+}
+
+@media screen and (min-width: 1441px) and (max-width: 1920px) {
+  html,
+  body {
+    font-size: 1.375rem !important; /* Larger font size for large desktops */
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 32px);
+    max-width: calc(100% - 32px);
+  }
+}
+
+@media screen and (min-width: 1921px) {
+  html,
+  body {
+    font-size: 1.5rem !important; /* Largest font size for extra-large screens */
+  }
+
+  .mainContentWrapperBody {
+    min-width: calc(100% - 32px);
+    max-width: calc(100% - 32px);
   }
 }
 
@@ -209,24 +104,43 @@ body {
   display: flex !important;
   flex-direction: row !important; 
   justify-content: space-between !important;
-}
-.marginLeft3rem {
+  }
+  .FlexDirectionColumnCenter {
+  display: flex !important;
+  flex-direction: column !important; 
+  justify-content: center !important;
+  }
+  .marginLeft3rem {
   margin-left: 3rem!important;
-}
-.marginLeft2rem {
+  }
+  .marginLeft2rem {
   margin-left: 2rem!important;
-}
-.marginLeft1rem {
+  }
+  .marginLeft1rem {
   margin-left: 1rem!important;
-}
-.marginTop3rem {
+  }
+  .marginTop3rem {
+  margin-top: 3rem!important;
+  }
+  .marginTop5rem {
+    margin-top: 5rem!important;
+    }
+  
+  .marginTop2rem {
+  margin-top:2rem!important;
+  }
+  
+  .marginTop1rem {
   margin-top: 1rem!important;
-}
-
-.marginTop2rem {
-  margin-top: 1rem!important;
-}
-
-.marginTop1rem {
-  margin-top: 1rem!important;
-}
+  }
+  .bold {
+  font-weight: bold;
+  }
+  
+  .info-block {
+  margin-bottom: 0.625rem; /* Adjust this value as needed */
+  }
+  .marginBottom1rem {
+  margin-bottom: 1rem!important;
+  }
+  

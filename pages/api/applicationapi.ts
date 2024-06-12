@@ -76,6 +76,8 @@ export const fetchParticipantData = async (accessToken: string) => {
 export const searchUser = async (token: any, criteria: any) => {
   try {
     let url = "";
+    console.log("criteriasearch user",criteria)
+
     if (!criteria) {
       throw new Error("Please provide search criteria.");
     } else if (criteria.startsWith("khoji_id=")) {
@@ -128,20 +130,20 @@ export const createParticipant = async (requestData: any, token: any) => {
   
   if (!response.ok) {
      const statusText = await response.text();
-    const additionalMessages = [
-      "User cannot have a relation with themselves",
-      "User can have only one relation with another user.",
-    ];
+    // const additionalMessages = [
+    //   "User cannot have a relation with themselves",
+    //   "User can have only one relation with another user.",
+    // ];
   
-    additionalMessages.forEach(searchTerm => {
-      if (statusText.includes(searchTerm)) {
-        message.error(searchTerm);
-      } else {
-        console.error(`${searchTerm}: Message not found`);
-      }
-    });
+    // additionalMessages.forEach(searchTerm => {
+    //   if (statusText.includes(searchTerm)) {
+    //     message.error(searchTerm);
+    //   } else {
+    //     console.error(`${searchTerm}: Message not found`);
+    //   }
+    // });
     
-    // alert(statusText)
+     alert(statusText)
   
     return false;
   } 
@@ -150,30 +152,17 @@ export const createParticipant = async (requestData: any, token: any) => {
     return data;
   }
 };
-
 export const submitApplication = async (
   requestBody: Record<string, any>,
   token: string
 ) => {
-  const formData = new FormData();
-  Object.entries(requestBody).forEach(([key, value]) => {
-    if (value === null || value === undefined) {
-      formData.append(key, "");
-    } else if (typeof value === "boolean") {
-      formData.append(key, value.toString());
-    } else if (typeof value === "object") {
-      formData.append(key, JSON.stringify(value));
-    } else {
-      formData.append(key, String(value));
-    }
-  });
-
   const requestOptions = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json", // Set content type to JSON
     },
-    body: formData,
+    body: JSON.stringify(requestBody), // Convert request body to JSON string
   };
 
   try {
@@ -211,6 +200,67 @@ export const submitApplication = async (
   }
 };
 
+
+// export const submitApplication = async (
+//   requestBody: Record<string, any>,
+//   token: string
+// ) => {
+//   const formData = new FormData();
+//   Object.entries(requestBody).forEach(([key, value]) => {
+//     if (value === null || value === undefined) {
+//       formData.append(key, "");
+//     } else if (typeof value === "boolean") {
+//       formData.append(key, value.toString());
+//     } else if (typeof value === "object") {
+//       formData.append(key, JSON.stringify(value));
+//     } else {
+//       formData.append(key, String(value));
+//     }
+//   });
+
+//   const requestOptions = {
+//     method: "POST",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     body: formData,
+//   };
+
+//   try {
+//     const response = await fetch(
+//       `${baseUrl}event/applications/`,
+//       requestOptions
+//     );
+
+    
+//     if (!response.ok) {
+//       const statusText = await response.text();
+//       const additionalMessages = [
+//         "Participants must be provided for application",
+//         "Participants cannot be accepted for application",
+//         "Applicant cannot be a participant in their own application",
+//         "User cannot create other users application",
+//         "User already has an active application"
+//       ];
+    
+//       additionalMessages.forEach(searchTerm => {
+//         if (statusText.includes(searchTerm)) {
+//           message.error(searchTerm);
+//         } else {
+//           console.error(`${searchTerm}: Message not found`);
+//         }
+//       });
+    
+//       return false;
+//     } else {
+//       return true;
+//     }
+//   } catch (error) {
+//     console.error("There was a problem with your fetch operation:", error);
+//     return false;
+//   }
+// };
+
 export const fetchPurposeOptions = async (userid: any, accessToken: any) => {
   try {
     const purposeApiUrl = `${baseUrl}event/applications/?user=${userid}`;
@@ -246,20 +296,21 @@ export const fetchPurposeOptions = async (userid: any, accessToken: any) => {
   }
 };
 
-export const confirmApplicationStatus = async (
+export const updateApplicationStatus = async (
   applicationId: any,
   newStatus: any,
   token: any
 ) => {
   try {
-    const apiUrl = `${eventUrl}applications/${applicationId}/`;
+    console.log("applicationId",applicationId,newStatus,token)
+    const apiUrl = `${eventUrl}applications/status/`;
     const response = await fetch(apiUrl, {
-      method: "PATCH",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ status: newStatus }),
+      body: JSON.stringify({ status: newStatus, applications : [applicationId] }),
     });
 
     if (!response.ok) {
@@ -315,34 +366,4 @@ export const submitRescheduleForm = async (
   }
 };
 
-export const updateApplicationStatus = async (
-  applicationId: any,
-  newStatus: any,
-  token: any
-) => {
-  try {
-    const apiUrl = `${eventUrl}applications/update_status/`;
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status: newStatus }),
-    });
 
-    const statusText = await response.text();
-
-    if (!response.ok) {
-      alert(statusText);
-      return false;
-    } else {
-      const responseData = await response.json();
-      console.log("Updated application:", responseData);
-      return responseData;
-    }
-  } catch (error) {
-    console.error("Error updating application status:", error);
-    throw error;
-  }
-};
