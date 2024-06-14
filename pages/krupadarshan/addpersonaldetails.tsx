@@ -288,56 +288,52 @@ if(participantData)
     }
   };
 
-  const handleSearchClick = async (e:any) => {
-    if (e.key === 'Enter' || e.key === 'Return') {
-
-      e.preventDefault(); 
+  const handleSearchClick = async () => {
     try {
       let criteria = '';
-  
+
       // Update state based on the input field
       if (khojiID) {
-        setKhojiID(khojiID);
-        criteria += `khoji_id=${khojiID}`;
+        criteria = `khoji_id=${khojiID}`;
       } else if (khojifirstName && khojilastName) {
-        setkhojifirstName(khojifirstName);
-        setkhojilastName(khojilastName);
-        criteria += `first_name=${khojifirstName}&last_name=${khojilastName}`;
+        criteria = `first_name=${khojifirstName}&last_name=${khojilastName}`;
       } else if (khojifirstName && !khojilastName) {
-        message.warning("Please enter both first name and last name");
-        return; // Optionally, you can display a message to the user here
+        message.warning('Please enter both first name and last name');
+        return;
       } else if (!khojifirstName && khojilastName) {
-        message.warning("Please enter both first name and last name");
-        return; // Optionally, you can display a message to the user here
+        message.warning('Please enter both first name and last name');
+        return;
       } else if (khojimobile) {
-        if (khojimobile.length !== 10) {
-          message.warning("Mobile number must be 10 digits long and contain only numbers");
-          // Optionally, you can display a message to the user here
+        if (khojimobile.length !== 10 || isNaN(Number(khojimobile))) {
+          message.warning('Mobile number must be 10 digits long and contain only numbers');
           return;
         }
-        setkhojimobile(khojimobile);
-        criteria += `contact_no=${khojimobile}`;
+        criteria = `contact_no=${khojimobile}`;
       } else if (khojiemail) {
-        setkhojiemail(khojiemail);
-        criteria += `email=${khojiemail}`;
+        criteria = `email=${khojiemail}`;
+      } else {
+        message.warning('Please enter search criteria');
+        return;
       }
-    
-      const searchResults = await searchUser(token, criteria);
-      console.log("searchResults", searchResults);
+
+      const searchResults = await searchUser(token, criteria); // Replace with your actual API call
+      console.log('searchResults', searchResults);
+
       if (searchResults.length > 0) {
         const firstUser = searchResults[0];
-        setkhojiuserid(firstUser.user.id);
+        setUserid(firstUser.user.id);
         setsearchdata(firstUser);
-        console.log("search user",firstUser)
-        form.setFieldsValue(firstUser);
+        console.log('search user', firstUser);
+        form.setFieldsValue(firstUser); // Set form values with Ant Design form instance
       } else {
-        message.warning("No data found");
+        message.warning('No data found');
       }
     } catch (error) {
-      console.error("Error handling search click:", error);
+      console.error('Error handling search click:', error);
+      message.error('Failed to search user');
     }
-  }
   };
+
 
   const onclickNextBtn = async () => {
     if (!selectedPurpose || !startdate || !enddate) {
@@ -467,7 +463,7 @@ if(participantData)
     const hasValue = value.trim() !== '';
     if (hasValue) {
         console.log("criteria", criteria);
-        handleSearchClick(criteria);
+       // handleSearchClick(criteria);
     } else {
         console.log("Input value is empty");
         // Optionally, you can display a message to the user here
@@ -519,7 +515,9 @@ if(participantData)
    className="inputStyle"
    disabled={value === 2}
    data-name="khoji_id"
-   onKeyDown={handleSearchClick}
+  // onKeyDown={handleSearchClick}
+   onPressEnter={handleSearchClick} // Trigger search on Enter key press
+
 />
               </Form.Item>
             </Col>
