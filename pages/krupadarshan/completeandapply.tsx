@@ -131,76 +131,51 @@ export default function CompleteAndApplyPage() {
   
 
  
-  function buildUserdataCard(user: any, index: any) {
-    return user ? (
+function buildUserdataCard(user: any, index: any) {
+  const getRandomColor = () => {
+    const colors = ['#fdd8d8', '#F9DF9D', '#CBCAFF', '#9CC4FF']; // Add more colors as needed
+    return colors[index % colors.length]; // Cycle through colors based on index
+  };
+
+  return user ? (
+    <div className={`userParticipantsProfile`} key={user.id}>
       <div
-        className={`${
-          index === 1 ? "userProfileLeftCards" : "userProfileLeftCards"
-        }`}
-        // style={{ width: "20rem", height: "20rem" }}
-        key={user.id}
-      >
-        <div className="userProfileTopSection" /> 
-        <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-          <Avatar className="userProfileImage" src={user?.user?.avtar} />
+        className="userParticipantsProfileTopSection"
+        style={{ background: getRandomColor() }} // Set background color dynamically
+      />
+      <div className="displayFlex flexDirectionRow alignItemsCenter">
+        <Avatar className="userParticipantsProfileImage" src={user?.user?.avtar} />
 
-          <div className="userProfileVerifiedBadge">
-            <label className="userProfileVerifiedBadgeLabel">Verified</label>
-            <VerifiedIcon />
-          </div>
+        <div className="userProfileVerifiedBadge">
+          <label className="userProfileVerifiedBadgeLabel">Verified</label>
+          {/* Assuming VerifiedIcon is an imported component */}
+          <VerifiedIcon />
         </div>
-        <div
-          className="displayFlex flexDirectionColumn"
-          style={{ textAlign: "center" }}
-        >
-          <label className="userProfileInfoTitle" style={{ marginRight: "9rem" ,marginTop:"10px"}}>
-         {`${user?.user?.user?.first_name?.charAt(0).toUpperCase()}${user?.user?.user?.first_name?.slice(1)} ${user?.user?.user?.last_name?.charAt(0).toUpperCase()}${user?.user?.user?.last_name?.slice(1)}`}
-
-          </label>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-           
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle"></label>
-              <label className="userProfileInfoValue"></label>
-            </div>
-            
+      </div>
+      <div className="displayFlex flexDirectionColumn" style={{ textAlign: "center" }}>
+        <label className="userProfileInfoTitle" style={{ marginRight: "9rem"}}>
+          {`${user?.user?.user?.first_name?.charAt(0).toUpperCase()}${user?.user?.user?.first_name?.slice(1)} ${user?.user?.user?.last_name?.charAt(0).toUpperCase()}${user?.user?.user?.last_name?.slice(1)}`}
+        </label>
+        <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+          <div className="displayFlex flexDirectionColumn flex1" style={{ marginTop: "1rem" }}>
+            <label className="userProfileInfoTitle">Tejsthan</label>
+            <label className="userProfileInfoValue">{user?.user?.current_tejsthan?.name || '-'}</label>
           </div>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle">Tejsthan</label>
-              <label className="userProfileInfoValue">
-                {user?.user?.current_tejsthan?.name|| '-'}
-              </label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle">Address</label>
-              <label className="userProfileInfoValue">
-              {user?.user?.location|| '-'}
-              </label>
-            </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              style={{ marginTop: "1rem" }}
-            >
-              <label className="userProfileInfoTitle">DOB</label>
-              <label className="userProfileInfoValue">{user?.user?.dob || '-'}</label>
-            </div>
+          <div className="displayFlex flexDirectionColumn flex1" style={{ marginTop: "1rem" }}>
+            <label className="userProfileInfoTitle">Address</label>
+            <label className="userProfileInfoValue">{user?.user?.location || '-'}</label>
+          </div>
+          <div className="displayFlex flexDirectionColumn flex1" style={{ marginTop: "1rem" }}>
+            <label className="userProfileInfoTitle">DOB</label>
+            <label className="userProfileInfoValue">{user?.user?.dob || '-'}</label>
           </div>
         </div>
       </div>
-    ) : (
-      <div className="userProfilePlaceholderCard" />
-    );
-  }
+    </div>
+  ) : (
+    <div className="userProfilePlaceholderCard" />
+  );
+}
   
   
   const items = [
@@ -280,15 +255,15 @@ export default function CompleteAndApplyPage() {
               className="FlexDirectionRowSpacebetween marginTop1rem"
              
               >
-                <Row gutter={[16, 16]} style={{ flex: "1", flexWrap: "wrap" }}>
+                <Row gutter={[16, 16]}>
                   {data.map((user: any, index: any) => (
                     <Col
                       key={index}
-                      xs={12}
-                      sm={24}
-                      md={12}
+                      xs={1}
+                      sm={2}
+                      md={1}
                       lg={12}
-                      xl={12}
+                      xl={2}
                       style={{
                         marginBottom: "16px",
                         marginLeft: "2rem",

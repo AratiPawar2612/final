@@ -230,34 +230,6 @@ border: 0.0069rem 0rem 0rem 0rem;
   color: #fff !important;
 }
 
-.menuItemCard {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 10.75rem !important;
-  height: 4.3125rem !important;
-  cursor: pointer !important;
-  position: relative !important;
-}
-
-.menuItemCardImage,
-.menuItemCardImage > svg {
-  width: 12.75rem !important;
-  height: 4.6125rem !important;
-}
-
-.menuItemCardLabel {
-  position: absolute !important;
-  z-index: 1000 !important;
-  font-size: 0.5625rem !important;
-  font-weight: 700 !important;
-  line-height: 0.9375rem !important;
-  letter-spacing: 0.0088rem !important;
-  color: #475569 !important;
-  text-align: center !important;
-  cursor: pointer !important;
-}
 
 .verifyKhojiMiddleDiv {
   display: flex !important;
@@ -344,12 +316,58 @@ border: 0.0069rem 0rem 0rem 0rem;
   position: relative !important;
   background: #E5E5E5 !important;
   margin-bottom: 0.75rem !important;
-  width: 15.3125rem !important;
+  width: 17.3125rem !important;
   text-wrap: nowrap;
   text-align:center;
   margin-bottom: 1rem!important;
 
 }
+.userParticipantsProfile {
+  height: 13.375rem; /* Initial height for collapsed state */
+  border-radius: 0.4375rem;
+  background: white;
+  margin-bottom: 0.75rem;
+  width: 17.3125rem;
+  overflow: hidden; /* Ensure content doesn't overflow */
+  transition: height 0.3s ease; /* Smooth transition for height change */
+  cursor: pointer; /* Change cursor on hover */
+  position: relative; /* Ensure relative positioning */
+  z-index: 1; /* Ensure the card is above other content */
+}
+.userParticipantsProfileImage {
+  height: 3.9906rem !important;
+  width: 3.9906rem !important;
+  border-radius: 2rem !important;
+  margin-left: 1.125rem !important;
+  margin-top: 0.6375rem !important;
+}
+
+.userParticipantsProfile:hover {
+  z-index: 2; /* Ensure hovered card is above other cards */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add box shadow for hover effect */
+}
+
+.userParticipantsProfile:hover + .userParticipantsProfile {
+  transform: translateY(-50%); /* Move second card up by half its height */
+  z-index: 3; /* Ensure second card is above the first card */
+}
+
+.userParticipantsProfileTopSection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height:4.125rem;
+  border-radius: 0.4375rem 0.4375rem 0 0;
+  /* background: #fdd8d8; */ /* Remove background color from here */
+}
+
+.userParticipantsProfile .profileContent {
+  padding: 1rem; /* Padding inside the card */
+  text-align: center;
+}
+
+
 
 
 

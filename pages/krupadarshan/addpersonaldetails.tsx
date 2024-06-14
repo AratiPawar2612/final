@@ -165,6 +165,7 @@ export default function AddPersonalDeatilsPage() {
     points: ['bl', 'tl'], // Align the bottom-left corner of the dropdown with the top-left corner of the trigger
     offset: [0, 4], // Offset the dropdown by 4 pixels vertically
   };
+  
   const disabledDate = (current: any, startDate: any, endDate: any) => {
     // Disable dates before today
     if (current && current < dayjs().startOf("day")) {
@@ -288,55 +289,46 @@ if(participantData)
   };
 
   const handleSearchClick = async (e:any) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === 'Return') {
+
       e.preventDefault(); 
     try {
       let criteria = '';
   
       // Update state based on the input field
       if (khojiID) {
-          // if (khojiID.length !== 8) {
-          //     console.log("Khoji ID must be 8 digits long");
-          //     // Optionally, you can display a message to the user here
-          //     return;
-          // }
-          setKhojiID(khojiID); // Update Khoji ID state
-          criteria += `khoji_id=${khojiID}`;
-      } else if (khojifirstName) {
-          setkhojifirstName(khojifirstName);
-          // Check if last name is also entered
-          if (khojilastName) {
-              criteria += `last_name=${khojilastName}&`;
-          }
-          criteria += `first_name=${khojifirstName}`;
-      } else if (khojilastName) {
-          setkhojilastName(khojilastName);
-          // Check if first name is also entered
-          if (khojifirstName) {
-              criteria += `first_name=${khojifirstName}&`;
-          }
-          criteria += `last_name=${khojilastName}`;
+        setKhojiID(khojiID);
+        criteria += `khoji_id=${khojiID}`;
+      } else if (khojifirstName && khojilastName) {
+        setkhojifirstName(khojifirstName);
+        setkhojilastName(khojilastName);
+        criteria += `first_name=${khojifirstName}&last_name=${khojilastName}`;
+      } else if (khojifirstName && !khojilastName) {
+        message.warning("Please enter both first name and last name");
+        return; // Optionally, you can display a message to the user here
+      } else if (!khojifirstName && khojilastName) {
+        message.warning("Please enter both first name and last name");
+        return; // Optionally, you can display a message to the user here
       } else if (khojimobile) {
-          if (khojimobile .length!== 10 ) {
-              console.log("Mobile number must be 10 digits long and contain only numbers");
-              // Optionally, you can display a message to the user here
-              return;
-          }
-          setkhojimobile(khojimobile);
-          criteria += `contact_no=${khojimobile}`;
+        if (khojimobile.length !== 10) {
+          message.warning("Mobile number must be 10 digits long and contain only numbers");
+          // Optionally, you can display a message to the user here
+          return;
+        }
+        setkhojimobile(khojimobile);
+        criteria += `contact_no=${khojimobile}`;
       } else if (khojiemail) {
-          setkhojiemail(khojiemail);
-          criteria += `email=${khojiemail}`;
+        setkhojiemail(khojiemail);
+        criteria += `email=${khojiemail}`;
       }
     
-     
-
       const searchResults = await searchUser(token, criteria);
       console.log("searchResults", searchResults);
       if (searchResults.length > 0) {
         const firstUser = searchResults[0];
         setkhojiuserid(firstUser.user.id);
         setsearchdata(firstUser);
+        console.log("search user",firstUser)
         form.setFieldsValue(firstUser);
       } else {
         message.warning("No data found");
@@ -517,7 +509,7 @@ if(participantData)
                 label="Enter Khoji ID"
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
-                name="khojiID"
+                name="khoji_id"
                 rules={[{ required: true, message: "Please enter Khoji ID" }]}
               >
   <Input
@@ -526,7 +518,7 @@ if(participantData)
    onChange={(e) => setKhojiID(e.target.value)}
    className="inputStyle"
    disabled={value === 2}
-   data-name="khojiID"
+   data-name="khoji_id"
    onKeyDown={handleSearchClick}
 />
               </Form.Item>
@@ -539,7 +531,6 @@ if(participantData)
               <Form.Item
                 label="First Name"
                 name={["user", "first_name"]}
-               
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 rules={[{ required: true, message: "Please enter First Name" }]}
@@ -946,10 +937,6 @@ if(participantData)
     );
   }
   
-
-
-
-
   function buildUserCard(user: any, index: any) {
     return user ? (
       <div
