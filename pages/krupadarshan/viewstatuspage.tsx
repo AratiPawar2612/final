@@ -20,6 +20,7 @@ import {
   fetchApplicationData,
   submitRescheduleForm,
   updateApplicationStatus,
+  fetchApplicationParticipantsData
 } from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
 import { ViewStatusThirdSvg } from "@/icons/svgs";
@@ -65,20 +66,22 @@ export default function ViewStatusPage() {
             sessionData?.session?.access_token
           );
 
+            //get application particpants data
+       const applicationParticipantsData = await fetchApplicationParticipantsData(
+        applicationData[0]?.id,sessionData?.session?.access_token
+      );
+      //const participantresp = firstApplication?.participants;
+            console.log("participant", applicationParticipantsData);
+            if (applicationParticipantsData.length > 0) {
+              setParticipantData(applicationParticipantsData);
+              console.log("participantresp", applicationParticipantsData);
+            }
           if (applicationData.length > 0) {
             const firstApplication = applicationData[0];
             console.log("applicationdata", firstApplication);
             setData(firstApplication);
             setStatus(firstApplication?.status);
             console.log("firstApplication",firstApplication?.status)
-            const participantresp = firstApplication?.participants;
-            console.log("participant", participantresp);
-            if (participantresp.length > 0) {
-              setParticipantData(participantresp);
-              console.log("participantresp", participantresp);
-            }
-
-           
           } else {
             console.error("No application data found");
           }
@@ -108,7 +111,7 @@ export default function ViewStatusPage() {
       if (res) {
         message.success("Your application is confirmed");
      
- window.location.reload();
+        window.location.reload();
 
       }
     } catch (error) {
@@ -121,7 +124,6 @@ export default function ViewStatusPage() {
       const res = await updateApplicationStatus(data?.id, "CANCELLED", token);
      
       if (res) {
-alert(res.status)
         message.success("Your application is cancelled");
         window.location.reload();
       }
@@ -152,7 +154,7 @@ alert(res.status)
           } 
         }
         else{
-message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
+            message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
 
         }
          } catch (error) {
@@ -307,7 +309,7 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
                                 icon={<ElipseIcon />}
                                 style={{ marginRight: "2rem" }}
                               />
-                              {`${participant.first_name} ${participant.last_name}`}
+                              {`${participant?.user?.user?.first_name} ${participant.user?.user?.last_name}`}
                             </div>
                           ))}
                         {particpantdata.length > 2 && (
@@ -342,7 +344,7 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
                             }}
                           >
                             <Avatar size={64} icon={<ElipseIcon />} />
-                            {`${participant.first_name} ${participant.last_name}`}
+                            {`${participant?.user?.user?.first_name} ${participant.user?.user?.last_name}`}
                           </div>
                         ))}
                     </Modal>
@@ -380,7 +382,7 @@ message.warning("USER CANNOT RESCHEDULE APPLICATION MORE THAN 3 TIMES");
                           icon={<ElipseIcon />}
                           style={{ marginRight: "1rem" }}
                         />
-                        {`${participant.first_name} ${participant.last_name}`}
+                        {`${participant?.user?.user?.first_name} ${participant.user?.user?.last_name}`}
                       </div>
                     ))
                   ) : (

@@ -35,6 +35,25 @@ export const fetchApplicationData = async (accessToken: any) => {
   return applicationData.results ?? [];
 };
 
+export const fetchApplicationParticipantsData = async (applicationId :any,accessToken: any) => {
+  const applicationApiUrl = `${baseUrl}event/applications/${applicationId}/participants/`;
+
+  const applicationResponse = await fetch(applicationApiUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!applicationResponse.ok) {
+    throw new Error("Failed to fetch application data");
+  }
+
+  const applicationData = await applicationResponse.json();
+  return applicationData.results ?? [];
+};
+
 export const fetchPurposeData = async (accessToken: string) => {
   const purposeApiUrl = `${baseUrl}event/purposes/`;
   const purposeResponse = await fetch(purposeApiUrl, {

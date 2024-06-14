@@ -11,7 +11,7 @@ import {
 } from "@/icons/icon";
 import { ArrowLeftIcon } from "@/icons/icon";
 import {
-  fetchApplicationData,fetchPurposeData
+  fetchApplicationData,fetchApplicationParticipantsData,fetchPurposeData
 } from "../api/applicationapi";
 import CustomMobileMenu from "@/components/custommobilemenu";
 import StepComponent from "@/components/customstep";
@@ -89,10 +89,18 @@ export default function CompleteAndApplyPage() {
         setPurpose(formattedPurposes);
       }
       
+      const applicationParticipantsData = await fetchApplicationParticipantsData(
+        applicationData[0]?.id,sessionData?.session?.access_token
+      );
+  
+            console.log("participant", applicationParticipantsData);
+            if (applicationParticipantsData.length > 0) {
+              setData(applicationParticipantsData);
+              console.log("participantresp", applicationParticipantsData);
+            }
 
 
-
-      setData(applicationData[0]?.participants);
+      //setData(applicationData[0]?.participants);
       console.log("userDataResults", applicationData[0]?.participants);
 
       setStartDate(convertDate(applicationData[0]?.preferred_start_date));
@@ -134,7 +142,7 @@ export default function CompleteAndApplyPage() {
       >
         <div className="userProfileTopSection" /> 
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
-          <Avatar className="userProfileImage" src={user.avtar} />
+          <Avatar className="userProfileImage" src={user?.user?.avtar} />
 
           <div className="userProfileVerifiedBadge">
             <label className="userProfileVerifiedBadgeLabel">Verified</label>
@@ -146,7 +154,7 @@ export default function CompleteAndApplyPage() {
           style={{ textAlign: "center" }}
         >
           <label className="userProfileInfoTitle" style={{ marginRight: "9rem" ,marginTop:"10px"}}>
-         {`${user?.first_name?.charAt(0).toUpperCase()}${user?.first_name?.slice(1)} ${user?.last_name?.charAt(0).toUpperCase()}${user?.last_name?.slice(1)}`}
+         {`${user?.user?.user?.first_name?.charAt(0).toUpperCase()}${user?.user?.user?.first_name?.slice(1)} ${user?.user?.user?.last_name?.charAt(0).toUpperCase()}${user?.user?.user?.last_name?.slice(1)}`}
 
           </label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
@@ -167,7 +175,7 @@ export default function CompleteAndApplyPage() {
             >
               <label className="userProfileInfoTitle">Tejsthan</label>
               <label className="userProfileInfoValue">
-                {user?.current_tejsthan?.name}
+                {user?.user?.current_tejsthan?.name|| '-'}
               </label>
             </div>
             <div
@@ -175,14 +183,16 @@ export default function CompleteAndApplyPage() {
               style={{ marginTop: "1rem" }}
             >
               <label className="userProfileInfoTitle">Address</label>
-              <label className="userProfileInfoValue"></label>
+              <label className="userProfileInfoValue">
+              {user?.user?.location|| '-'}
+              </label>
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginTop: "1rem" }}
             >
               <label className="userProfileInfoTitle">DOB</label>
-              <label className="userProfileInfoValue">{user.dob}</label>
+              <label className="userProfileInfoValue">{user?.user?.dob || '-'}</label>
             </div>
           </div>
         </div>

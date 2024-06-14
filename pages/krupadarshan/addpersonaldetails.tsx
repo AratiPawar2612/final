@@ -527,7 +527,7 @@ if(participantData)
    className="inputStyle"
    disabled={value === 2}
    data-name="khojiID"
-   onKeyPress={handleSearchClick}
+   onKeyDown={handleSearchClick}
 />
               </Form.Item>
             </Col>
