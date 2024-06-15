@@ -149,20 +149,20 @@ export const createParticipant = async (requestData: any, token: any) => {
   
   if (!response.ok) {
      const statusText = await response.text();
-    // const additionalMessages = [
-    //   "User cannot have a relation with themselves",
-    //   "User can have only one relation with another user.",
-    // ];
-  
-    // additionalMessages.forEach(searchTerm => {
-    //   if (statusText.includes(searchTerm)) {
-    //     message.error(searchTerm);
-    //   } else {
-    //     console.error(`${searchTerm}: Message not found`);
-    //   }
-    // });
+    const additionalMessages = [
+      "The fields user, relation_with must make a unique set",
+      "user_cant_be_a_relative_with_self",
+    ];
+  //alert(additionalMessages);
+    additionalMessages.forEach(searchTerm => {
+      if (statusText.includes(searchTerm)) {
+        message.error(searchTerm);
+      } else {
+        console.error(statusText);
+      }
+    });
     
-     alert(statusText)
+     //alert(statusText)
   
     return false;
   } 
@@ -171,6 +171,8 @@ export const createParticipant = async (requestData: any, token: any) => {
     return data;
   }
 };
+
+
 export const submitApplication = async (
   requestBody: Record<string, any>,
   token: string

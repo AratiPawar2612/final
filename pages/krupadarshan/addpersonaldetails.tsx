@@ -312,11 +312,12 @@ export default function AddPersonalDeatilsPage() {
 
       if (searchResults.length > 0) {
         const firstUser = searchResults[0];
-        setUserid(firstUser.user.id);
+        setkhojiuserid(firstUser.user.id);
         setsearchdata(firstUser);
         console.log("search user", firstUser);
         form.setFieldsValue(firstUser); // Set form values with Ant Design form instance
       } else {
+        // form.resetFields(); 
         message.warning("No data found");
       }
     } catch (error) {
@@ -529,7 +530,8 @@ export default function AddPersonalDeatilsPage() {
                   onChange={(e) => setkhojifirstName(e.target.value)}
                   data-name="first_name"
                   disabled={value === 1}
-                  onKeyPress={handleSearchClick} // Disable input if value is 1 (Yes)
+                  onPressEnter={handleSearchClick} 
+                  onBlur={handleSearchClick}
                 />
               </Form.Item>
             </Col>
@@ -547,7 +549,8 @@ export default function AddPersonalDeatilsPage() {
                   onChange={(e) => setkhojilastName(e.target.value)}
                   data-name="last_name"
                   disabled={value === 1} // Disable input if value is 1 (Yes)
-                  onKeyPress={handleSearchClick}
+                  onPressEnter={handleSearchClick} 
+                  onBlur={handleSearchClick}
                 />
               </Form.Item>
             </Col>
@@ -572,7 +575,8 @@ export default function AddPersonalDeatilsPage() {
                   onChange={(e) => setkhojiemail(e.target.value)}
                   disabled={value === 1} // Disable input if value is 1 (Yes)
                   data-name="email"
-                  onKeyPress={handleSearchClick}
+                  onPressEnter={handleSearchClick} 
+                  onBlur={handleSearchClick}
                 />
               </Form.Item>
             </Col>
@@ -598,7 +602,8 @@ export default function AddPersonalDeatilsPage() {
                   onChange={(e) => setkhojimobile(e.target.value)}
                   disabled={value === 1} // Disable input if value is 1 (Yes)
                   data-name="contact_no"
-                  onKeyPress={handleSearchClick}
+                  onPressEnter={handleSearchClick} 
+                  onBlur={handleSearchClick}
                 />
               </Form.Item>
             </Col>
@@ -922,17 +927,111 @@ export default function AddPersonalDeatilsPage() {
     );
   }
 
+  // function buildUserCard(user: any, index: any) {
+  //   return user ? (
+  //     <div
+  //       className={`${
+  //         index === 1 ? "userProfileLeftCards" : "userProfileLeftCards"
+  //       }`}
+  //       key={user.id}
+  //     >
+  //       <div className="userProfileTopSection" />
+  //       <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
+  //         <Avatar className="userProfileImage" src={user.avtar} />
+  //         <div className="userProfileVerifiedBadge">
+  //           <label className="userProfileVerifiedBadgeLabel">Verified</label>
+  //           <VerifiedIcon />
+  //         </div>
+  //       </div>
+  //       <div
+  //         className="displayFlex flexDirectionColumn"
+  //         style={{ textAlign: "center" }}
+  //       >
+  //         <label
+  //           className="userProfileInfoTitle"
+  //           style={{ marginRight: "10rem", textWrap: "nowrap" }}
+  //         >
+  //           {user?.user?.first_name} {user?.user?.last_name}
+  //         </label>
+  //         <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+  //           <div
+  //             className="displayFlex flexDirectionColumn flex1"
+  //             style={{ marginTop: "1rem" }}
+  //           >
+  //             <label className="userProfileInfoTitle">
+  //               {/* Khoji Id */}
+  //               </label>
+  //             <label className="userProfileInfoValue">
+  //               {/* {user.khoji_id} */}
+  //               </label>
+  //               <label className="userProfileInfoTitle">
+  //               {/* Khoji Id */}
+  //               </label>
+  //             <label className="userProfileInfoValue">
+  //               {/* {user.khoji_id} */}
+  //               </label>
+  //               <label className="userProfileInfoTitle">
+  //               {/* Khoji Id */}
+  //               </label>
+  //             <label className="userProfileInfoValue">
+  //               {/* {user.khoji_id} */}
+  //               </label>
+  //               <label className="userProfileInfoTitle">
+  //               {/* Khoji Id */}
+  //               </label>
+  //             <label className="userProfileInfoValue">
+  //               {/* {user.khoji_id} */}
+  //               </label>
+  //           </div>
+  //           {/* <div
+  //             className="displayFlex flexDirectionColumn flex1"
+  //             style={{ marginTop: "1rem" }}
+  //           >
+  //             <label className="userProfileInfoTitle"></label>
+  //             <label className="userProfileInfoValue"></label>
+  //           </div> */}
+  //           {/* <div
+  //             className="displayFlex flexDirectionColumn flex1"
+  //             style={{ marginLeft: "1rem" }}
+  //           >
+              
+  //             <QRCode value={user?.user?.id} size={80} />
+  //           </div> */}
+  //         </div>
+         
+  //         <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+  //           <div className="displayFlex flexDirectionColumn flex1">
+  //             <label className="userProfileInfoTitle">Tejsthan</label>
+  //             <label className="userProfileInfoValue">
+  //               {user?.current_tejsthan?.name}
+  //             </label>
+  //           </div>
+  //           <div className="displayFlex flexDirectionColumn flex1 marginTop16">
+  //             <label className="userProfileInfoTitle">Shivir level</label>
+  //             <label className="userProfileInfoValue">{user.shivir_name}</label>
+  //           </div>
+  //           <div className="displayFlex flexDirectionColumn flex1">
+  //             <label className="userProfileInfoTitle">DOB</label>
+  //             <label className="userProfileInfoValue">{user.dob}</label>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   ) : (
+  //     <div className="userProfilePlaceholderCard" />
+  //   );
+  // }
+
   function buildUserCard(user: any, index: any) {
     return user ? (
       <div
-        className={`${
-          index === 1 ? "userProfileLeftCards" : "userProfileLeftCards"
-        }`}
+        className={`${index === 1 ? "userProfileCard" : "userProfileCard"}`}
         key={user.id}
       >
         <div className="userProfileTopSection" />
         <div className="displayFlex flexDirectionRow alignItemsCenter jusitfyContentSpaceBetween">
           <Avatar className="userProfileImage" src={user.avtar} />
+
           <div className="userProfileVerifiedBadge">
             <label className="userProfileVerifiedBadgeLabel">Verified</label>
             <VerifiedIcon />
@@ -944,7 +1043,7 @@ export default function AddPersonalDeatilsPage() {
         >
           <label
             className="userProfileInfoTitle"
-            style={{ marginRight: "10rem", textWrap: "nowrap" }}
+            style={{ marginRight: "10rem", marginTop: "10px",textWrap:"nowrap", }}
           >
             {user?.user?.first_name} {user?.user?.last_name}
           </label>
@@ -965,24 +1064,33 @@ export default function AddPersonalDeatilsPage() {
             </div>
             <div
               className="displayFlex flexDirectionColumn flex1"
-              style={{ marginLeft: "1rem" }}
+              // style={{ marginTop: "1rem", marginLeft: "1rem" }}
             >
-              
+              {/* <ScannerIcon /> */}
               <QRCode value={user?.user?.id} size={80} />
             </div>
           </div>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
-            <div className="displayFlex flexDirectionColumn flex1">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
               <label className="userProfileInfoTitle">Tejsthan</label>
               <label className="userProfileInfoValue">
                 {user?.current_tejsthan?.name}
               </label>
             </div>
-            <div className="displayFlex flexDirectionColumn flex1 marginTop16">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
               <label className="userProfileInfoTitle">Shivir level</label>
               <label className="userProfileInfoValue">{user.shivir_name}</label>
             </div>
-            <div className="displayFlex flexDirectionColumn flex1">
+            <div
+              className="displayFlex flexDirectionColumn flex1"
+              style={{ marginTop: "1rem" }}
+            >
               <label className="userProfileInfoTitle">DOB</label>
               <label className="userProfileInfoValue">{user.dob}</label>
             </div>
@@ -1473,11 +1581,12 @@ export default function AddPersonalDeatilsPage() {
                         type="primary"
                         style={{
                           borderRadius: "2rem",
-                          marginLeft: "1rem",
+                          marginLeft: "4rem",
                           width: "12rem",
                           height: "2rem",
                           backgroundColor: "black",
                           marginBottom: "1rem",
+                          alignItems:"center"
                         }}
                         onClick={onclickNextBtn}
                       >
@@ -1489,59 +1598,50 @@ export default function AddPersonalDeatilsPage() {
               </Form>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-  <Row style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly"}}>
-    <Col
-      xs={24}
-      sm={12}
-      md={12}
-      lg={12}
-      xl={8}
-      style={{ marginBottom: "16px" }}
-    >
-      <div className="sameDimensions">
-        {buildProfiles()}
-      </div>
-    </Col>
+            <Row gutter={[16, 16]} style={{ justifyContent: "space-between" }}>
+              <Col
+                xs={24}
+                sm={24}
+                md={12}
+                lg={12}
+                xl={12}
+                style={{ marginBottom: "16px" }}
+              >
+                   
+      {buildProfiles()}
+   
+  </Col>
 
-    <Col
-      xs={24}
-      sm={12}
-      md={24}
-      lg={12}
-      xl={8}
-      style={{ marginBottom: "16px" }}
-    >
-      {isFamilyKrupaDarshan === "true" && (
-        <div className="sameDimensions">
-          <Card onClick={showModal} className="addfamilymembercard">
-            <div
-              style={{
-                textAlign: "center",
-                color: "gray",
-                fontSize: "2.8rem",
-                justifyContent: "center",
-              }}
-            >
+  {/* Add Family Member Card Section */}
+  <Col
+                xs={24}
+                sm={24}
+                md={12}
+                lg={12}
+                xl={10}
+                style={{ marginBottom: "16px" }}
+              >
+    {isFamilyKrupaDarshan === "true" && (
+      <div style={{ textAlign: "center" }}>
+        <Card onClick={showModal} >
+        <div style={{ color: "gray", fontSize: "3.3rem" }}>
               <PlusOutlined />
               <br />
-              <Text style={{ color: "gray" }}>
-                Add Family Member Here
-              </Text>
+              <Text style={{ color: "gray", fontSize: "1rem", whiteSpace: "nowrap" }}>Add Family</Text>
+              <br />
+              <Text style={{ color: "gray", fontSize: "1rem", whiteSpace: "nowrap" }}>Members Here</Text>
             </div>
-          </Card>
-        </div>
-      )}
-    </Col>
-  </Row>
+        </Card>
+      </div>
+    )}
+  </Col>
+</Row>
+
   {isFamilyKrupaDarshan === "true" && (
-    <Row>
+    <Row justify={"center"}>
       <Col
-       xs={18}
-      sm={12}
-      md={24}
-      lg={12}
-      xl={8}
-      style={{ marginBottom: "16px" }}>
+      
+       style={{ marginBottom: "16px",marginLeft: "12rem", }}>
         <div>
           <Button
             className={isMobileView ? "mobileViewStyle" : "nonMobileViewStyle"}
@@ -1611,6 +1711,7 @@ export default function AddPersonalDeatilsPage() {
     </Row>
   )}
 </Col>
+
 
           </Row>
         </div>
