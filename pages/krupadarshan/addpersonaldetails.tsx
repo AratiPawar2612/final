@@ -43,11 +43,10 @@ import {
 import CustomMobileMenu from "@/components/custommobilemenu";
 import { ViewStatusFirstSvg } from "@/icons/svgs";
 import type { RadioChangeEvent } from "antd";
-import moment, { Moment } from 'moment';
-import dayjs, { Dayjs } from 'dayjs'; // Import Dayjs instead of Moment
-import { message } from 'antd';
-import { QRCode, Space } from 'antd';
-
+import moment, { Moment } from "moment";
+import dayjs, { Dayjs } from "dayjs"; // Import Dayjs instead of Moment
+import { message } from "antd";
+import { QRCode, Space } from "antd";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -95,7 +94,7 @@ export default function AddPersonalDeatilsPage() {
   const [isMobileView, setIsMobileView] = useState(false);
   const dayjs = require("dayjs");
   const [value, setValue] = useState(1);
- 
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 768);
@@ -162,10 +161,10 @@ export default function AddPersonalDeatilsPage() {
 
   const [selectedRelationship, setSelectedRelationship] = useState("");
   const dropdownAlign = {
-    points: ['bl', 'tl'], // Align the bottom-left corner of the dropdown with the top-left corner of the trigger
+    points: ["bl", "tl"], // Align the bottom-left corner of the dropdown with the top-left corner of the trigger
     offset: [0, 4], // Offset the dropdown by 4 pixels vertically
   };
-  
+
   const disabledDate = (current: any, startDate: any, endDate: any) => {
     // Disable dates before today
     if (current && current < dayjs().startOf("day")) {
@@ -250,8 +249,6 @@ export default function AddPersonalDeatilsPage() {
       });
   };
 
-   
-
   const handleAddClick = async () => {
     try {
       if (!selectedRelationship) {
@@ -269,20 +266,15 @@ export default function AddPersonalDeatilsPage() {
 
       const participantData = await createParticipant(requestBody, token);
 
-
-if(participantData)
-  {
-  
-    console.log("Response from server:", participantData);
-    message.success('Participant Added successfully');
-    form.resetFields();
-    window.location.reload();
-    setErrorMessage("");
-  }
-  else{
-    form.resetFields();
-  }
-    
+      if (participantData) {
+        console.log("Response from server:", participantData);
+        message.success("Participant Added successfully");
+        form.resetFields();
+        window.location.reload();
+        setErrorMessage("");
+      } else {
+        form.resetFields();
+      }
     } catch (error) {
       console.error("Error adding participant:", error);
     }
@@ -290,54 +282,52 @@ if(participantData)
 
   const handleSearchClick = async () => {
     try {
-      let criteria = '';
+      let criteria = "";
 
-      // Update state based on the input field
       if (khojiID) {
         criteria = `khoji_id=${khojiID}`;
       } else if (khojifirstName && khojilastName) {
         criteria = `first_name=${khojifirstName}&last_name=${khojilastName}`;
       } else if (khojifirstName && !khojilastName) {
-        message.warning('Please enter both first name and last name');
+        message.warning("Please enter both first name and last name");
         return;
       } else if (!khojifirstName && khojilastName) {
-        message.warning('Please enter both first name and last name');
+        message.warning("Please enter both first name and last name");
         return;
       } else if (khojimobile) {
         if (khojimobile.length !== 10 || isNaN(Number(khojimobile))) {
-          message.warning('Mobile number must be 10 digits long and contain only numbers');
+          message.warning("Mobile number must be 10 digits long and contain only numbers");
           return;
         }
         criteria = `contact_no=${khojimobile}`;
       } else if (khojiemail) {
         criteria = `email=${khojiemail}`;
       } else {
-        message.warning('Please enter search criteria');
+        message.warning("Please enter search criteria");
         return;
       }
 
       const searchResults = await searchUser(token, criteria); // Replace with your actual API call
-      console.log('searchResults', searchResults);
+      console.log("searchResults", searchResults);
 
       if (searchResults.length > 0) {
         const firstUser = searchResults[0];
         setUserid(firstUser.user.id);
         setsearchdata(firstUser);
-        console.log('search user', firstUser);
+        console.log("search user", firstUser);
         form.setFieldsValue(firstUser); // Set form values with Ant Design form instance
       } else {
-        message.warning('No data found');
+        message.warning("No data found");
       }
     } catch (error) {
-      console.error('Error handling search click:', error);
-      message.error('Failed to search user');
+      console.error("Error handling search click:", error);
+      message.error("Failed to search user");
     }
   };
 
-
   const onclickNextBtn = async () => {
     if (!selectedPurpose || !startdate || !enddate) {
-      console.log("startdate",startdate)
+      console.log("startdate", startdate);
       message.warning("Please Enter All required fields" + startdate);
     } else {
       const requestBody: Record<string, any> = {
@@ -349,12 +339,11 @@ if(participantData)
         preferred_start_date: startdate,
         preferred_end_date: enddate,
       };
-      
+
       // Conditionally add khoji_note
-      if (!addnote==null) {
+      if (!addnote == null) {
         requestBody.khoji_note = addnote;
       }
-      
 
       try {
         const applicationSubmitted = await submitApplication(
@@ -363,9 +352,11 @@ if(participantData)
         );
         console.log("applicationSubmitted", applicationSubmitted);
         if (applicationSubmitted) {
-          message.success("Congratulations! Your application has been saved successfully");
+          message.success(
+            "Congratulations! Your application has been saved successfully"
+          );
           router.push("/krupadarshan/completeandapply");
-        } 
+        }
       } catch (error: any) {
         // Specify the type of error explicitly
         console.error("Error submitting application:", error);
@@ -377,8 +368,6 @@ if(participantData)
     }
   };
 
-  
-  
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -403,7 +392,6 @@ if(participantData)
     }
   };
 
-
   const handleInputTypeChange = (type: string) => {
     if (type === "View all") {
       setInputType(type);
@@ -415,61 +403,60 @@ if(participantData)
 
   const [open, setOpen] = useState(false);
 
-
-
   const handleInputChange = (e: any) => {
     const { dataset, value } = e.target;
     const name = dataset.name;
-    console.log("Name:", name); 
-    let criteria = '';
-  
+    console.log("Name:", name);
+    let criteria = "";
+
     // Update state based on the input field
-    if (name === 'khojiID') {
-        if (value.length !== 8) {
-            console.log("Khoji ID must be 8 digits long");
-            // Optionally, you can display a message to the user here
-            return;
-        }
-        setKhojiID(value); // Update Khoji ID state
-        criteria += `khoji_id=${value}`;
-    } else if (name === 'first_name') {
-        setkhojifirstName(value);
-        // Check if last name is also entered
-        if (khojilastName) {
-            criteria += `last_name=${khojilastName}&`;
-        }
-        criteria += `first_name=${value}`;
-    } else if (name === 'last_name') {
-        setkhojilastName(value);
-        // Check if first name is also entered
-        if (khojifirstName) {
-            criteria += `first_name=${khojifirstName}&`;
-        }
-        criteria += `last_name=${value}`;
-    } else if (name === 'contact_no') {
-        if (value.length !== 10 || isNaN(value)) {
-            console.log("Mobile number must be 10 digits long and contain only numbers");
-            // Optionally, you can display a message to the user here
-            return;
-        }
-        setkhojimobile(value);
-        criteria += `contact_no=${value}`;
-    } else if (name === 'email') {
-        setkhojiemail(value);
-        criteria += `email=${value}`;
-    }
-  
-    // Check if the input value is not empty
-    const hasValue = value.trim() !== '';
-    if (hasValue) {
-        console.log("criteria", criteria);
-       // handleSearchClick(criteria);
-    } else {
-        console.log("Input value is empty");
+    if (name === "khojiID") {
+      if (value.length !== 8) {
+        console.log("Khoji ID must be 8 digits long");
         // Optionally, you can display a message to the user here
+        return;
+      }
+      setKhojiID(value); // Update Khoji ID state
+      criteria += `khoji_id=${value}`;
+    } else if (name === "first_name") {
+      setkhojifirstName(value);
+      // Check if last name is also entered
+      if (khojilastName) {
+        criteria += `last_name=${khojilastName}&`;
+      }
+      criteria += `first_name=${value}`;
+    } else if (name === "last_name") {
+      setkhojilastName(value);
+      // Check if first name is also entered
+      if (khojifirstName) {
+        criteria += `first_name=${khojifirstName}&`;
+      }
+      criteria += `last_name=${value}`;
+    } else if (name === "contact_no") {
+      if (value.length !== 10 || isNaN(value)) {
+        console.log(
+          "Mobile number must be 10 digits long and contain only numbers"
+        );
+        // Optionally, you can display a message to the user here
+        return;
+      }
+      setkhojimobile(value);
+      criteria += `contact_no=${value}`;
+    } else if (name === "email") {
+      setkhojiemail(value);
+      criteria += `email=${value}`;
     }
-};
-  
+
+    // Check if the input value is not empty
+    const hasValue = value.trim() !== "";
+    if (hasValue) {
+      console.log("criteria", criteria);
+      // handleSearchClick(criteria);
+    } else {
+      console.log("Input value is empty");
+      // Optionally, you can display a message to the user here
+    }
+  };
 
   const renderInputComponent = () => {
     if (inputType === "khoji") {
@@ -482,7 +469,7 @@ if(participantData)
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 name="rdyesno"
-                initialValue={1} 
+                initialValue={1}
                 rules={[{ required: true, message: "Please select an option" }]}
               >
                 <Radio.Group onChange={onChange} value={value}>
@@ -508,17 +495,16 @@ if(participantData)
                 name="khoji_id"
                 rules={[{ required: true, message: "Please enter Khoji ID" }]}
               >
-  <Input
-   placeholder="Enter Khoji ID"
-   value={khojiID}
-   onChange={(e) => setKhojiID(e.target.value)}
-   className="inputStyle"
-   disabled={value === 2}
-   data-name="khoji_id"
-  // onKeyDown={handleSearchClick}
-   onPressEnter={handleSearchClick} // Trigger search on Enter key press
-
-/>
+               <Input
+                placeholder="Enter Khoji ID"
+                value={khojiID}
+                onChange={(e) => setKhojiID(e.target.value)}
+                className="inputStyle"
+                disabled={value === 2}
+                data-name="khoji_id"
+                onPressEnter={handleSearchClick} 
+                 onBlur={handleSearchClick}
+              />
               </Form.Item>
             </Col>
           </Row>
@@ -591,7 +577,6 @@ if(participantData)
               </Form.Item>
             </Col>
           </Row>
-         
 
           <Row gutter={16}>
             <Col span={24}>
@@ -646,23 +631,19 @@ if(participantData)
             </Col>
           </Row>
 
-          <div
-            
-          >
-            
-              <Button
-                type="primary"
-                style={{
-                  marginTop: "1rem",
-                  backgroundColor: "black",
-                  width: "100%",
-                  marginBottom: "1rem",
-                }}
-                onClick={handleAddClick}
-              >
-                Add
-              </Button>
-          
+          <div>
+            <Button
+              type="primary"
+              style={{
+                marginTop: "1rem",
+                backgroundColor: "black",
+                width: "100%",
+                marginBottom: "1rem",
+              }}
+              onClick={handleAddClick}
+            >
+              Add
+            </Button>
           </div>
         </Form>
       );
@@ -806,7 +787,7 @@ if(participantData)
   ) {
     const handleCardClick = () => {
       const isSelected = selectedUserIds.includes(user.id);
-  
+
       // If selected, remove from the list; otherwise, add to the list
       if (isSelected) {
         setSelectedUserIds((prevIds: any) =>
@@ -816,31 +797,35 @@ if(participantData)
         setSelectedUserIds((prevIds: any) => [...prevIds, user.id]);
       }
     };
-  
+
     if (!user) {
       return <div className="userProfilePlaceholderCard" />;
     }
-  
+
     const isSelected = selectedUserIds.includes(user.id);
-  
+
     return (
       <div className="userProfileContainer" key={user.id}>
         <div
-          className={`${
-            index === 1 ? "userProfile" : "userProfile"
-          } ${isSelected ? "selectedCard" : ""}`}
+          className={`${index === 1 ? "userProfile" : "userProfile"} ${
+            isSelected ? "selectedCard" : ""
+          }`}
           onClick={handleCardClick}
         >
           <div className="userProfileTopSection">
             {isSelected && (
               <CheckCircleOutlined
-                style={{ color: "black", marginTop: "1rem", marginLeft: "12rem" }}
+                style={{
+                  color: "black",
+                  marginTop: "1rem",
+                  marginLeft: "12rem",
+                }}
               />
             )}
           </div>
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Avatar className="userProfileImage" src={user.avtar} />
-  
+
             <div className="userProfileVerifiedBadge">
               <label className="userProfileVerifiedBadgeLabel">Verified</label>
               <VerifiedIcon />
@@ -858,7 +843,7 @@ if(participantData)
                 user?.relation_with?.user?.last_name &&
                 [
                   user?.relation_with?.user?.first_name,
-                  user?.relation_with?.user?.last_name
+                  user?.relation_with?.user?.last_name,
                 ]
                   .reduce(
                     (acc, name) =>
@@ -866,7 +851,9 @@ if(participantData)
                       " " +
                       name
                         .split(" ")
-                        .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+                        .map(
+                          (w: string) => w.charAt(0).toUpperCase() + w.slice(1)
+                        )
                         .join(" "),
                     ""
                   )
@@ -878,7 +865,7 @@ if(participantData)
                 style={{
                   marginTop: "1rem",
                   marginLeft: "1.5rem",
-                  alignItems: "baseline"
+                  alignItems: "baseline",
                 }}
               >
                 <label className="userProfileInfoTitle">Khoji Id</label>
@@ -934,7 +921,7 @@ if(participantData)
       </div>
     );
   }
-  
+
   function buildUserCard(user: any, index: any) {
     return user ? (
       <div
@@ -955,7 +942,10 @@ if(participantData)
           className="displayFlex flexDirectionColumn"
           style={{ textAlign: "center" }}
         >
-          <label className="userProfileInfoTitle" style={{ marginRight: "10rem",textWrap:"nowrap"}}>
+          <label
+            className="userProfileInfoTitle"
+            style={{ marginRight: "10rem", textWrap: "nowrap" }}
+          >
             {user?.user?.first_name} {user?.user?.last_name}
           </label>
           <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
@@ -977,31 +967,22 @@ if(participantData)
               className="displayFlex flexDirectionColumn flex1"
               style={{ marginLeft: "1rem" }}
             >
-              <QRCode value={user?.user?.id} size={100} />
+              
+              <QRCode value={user?.user?.id} size={80} />
             </div>
           </div>
-          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16" 
-          >
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-              
-            >
+          <div className="displayFlex flexDirectionRow alignItemsCenter marginTop16">
+            <div className="displayFlex flexDirectionColumn flex1">
               <label className="userProfileInfoTitle">Tejsthan</label>
               <label className="userProfileInfoValue">
                 {user?.current_tejsthan?.name}
               </label>
             </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1 marginTop16"
-             
-            >
+            <div className="displayFlex flexDirectionColumn flex1 marginTop16">
               <label className="userProfileInfoTitle">Shivir level</label>
               <label className="userProfileInfoValue">{user.shivir_name}</label>
             </div>
-            <div
-              className="displayFlex flexDirectionColumn flex1"
-             
-            >
+            <div className="displayFlex flexDirectionColumn flex1">
               <label className="userProfileInfoTitle">DOB</label>
               <label className="userProfileInfoValue">{user.dob}</label>
             </div>
@@ -1054,9 +1035,14 @@ if(participantData)
           </div>
           <Row justify="center">
             <Col xs={24} xl={24}>
-            <div style={{display:"flex",justifyContent:"center",marginTop:"1rem"}}  >
-                  <StepComponent currentStep={-1} />
-                
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "1rem",
+                }}
+              >
+                <StepComponent currentStep={-1} />
               </div>
             </Col>
           </Row>
@@ -1172,26 +1158,20 @@ if(participantData)
                         },
                       ]}
                     >
-                   
-                    <Select
-                            mode="multiple"
-                            style={{ width: "100%" }}
-                            placeholder="Select Purpose"
-                            value={selectedPurpose}
-                            onChange={(value) => setSelectedPurpose(value)}
-                            showSearch={false}
-                           
-                    
-                          >
-                          {purposeOptions.map((option) => (
-                            <Option key={option.key} value={option.value}>
-                              {option.label}
-                            </Option>
-                          ))}
-                        </Select>
-                   
-                          
-                     
+                      <Select
+                        mode="multiple"
+                        style={{ width: "100%" }}
+                        placeholder="Select Purpose"
+                        value={selectedPurpose}
+                        onChange={(value) => setSelectedPurpose(value)}
+                        showSearch={false}
+                      >
+                        {purposeOptions.map((option) => (
+                          <Option key={option.key} value={option.value}>
+                            {option.label}
+                          </Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                   </Col>
                 </Row>
@@ -1209,7 +1189,7 @@ if(participantData)
                         },
                       ]}
                     > */}
-                      {/* <DatePicker
+                    {/* <DatePicker
                         style={{
                           borderRadius: "2rem",
                           height: "2rem",
@@ -1224,7 +1204,7 @@ if(participantData)
                           }
                         }}
                       /> */}
-                      {/* <DatePicker
+                    {/* <DatePicker
   style={{
     borderRadius: "2rem",
     height: "2rem",
@@ -1271,7 +1251,7 @@ if(participantData)
                           }
                         }}
                       /> */}
-                      {/* <DatePicker
+                    {/* <DatePicker
     style={{
       borderRadius: "2rem",
       height: "2rem",
@@ -1348,111 +1328,120 @@ if(participantData)
                       }}
                     /> */}
 
+                    <div>
+                      <DatePicker
+                        style={{
+                          borderRadius: "2rem",
+                          height: "2rem",
+                          width: "100%",
+                        }}
+                        format="YYYY-MM-DD"
+                        placeholder="select week"
+                        disabledDate={(current: Dayjs) => {
+                          const today = dayjs();
+                          const startOfCurrentMonth = dayjs().startOf("month");
+                          const endOfFirstWeek = startOfCurrentMonth.add(
+                            7,
+                            "day"
+                          );
 
-<div>
-      <DatePicker
-        style={{
-          borderRadius: "2rem",
-          height: "2rem",
-          width: "100%",
-        }}
-        format="YYYY-MM-DD"
-        placeholder="select week"
-        disabledDate={(current: Dayjs) => {
-          const today = dayjs();
-          const startOfCurrentMonth = dayjs().startOf("month");
-          const endOfFirstWeek = startOfCurrentMonth.add(7, "day");
+                          // Disable the current week (first 7 days of the month)
+                          if (
+                            current.isBefore(today, "day") ||
+                            current.isBefore(endOfFirstWeek, "day")
+                          ) {
+                            return true;
+                          }
+                          return false;
+                        }}
+                        suffixIcon={
+                          startdate &&
+                          enddate && (
+                            <div
+                              style={{
+                                fontSize: "0.625rem",
+                                fontWeight: "bolder",
+                              }}
+                            >
+                              Start Date: {startdate} To End Date: {enddate}
+                            </div>
+                          )
+                        }
+                        onChange={(date, dateString) => {
+                          console.log("Received dateString:", dateString);
 
-          // Disable the current week (first 7 days of the month)
-          if (
-            current.isBefore(today, "day") ||
-            current.isBefore(endOfFirstWeek, "day")
-          ) {
-            return true;
-          }
-          return false;
-        }}
-        suffixIcon={
-          startdate &&
-          enddate && (
-            <div style={{fontSize:"0.625rem",fontWeight:"bolder"}}>
-              
-                Start Date: {startdate} To End Date: {enddate}
-              
-            </div>
-          )
-        }
-        onChange={(date, dateString) => {
-          console.log("Received dateString:", dateString);
+                          // Check if dateString is defined and has the expected format
+                          if (typeof dateString === "string") {
+                            const match = dateString.match(
+                              /^(\d{4})-(\d{1,2})-(\d{1,2})$/
+                            );
+                            if (match) {
+                              const year = parseInt(match[1], 10);
+                              const month = parseInt(match[2], 10);
+                              const day = parseInt(match[3], 10);
+                              let startDateOfWeek, endDateOfWeek;
 
-          // Check if dateString is defined and has the expected format
-          if (typeof dateString === "string") {
-            const match = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-            if (match) {
-              const year = parseInt(match[1], 10);
-              const month = parseInt(match[2], 10);
-              const day = parseInt(match[3], 10);
-              let startDateOfWeek, endDateOfWeek;
+                              // Determine the start and end dates of the week based on the selected day
+                              if (day <= 7) {
+                                startDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .date(1)
+                                  .format("YYYY-MM-DD");
+                                endDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .date(7)
+                                  .format("YYYY-MM-DD");
+                              } else if (day <= 14) {
+                                startDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .date(8)
+                                  .format("YYYY-MM-DD");
+                                endDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .date(14)
+                                  .format("YYYY-MM-DD");
+                              } else if (day <= 21) {
+                                startDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .date(15)
+                                  .format("YYYY-MM-DD");
+                                endDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .date(21)
+                                  .format("YYYY-MM-DD");
+                              } else {
+                                startDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .date(22)
+                                  .format("YYYY-MM-DD");
+                                endDateOfWeek = dayjs()
+                                  .year(year)
+                                  .month(month - 1)
+                                  .endOf("month")
+                                  .format("YYYY-MM-DD");
+                              }
 
-              // Determine the start and end dates of the week based on the selected day
-              if (day <= 7) {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(1)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(7)
-                  .format("YYYY-MM-DD");
-              } else if (day <= 14) {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(8)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(14)
-                  .format("YYYY-MM-DD");
-              } else if (day <= 21) {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(15)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(21)
-                  .format("YYYY-MM-DD");
-              } else {
-                startDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .date(22)
-                  .format("YYYY-MM-DD");
-                endDateOfWeek = dayjs()
-                  .year(year)
-                  .month(month - 1)
-                  .endOf("month")
-                  .format("YYYY-MM-DD");
-              }
-
-              // Update state with start and end dates
-              setStartdate(startDateOfWeek);
-              setEnddate(endDateOfWeek);
-            } else {
-              console.error("Invalid dateString format:", dateString);
-            }
-          }
-        }}
-      />
-    
-    </div>
-       </Form.Item>
+                              // Update state with start and end dates
+                              setStartdate(startDateOfWeek);
+                              setEnddate(endDateOfWeek);
+                            } else {
+                              console.error(
+                                "Invalid dateString format:",
+                                dateString
+                              );
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </Form.Item>
                 </Col>
 
                 <Row gutter={16}>
@@ -1500,132 +1489,129 @@ if(participantData)
               </Form>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Row
-                gutter={[16, 16]}
-                style={{ justifyContent: "space-between" }}
-              >
-                <Col
-                  xs={24}
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={12}
-                  style={{ marginBottom: "16px" }}
-                >
-                  {buildProfiles()}
-                </Col>
+  <Row style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly"}}>
+    <Col
+      xs={24}
+      sm={12}
+      md={12}
+      lg={12}
+      xl={8}
+      style={{ marginBottom: "16px" }}
+    >
+      <div className="sameDimensions">
+        {buildProfiles()}
+      </div>
+    </Col>
 
-                <Col
-                  xs={10}
-                  sm={12}
-                  md={24}
-                  lg={12}
-                  xl={12}
-                  style={{ marginBottom: "16px" }}
-                >
-                  {isFamilyKrupaDarshan === "true" && (
-                    <div
-                     
-                    >
-                      <Card onClick={showModal} className="addfamilymembercard">
-                        <div
-                          style={{
-                            textAlign: "center",
-                            color: "gray",
-                            fontSize: "2.8rem",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <PlusOutlined />
-                          <br />
-                          <Text style={{ color: "gray" }}>
-                            Add Family Member Here
-                          </Text>
-                        </div>
-                      </Card>
-                      <Col
-                        xs={10}
-                        sm={12}
-                        md={24}
-                        lg={12}
-                        xl={12}
-                        style={{ marginBottom: "16px" }}
-                      >
-                        <div>
-                          <Button
-                            className={
-                              isMobileView
-                                ? "mobileViewStyle"
-                                : "nonMobileViewStyle"
-                            }
-                            onClick={() => handleInputTypeChange("View all")}
-                          >
-                            View all
-                          </Button>
-                        </div>
-                      </Col>
-                      <Modal
-                        title={
-                          inputType === "View all"
-                            ? "Added Family Members"
-                            : "Family Member 1"
-                        }
-                        open={isModalVisible}
-                        footer={null}
-                        style={{ top: 20 }}
-                        onCancel={handleCancel}
-                      >
-                        <div
-                          style={{
-                            maxHeight: "60vh",
-                            overflowY: "auto",
-                            padding: "0 24px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                         <div style={{ marginBottom: 16 }}>
-  {inputType !== "View all" && (
-    <>
-      <Button
-        type="link"
-        style={{
-          marginRight: 10,
-          fontSize: "0.8225rem", // Explicitly set the font size
-          color: inputType === "khoji" ? "blue" : "black",
-        }}
-        onClick={() => handleInputTypeChange("khoji")}
+    <Col
+      xs={24}
+      sm={12}
+      md={24}
+      lg={12}
+      xl={8}
+      style={{ marginBottom: "16px" }}
+    >
+      {isFamilyKrupaDarshan === "true" && (
+        <div className="sameDimensions">
+          <Card onClick={showModal} className="addfamilymembercard">
+            <div
+              style={{
+                textAlign: "center",
+                color: "gray",
+                fontSize: "2.8rem",
+                justifyContent: "center",
+              }}
+            >
+              <PlusOutlined />
+              <br />
+              <Text style={{ color: "gray" }}>
+                Add Family Member Here
+              </Text>
+            </div>
+          </Card>
+        </div>
+      )}
+    </Col>
+  </Row>
+  {isFamilyKrupaDarshan === "true" && (
+    <Row>
+      <Col
+       xs={18}
+      sm={12}
+      md={24}
+      lg={12}
+      xl={8}
+      style={{ marginBottom: "16px" }}>
+        <div>
+          <Button
+            className={isMobileView ? "mobileViewStyle" : "nonMobileViewStyle"}
+            onClick={() => handleInputTypeChange("View all")}
+          >
+            View all
+          </Button>
+        </div>
+      </Col>
+      <Modal
+        title={
+          inputType === "View all"
+            ? "Added Family Members"
+            : "Family Member 1"
+        }
+        open={isModalVisible}
+        footer={null}
+        style={{ top: 20 }}
+        onCancel={handleCancel}
       >
-        Khoji
-      </Button>
-      <Button
-        type="link"
-        style={{
-          fontSize: "0.8225rem", // Explicitly set the font size
-          color: inputType === "guest" ? "blue" : "black",
-        }}
-        onClick={() => handleInputTypeChange("guest")}
-      >
-        Guest Khoji
-      </Button>
-    </>
+        <div
+          style={{
+            maxHeight: "60vh",
+            overflowY: "auto",
+            padding: "0 24px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ marginBottom: 16 }}>
+              {inputType !== "View all" && (
+                <>
+                  <Button
+                    type="link"
+                    style={{
+                      marginRight: 10,
+                      fontSize: "0.8225rem",
+                      color: inputType === "khoji" ? "blue" : "black",
+                    }}
+                    onClick={() => handleInputTypeChange("khoji")}
+                  >
+                    Khoji
+                  </Button>
+                  <Button
+                    type="link"
+                    style={{
+                      fontSize: "0.8225rem",
+                      color: inputType === "guest" ? "blue" : "black",
+                    }}
+                    onClick={() => handleInputTypeChange("guest")}
+                  >
+                    Guest Khoji
+                  </Button>
+                </>
+              )}
+            </div>
+
+            {renderInputComponent()}
+          </div>
+        </div>
+      </Modal>
+    </Row>
   )}
-</div>
+</Col>
 
-                            {renderInputComponent()}
-                          </div>
-                        </div>
-                      </Modal>
-                    </div>
-                  )}
-                </Col>
-              </Row>
-            </Col>
           </Row>
         </div>
       </div>
